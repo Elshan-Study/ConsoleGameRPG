@@ -1,7 +1,10 @@
 #include <iostream>
+#include "Archetype.h"
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    std::unique_ptr<Archetype> obj = std::make_unique<Aristocrat>();
+    std::cout << obj->getBrawn();
+
 }
 
