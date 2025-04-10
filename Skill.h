@@ -9,8 +9,9 @@ public:
 	Skill() : value(0), dices(0) {};
 	explicit Skill(size_t value) : value(value), dices(0) {};
 
-	void changeValue(size_t mod) { value += mod; }
+	virtual void changeValue(int mod, Archetype* parameter) = 0;
 	virtual void setDices(Archetype* parameter) = 0;
+	size_t getDices() const { return dices; }
 
 	virtual ~Skill() = default;
 };
@@ -24,6 +25,12 @@ public:
 	{
 		dices = value + parameter->getIntellect();
 	}
+
+	void changeValue(int mod, Archetype* parameter) override
+	{
+		value += mod;
+		setDices(parameter);
+	}
 };
 
 class BrawnSkill final : public Skill
@@ -34,6 +41,12 @@ public:
 	void setDices(Archetype* parameter) override
 	{
 		dices = value + parameter->getBrawn();
+	}
+
+	void changeValue(int mod, Archetype* parameter) override
+	{
+		value += mod;
+		setDices(parameter);
 	}
 };
 
@@ -46,6 +59,12 @@ public:
 	{
 		dices = value + parameter->getCunning();
 	}
+
+	void changeValue(int mod, Archetype* parameter) override
+	{
+		value += mod;
+		setDices(parameter);
+	}
 };
 
 class AgilitySkill final : public Skill
@@ -56,6 +75,12 @@ public:
 	void setDices(Archetype* parameter) override
 	{
 		dices = value + parameter->getAgility();
+	}
+
+	void changeValue(int mod, Archetype* parameter) override
+	{
+		value += mod;
+		setDices(parameter);
 	}
 };
 
@@ -68,6 +93,12 @@ public:
 	{
 		dices = value + parameter->getWillpower();
 	}
+
+	void changeValue(int mod, Archetype* parameter) override
+	{
+		value += mod;
+		setDices(parameter);
+	}
 };
 
 class PresenceSkill final : public Skill
@@ -78,5 +109,11 @@ public:
 	void setDices(Archetype* parameter) override
 	{
 		dices = value + parameter->getPresence();
+	}
+
+	void changeValue(int mod, Archetype* parameter) override
+	{
+		value += mod;
+		setDices(parameter);
 	}
 };
