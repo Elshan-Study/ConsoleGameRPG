@@ -8,11 +8,11 @@ protected:
 	size_t Cunning;
 	size_t Willpower;
 	size_t Presence;
-	size_t HP = 0;
-	size_t AP = 0;
+	size_t HP;
+	size_t AP;
 public:
-	Archetype() : Brawn(0), Agility(0), Intellect(0), Cunning(0), Willpower(0), Presence(0) {};
-	explicit Archetype(size_t brawn, size_t agility, size_t intellect, size_t cunning, size_t willpower, size_t presence)
+	Archetype() : Brawn(0), Agility(0), Intellect(0), Cunning(0), Willpower(0), Presence(0), HP(0), AP(0) {};
+	explicit Archetype(size_t brawn, size_t agility, size_t intellect, size_t cunning, size_t willpower, size_t presence) : HP(0), AP(0)
 	{
 		Brawn = brawn;
 		Agility = agility;
@@ -41,7 +41,7 @@ public:
 
 };
 
-class Sturdy : public Archetype
+class Sturdy final : public Archetype
 {
 public:
 	Sturdy() : Archetype(3, 2, 2, 2, 1, 2) { setHP(); setAP(); }
@@ -49,7 +49,7 @@ public:
 	void setAP() override { HP = 8 + Willpower; }
 };
 
-class Genius : public Archetype
+class Genius final : public Archetype
 {
 public:
 	Genius() : Archetype(2, 1, 3, 2, 2, 2) { setHP(); setAP(); }
@@ -57,7 +57,7 @@ public:
 	void setAP() override { HP = 12 + Willpower; }
 };
 
-class Aristocrat : public Archetype
+class Aristocrat final : public Archetype
 {
 public:
 	Aristocrat() : Archetype(1, 2, 2, 2, 2, 3) { setHP(); setAP(); }
@@ -65,7 +65,7 @@ public:
 	void setAP() override { HP = 10 + Willpower; }
 };
 
-class Simpleton : public Archetype
+class Simpleton final : public Archetype
 {
 public:
 	Simpleton() : Archetype(2, 2, 2, 2, 2, 2) { setHP(); setAP(); }

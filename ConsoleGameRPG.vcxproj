@@ -129,9 +129,13 @@
   <ItemGroup>
     <ClCompile Include="Archetype.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Skill.cpp" />
+    <ClCompile Include="Specialization.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Archetype.h" />
+    <ClInclude Include="Skill.h" />
+    <ClInclude Include="Specialization.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

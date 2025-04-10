@@ -21,9 +21,21 @@
     <ClCompile Include="Archetype.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Specialization.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Skill.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Archetype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Specialization.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Skill.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
