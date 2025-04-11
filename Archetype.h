@@ -25,6 +25,10 @@ public:
 	virtual ~Archetype() = default;
 	virtual void setHP() = 0;
 	virtual void setAP() = 0;
+	size_t getHP() const { return HP; };
+	size_t getAP() const { return AP; };
+	void changeHP(int mod) { HP += mod; }; /*!Need exceptions: if mod > value */
+	void changeAP(int mod) { AP += mod; }; /*!Need exceptions: if mod > value */
 };
 
 class Sturdy final : public Archetype
