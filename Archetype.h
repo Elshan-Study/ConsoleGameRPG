@@ -11,7 +11,7 @@ protected:
 	size_t HP;
 	size_t AP;
 public:
-	Archetype() : Brawn(0), Agility(0), Intellect(0), Cunning(0), Willpower(0), Presence(0), HP(0), AP(0) {};
+	Archetype() : Brawn(1), Agility(1), Intellect(1), Cunning(1), Willpower(1), Presence(1), HP(1), AP(1) {};
 	explicit Archetype(size_t brawn, size_t agility, size_t intellect, size_t cunning, size_t willpower, size_t presence) : HP(0), AP(0)
 	{
 		Brawn = brawn;
