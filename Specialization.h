@@ -23,6 +23,7 @@ public:
 	PresenceSkill Negotiation;
 
 	Specialization(){};
+
 	Specialization(const Specialization&) = delete;
 	Specialization& operator=(const Specialization&) = delete;
 	virtual ~Specialization() = default;
