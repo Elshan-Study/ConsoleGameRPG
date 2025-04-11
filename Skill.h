@@ -30,7 +30,7 @@ public:
 	
 	void setDices(Archetype* parameter) override
 	{
-		dices = value + parameter->getIntellect();
+		dices = value + parameter->Intellect;
 	}
 
 	void changeValue(int mod, Archetype* parameter) override
@@ -49,7 +49,7 @@ public:
 
 	void setDices(Archetype* parameter) override
 	{
-		dices = value + parameter->getBrawn();
+		dices = value + parameter->Brawn;
 	}
 
 	void changeValue(int mod, Archetype* parameter) override
@@ -68,7 +68,7 @@ public:
 
 	void setDices(Archetype* parameter) override
 	{
-		dices = value + parameter->getCunning();
+		dices = value + parameter->Cunning;
 	}
 
 	void changeValue(int mod, Archetype* parameter) override
@@ -87,7 +87,7 @@ public:
 
 	void setDices(Archetype* parameter) override
 	{
-		dices = value + parameter->getAgility();
+		dices = value + parameter->Agility;
 	}
 
 	void changeValue(int mod, Archetype* parameter) override
@@ -106,7 +106,7 @@ public:
 
 	void setDices(Archetype* parameter) override
 	{
-		dices = value + parameter->getWillpower();
+		dices = value + parameter->Willpower;
 	}
 
 	void changeValue(int mod, Archetype* parameter) override
@@ -125,7 +125,7 @@ public:
 
 	void setDices(Archetype* parameter) override
 	{
-		dices = value + parameter->getPresence();
+		dices = value + parameter->Presence;
 	}
 
 	void changeValue(int mod, Archetype* parameter) override
