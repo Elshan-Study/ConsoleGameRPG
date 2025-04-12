@@ -15,7 +15,8 @@ public:
 	size_t getValue() const { return value; }
 
 	virtual ~Skill() = default;
-
+	
+	void operator=(int new_value) { dices -= value; value = new_value; dices += new_value; }
 	void operator+=(size_t mod) { dices += mod; value += mod;} /*!Need exceptions: if mod < 0*/
 	void operator-=(size_t mod) { dices -= mod; value -= mod; } /*!Need exceptions: if mod < 0 && mod > value */
 };
@@ -36,6 +37,8 @@ public:
 		value += mod;
 		setDices(parameter);
 	}
+
+	void operator=(int new_value) { dices -= value; value = new_value; dices += new_value; }
 };
 
 class BrawnSkill final : public Skill
@@ -54,6 +57,8 @@ public:
 		value += mod;
 		setDices(parameter);
 	}
+
+	void operator=(int new_value) { dices -= value; value = new_value; dices += new_value; }
 };
 
 class CunningSkill final : public Skill
@@ -72,6 +77,8 @@ public:
 		value += mod;
 		setDices(parameter);
 	}
+
+	void operator=(int new_value) { dices -= value; value = new_value; dices += new_value; }
 };
 
 class AgilitySkill final : public Skill
@@ -90,6 +97,8 @@ public:
 		value += mod;
 		setDices(parameter);
 	}
+
+	void operator=(int new_value) { dices -= value; value = new_value; dices += new_value; }
 };
 
 class WillpowerSkill final : public Skill
@@ -108,6 +117,8 @@ public:
 		value += mod;
 		setDices(parameter);
 	}
+
+	void operator=(int new_value) { dices -= value; value = new_value; dices += new_value; }
 };
 
 class PresenceSkill final : public Skill
@@ -126,4 +137,6 @@ public:
 		value += mod;
 		setDices(parameter);
 	}
+
+	void operator=(int new_value) { dices -= value; value = new_value; dices += new_value; }
 };
