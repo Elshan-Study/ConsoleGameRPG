@@ -8,12 +8,12 @@ protected:
 	std::string name;
 	bool isConsumable;
 public:
-	Item() : name("Unknown"), isConsumable(0) {};
-	explicit Item(std::string name, bool isConsumable) : name(name), isConsumable(isConsumable) {};
+	bool isExist;
+	Item() : name("Unknown"), isConsumable(0), isExist(1) {};
+	explicit Item(std::string name, bool isConsumable) : name(name), isConsumable(isConsumable), isExist(1) {};
 
 	virtual ~Item() {};
 	virtual int useItem(int effect) = 0;
-	virtual bool getItem() = 0;
 
     friend std::ostream& operator<<(std::ostream& os, const Item& item) {
         os << item.name << "\n";
@@ -27,19 +27,21 @@ private:
 	int mod;
 	size_t count;
 public:
-	Potion() : mod(0), count(0) {};
-	explicit Potion(std::string name, int mod) : Item(name, 1), mod(mod), count(0) {};
+	Potion() : mod(0), count(1) {};
+	explicit Potion(std::string name, int mod) : Item(name, 1), mod(mod), count(1) {};
 	
 	int useItem(int effect = 0) override
 	{
+		if (isExist == 0) { return 0; }
 		count -= 1;
+		if (count == 0) { isExist = 0; }
 		return mod + effect;
 	}
 
-	bool getItem() override
+	void addCopy(size_t value)
 	{
-		count += 1;
-		return 1;
+		count += value;
+		isExist = 1;
 	}
 };
 
@@ -54,13 +56,10 @@ public:
 
 	int useItem(int effect = 1) override
 	{
+		if (isExist == 0) { return 0; }
 		armor_hp -= effect;
+		if (armor_hp == 0) { isExist = 0; }
 		return soak;
-	}
-
-	bool getItem() override
-	{
-		return 1;
 	}
 };
 
@@ -75,33 +74,22 @@ public:
 
 	int useItem(int effect) override
 	{
+		if (isExist == 0) { return 0; }
 		if (effect >= critic) { return damage * 2; }
 		else { return damage; }
-	}
-
-	bool getItem() override
-	{
-		return 1;
 	}
 };
 
 class QuestItem final : public Item
 {
-private:
-	bool isExist;
 public:
-	QuestItem() : isExist(0) {};
-	explicit QuestItem(std::string name) : Item(name, 1), isExist(0) {};
+	QuestItem() {};
+	explicit QuestItem(std::string name) : Item(name, 1) {};
 
 	int useItem(int effect = 0) override
 	{
+		if (isExist == 0) { return 0; }
 		isExist = 0;
 		return 0;
-	}
-
-	bool getItem() override
-	{
-		isExist = 1;
-		return 1;
 	}
 };
