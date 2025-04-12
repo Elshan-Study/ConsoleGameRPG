@@ -1,5 +1,6 @@
 #pragma once
 #include "Skill.h"
+#include "Item.h"
 class Specialization
 {
 public:
@@ -27,7 +28,6 @@ public:
 	Specialization(const Specialization&) = delete;
 	Specialization& operator=(const Specialization&) = delete;
 	virtual ~Specialization() = default;
-	/*virtual Item getClassStartItem() = 0;*/
 	void setAllDices(Archetype* parameter)
 	{
 		Alchemy.setDices(parameter);

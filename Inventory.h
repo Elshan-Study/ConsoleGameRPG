@@ -7,13 +7,31 @@ class Inventory final
 private:
 	const size_t MAX_ITEMS = 20;
 	size_t size = 0;
-	std::unique_ptr<Item* []> items;
 public:
+	std::unique_ptr<Item* []> items;
 	Inventory() { items = std::make_unique<Item * []>(MAX_ITEMS); }
+	Inventory(Inventory& const other) : size(other.size)
+	{
+		for (size_t i = 0; i < other.size - 1; ++i) {
+			items[i] = other.items[i];
+		}
+	}
 
 	~Inventory() = default;
 
+	size_t getSize() const { return size; }
+
 	bool addItem(Item* item) {
+		
+		for (size_t i = 0; i < size; i++)
+		{
+			if (auto item = dynamic_cast<Potion*>(items[i]))
+			{
+				items[i]->addCopy(1);
+				return true;
+			}
+		}
+
 		if (size < MAX_ITEMS) {
 			items[size++] = item;
 			return true;

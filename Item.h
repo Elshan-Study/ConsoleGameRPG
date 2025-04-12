@@ -21,6 +21,9 @@ public:
 		item.print(os);
 		return os;
 	}
+	virtual void addCopy(size_t value) = 0;
+
+	std::string Name() const { return name; }
 };
 
 class Potion final : public Item
