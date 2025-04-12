@@ -128,12 +128,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Archetype.cpp" />
+    <ClCompile Include="Item.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Skill.cpp" />
     <ClCompile Include="Specialization.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Archetype.h" />
+    <ClInclude Include="Item.h" />
     <ClInclude Include="Skill.h" />
     <ClInclude Include="Specialization.h" />
   </ItemGroup>
