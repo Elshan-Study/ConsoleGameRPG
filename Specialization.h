@@ -16,7 +16,7 @@ public:
 	WillpowerSkill Vigilance;
 	WillpowerSkill Coercion;
 	CunningSkill Perception;
-	CunningSkill Skulduggery;
+	CunningSkill Skullduggery;
 	CunningSkill Survival;
 	PresenceSkill Cool;
 	PresenceSkill Charm;
@@ -28,6 +28,27 @@ public:
 	Specialization& operator=(const Specialization&) = delete;
 	virtual ~Specialization() = default;
 	/*virtual Item getClassStartItem() = 0;*/
+	void setAllDices(Archetype* parameter)
+	{
+		Alchemy.setDices(parameter);
+		Mechanics.setDices(parameter);
+		Magic.setDices(parameter);
+		Athletics.setDices(parameter);
+		Resilience.setDices(parameter);
+		Melee.setDices(parameter);
+		Coordination.setDices(parameter);
+		Stealth.setDices(parameter);
+		Ranged.setDices(parameter);
+		Discipline.setDices(parameter);
+		Vigilance.setDices(parameter);
+		Coercion.setDices(parameter);
+		Perception.setDices(parameter);
+		Skullduggery.setDices(parameter);
+		Survival.setDices(parameter);
+		Cool.setDices(parameter);
+		Charm.setDices(parameter);
+		Negotiation.setDices(parameter);
+	}
 };
 
 class Wizard final : public Specialization
@@ -74,7 +95,7 @@ public:
 		Coordination = 2;
 		Melee = 2;
 		Stealth = 2;
-		Skulduggery = 2;
+		Skullduggery = 2;
 	}
 };
 

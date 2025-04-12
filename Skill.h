@@ -7,12 +7,12 @@ protected:
 	size_t dices;
 public:
 	Skill() : value(0), dices(0) {};
-	explicit Skill(size_t value) : value(value), dices(0) {};
-	Skill(size_t new_value) { dices -= value; value = new_value;  dices += value; } /*!Need exceptions: if new_value < 0*/
+	explicit Skill(size_t new_value) : value(new_value), dices(0) {};
 
 	virtual void changeValue(int mod, Archetype* parameter) = 0;
 	virtual void setDices(Archetype* parameter) = 0;
 	size_t getDices() const { return dices; }
+	size_t getValue() const { return value; }
 
 	virtual ~Skill() = default;
 
@@ -26,7 +26,7 @@ class IntSkill final : public Skill
 public:
 	IntSkill() {};
 	/*explicit IntSkill(size_t value, Archetype* parameter) : Skill(value) { setDices(parameter); }*/
-	IntSkill(size_t new_value) { dices -= value; value = new_value;  dices += value; }
+	IntSkill(size_t new_value) : Skill(new_value) {};
 	
 	void setDices(Archetype* parameter) override
 	{
@@ -45,7 +45,7 @@ class BrawnSkill final : public Skill
 public:
 	BrawnSkill() {};
 	/*explicit BrawnSkill(size_t value, Archetype* parameter) : Skill(value) { setDices(parameter); }*/
-	BrawnSkill(size_t new_value) { dices -= value; value = new_value;  dices += value; }
+	BrawnSkill(size_t new_value) : Skill(new_value) {};
 
 	void setDices(Archetype* parameter) override
 	{
@@ -64,7 +64,7 @@ class CunningSkill final : public Skill
 public:
 	CunningSkill() {};
 	/*explicit CunningSkill(size_t value, Archetype* parameter) : Skill(value) { setDices(parameter); }*/
-	CunningSkill(size_t new_value) { dices -= value; value = new_value;  dices += value; }
+	CunningSkill(size_t new_value) : Skill(new_value) {};
 
 	void setDices(Archetype* parameter) override
 	{
@@ -83,7 +83,7 @@ class AgilitySkill final : public Skill
 public:
 	AgilitySkill() {};
 	/*explicit AgilitySkill(size_t value, Archetype* parameter) : Skill(value) { setDices(parameter); }*/
-	AgilitySkill(size_t new_value) { dices -= value; value = new_value;  dices += value; }
+	AgilitySkill(size_t new_value) : Skill(new_value) {};
 
 	void setDices(Archetype* parameter) override
 	{
@@ -102,7 +102,7 @@ class WillpowerSkill final : public Skill
 public:
 	WillpowerSkill() {};
 	/*explicit WillpowerSkill(size_t value, Archetype* parameter) : Skill(value) { setDices(parameter); }*/
-	WillpowerSkill(size_t new_value) { dices -= value; value = new_value;  dices += value; }
+	WillpowerSkill(size_t new_value) : Skill(new_value) {};
 
 	void setDices(Archetype* parameter) override
 	{
@@ -121,7 +121,7 @@ class PresenceSkill final : public Skill
 public:
 	PresenceSkill() {};
 	/*explicit PresenceSkill(size_t value, Archetype* parameter) : Skill(value) { setDices(parameter); }*/
-	PresenceSkill(size_t new_value) { dices -= value; value = new_value;  dices += value; }
+	PresenceSkill(size_t new_value) : Skill(new_value) {};
 
 	void setDices(Archetype* parameter) override
 	{
