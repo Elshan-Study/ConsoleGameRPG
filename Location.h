@@ -10,7 +10,7 @@ protected:
 	std::string description_file;
 public:
 	Location() : name("Unknown"), description_file("Unknown") {};
-	Location(const std::string& name, const std::string& filename) : name(name), description_file(filename) {};
+    explicit Location(const std::string& name, const std::string& filename) : name(name), description_file(filename) {};
 	virtual ~Location() = default;
 
     virtual void Activate(const std::string& key) = 0;
@@ -43,7 +43,7 @@ private:
     bool isQuestQet;
     std::unique_ptr<Quest> quest;
 public:
-    QuestGetPointer(const std::string& name, const std::string& description_filename, 
+    explicit QuestGetPointer(const std::string& name, const std::string& description_filename,
         const std::string& key, std::unique_ptr<Quest> quest) : Location(name, description_filename), 
         key(key), isQuestQet(false), quest(std::move(quest)){};
 
@@ -61,7 +61,7 @@ private:
     bool activate_status;
     std::unique_ptr<Quest> quest;
 public:
-    QuestPointer(const std::string& name, const std::string& description_filename, 
+    explicit QuestPointer(const std::string& name, const std::string& description_filename,
         const std::string& lock, std::unique_ptr<Quest> quest) : Location(name, description_filename), lock(lock), 
         activate_status(false), quest(std::move(quest)) {};
 

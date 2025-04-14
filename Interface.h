@@ -605,6 +605,12 @@ public:
 	}
 };
 
+class OptionChoice final : public Interface
+{
+public:
+	
+};
+
 class MapsLoading final : public Interface
 {
 public:

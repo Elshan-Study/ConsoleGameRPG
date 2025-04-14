@@ -108,6 +108,79 @@ public:
 		}
 	}
 
+	size_t rollDice(size_t numDice, size_t difficulty) {
+		std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
+		size_t successCount = 0;
+
+		for (int i = 0; i < numDice; ++i) {
+			int roll = rand() % 10 + 1;
+			std::cout << "Dice #" << (i + 1) << ": " << roll << '\n';
+			if (roll >= difficulty) {
+				successCount++;
+			}
+		}
+
+		return successCount;
+	}
+
+	void attack(Character& target, size_t itemIndex, size_t numDice, size_t successDiff)
+	{
+		size_t soak = 0;
+		size_t damage = 0;
+		size_t roll = rollDice(numDice, 6);
+
+		if (roll >= successDiff)
+		{
+			for (size_t i = 0; i < target.inventory.getSize(); ++i)
+			{
+				Item* item = target.inventory[i].get();
+				if (dynamic_cast<Armor*>(item) != nullptr)
+				{
+					soak = item->useItem(1);
+					break;
+				}
+			}
+
+			size_t itemEffect = 0;
+			if (itemIndex < inventory.getSize())
+			{
+				Item* weapon = inventory[itemIndex].get();
+				if (dynamic_cast<Weapon*>(weapon) != nullptr)
+				{
+					itemEffect = weapon->useItem(roll) + Brawn();
+				}
+			}
+
+			if (itemEffect == 0)
+			{
+				itemEffect = Brawn(); 
+			}
+
+			if (soak >= roll + itemEffect)
+			{
+				damage = 0;
+			}
+			else
+			{
+				damage = roll + itemEffect - soak;
+			}
+
+			target.currentHP = (damage >= target.currentHP) ? 0 : target.currentHP - damage;
+		}
+	}
+
+	bool skillCheck(size_t numDice, size_t successDiff)
+	{
+		size_t roll = rollDice(numDice, 5);
+
+		if (roll >= successDiff)
+		{
+			return 1;
+		}
+
+		return 0;
+	}
 
 	void printInfo()
 	{
