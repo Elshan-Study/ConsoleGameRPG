@@ -136,7 +136,6 @@
     <ClCompile Include="Location.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Quest.cpp" />
-    <ClCompile Include="QuestStage.cpp" />
     <ClCompile Include="Skill.cpp" />
     <ClCompile Include="Specialization.cpp" />
   </ItemGroup>
@@ -149,7 +148,6 @@
     <ClInclude Include="Item.h" />
     <ClInclude Include="Location.h" />
     <ClInclude Include="Quest.h" />
-    <ClInclude Include="QuestStage.h" />
     <ClInclude Include="Skill.h" />
     <ClInclude Include="Specialization.h" />
   </ItemGroup>

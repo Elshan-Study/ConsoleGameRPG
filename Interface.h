@@ -625,6 +625,18 @@ public:
 		std::unique_ptr<Location> darkHollow = std::make_unique<QuestPointer>("Dark Hollow", "darkHollow.txt", "005");
 		std::unique_ptr<Location> dragonCaves = std::make_unique<QuestPointer>("Dragon Caves", "dragonCaves.txt", "003");
 		std::unique_ptr<Location> royalPeak = std::make_unique<QuestPointer>("Royal Peak", "royalPeak.txt", "006");
+
+		map1.addLocation(std::move(forge));
+		map1.addLocation(std::move(sewerage));
+		map1.addLocation(std::move(blackMarket));
+
+		map2.addLocation(std::move(alchemistHut));
+		map2.addLocation(std::move(trollEdge));
+		map2.addLocation(std::move(darkHollow));
+
+		map3.addLocation(std::move(doctorShop));
+		map3.addLocation(std::move(dragonCaves));
+		map3.addLocation(std::move(royalPeak));
 	}
 
 }; 

@@ -8,6 +8,7 @@ class Game
 private:
 	Character PC;
 	PCCharacterCreate createPC;
+	MainMenu menu;
 	Map CapitalCity;
 	Map EvilSwamp;
 	Map BlackMountain;
@@ -17,7 +18,6 @@ public:
 
 	void Start()
 	{
-		MainMenu menu;
 		int choice = menu.Show();
 
 		switch (choice)

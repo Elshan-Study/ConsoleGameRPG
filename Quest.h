@@ -26,5 +26,3 @@ public:
 	void Win() { currentStatus = Status::Victory; }
 	void Defeat() { currentStatus = Status::Defeat; }
 };
-
-
