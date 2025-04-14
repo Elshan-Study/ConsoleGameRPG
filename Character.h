@@ -111,7 +111,7 @@ public:
 		if (!archetype || !specialization) { return; }
 		std::cout << name << "\n";
 		std::cout << "HP: " << currentHP << "/" << archetype->getHP() << "\n";
-		std::cout << "AP: " << currentHP << "/" << archetype->getAP() << "\n";
+		std::cout << "AP: " << currentAP << "/" << archetype->getAP() << "\n";
 		std::cout << "\nCharacteristics: \n";
 		std::cout << "Brawn: " << Brawn() << " | Agility: " << Agility()
 			<< " | Intellect: " << Intellect() << " | Cunning: " << Cunning()

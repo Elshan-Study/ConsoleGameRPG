@@ -23,8 +23,8 @@ public:
 		Presence = presence;
 	};
 	virtual ~Archetype() = default;
-	virtual void setHP() {};
-	virtual void setAP() {};
+	virtual void setHP() = 0;
+	virtual void setAP() = 0;
 	size_t getHP() const { return HP; };
 	size_t getAP() const { return AP; };
 	void changeHP(int mod) { HP += mod; }; /*!Need exceptions: if mod > value */
@@ -36,7 +36,7 @@ class Sturdy final : public Archetype
 public:
 	Sturdy() : Archetype(3, 2, 2, 2, 1, 2) { setHP(); setAP(); }
 	void setHP() override { HP = 12 + Brawn; }
-	void setAP() override { HP = 8 + Willpower; }
+	void setAP() override {	AP = 8 + Willpower; }
 };
 
 class Genius final : public Archetype
@@ -44,7 +44,7 @@ class Genius final : public Archetype
 public:
 	Genius() : Archetype(2, 1, 3, 2, 2, 2) { setHP(); setAP(); }
 	void setHP() override { HP = 8 + Brawn; }
-	void setAP() override { HP = 12 + Willpower; }
+	void setAP() override { AP = 12 + Willpower; }
 };
 
 class Aristocrat final : public Archetype
@@ -52,7 +52,7 @@ class Aristocrat final : public Archetype
 public:
 	Aristocrat() : Archetype(1, 2, 2, 2, 2, 3) { setHP(); setAP(); }
 	void setHP() override { HP = 10 + Brawn; }
-	void setAP() override { HP = 10 + Willpower; }
+	void setAP() override { AP = 10 + Willpower; }
 };
 
 class Simpleton final : public Archetype
@@ -60,5 +60,5 @@ class Simpleton final : public Archetype
 public:
 	Simpleton() : Archetype(2, 2, 2, 2, 2, 2) { setHP(); setAP(); }
 	void setHP() override { HP = 10 + Brawn; }
-	void setAP() override { HP = 10 + Willpower; }
+	void setAP() override { AP = 10 + Willpower; }
 };
