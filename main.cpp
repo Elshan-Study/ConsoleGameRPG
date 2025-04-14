@@ -1,22 +1,10 @@
 #include <iostream>
-#include "Archetype.h"
-#include "Specialization.h"
-#include "Inventory.h"
-#include "Character.h"
-#include "Interface.h"
+#include "Game.h"
 
 int main()
 {
-    Character PC;
-    PCCharacterCreate createPC;
-
-    createPC.initialize(PC);
-
-    PC.printInfo();
-
-    PC.useItem<Potion>(0); 
-
-    PC.printInfo();
+    Game game;
+    game.Start();
 
     return 0;
 }
