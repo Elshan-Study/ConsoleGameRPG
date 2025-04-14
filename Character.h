@@ -105,7 +105,29 @@ public:
 		std::cout << name << "\n";
 		std::cout << "HP: " << currentHP << "/" << archetype->getHP() << "\n";
 		std::cout << "AP: " << currentHP << "/" << archetype->getAP() << "\n";
-
+		std::cout << "\nCharacteristics: \n";
+		std::cout << "Brawn: " << Brawn() << " | Agility: " << Agility()
+			<< " | Intellect: " << Intellect() << " | Cunning: " << Cunning()
+			<< " | Willpower: " << Willpower() << " | Presence: " << Presence() << "\n";
+		std::cout << "\nSkills: \n";
+		std::cout << "Alchemy: " << Alchemy() << "(" << alchemy() << " dices) | "
+			<< "Mechanics: " << Mechanics() << "(" << mechanics() << " dices) | "
+			<< "Magic: " << Magic() << "(" << magic() << " dices)\n"
+			<< "Athletics: " << Athletics() << "(" << athletics() << " dices) | "
+			<< "Resilience: " << Resilience() << "(" << resilience() << " dices) | "
+			<< "Melee: " << Melee() << "(" << melee() << " dices)\n"
+			<< "Coordination: " << Coordination() << "(" << coordination() << " dices) | "
+			<< "Stealth: " << Stealth() << "(" << stealth() << " dices) | "
+			<< "Ranged: " << Ranged() << "(" << ranged() << " dices)\n"
+			<< "Discipline: " << Discipline() << "(" << discipline() << " dices) | "
+			<< "Vigilance: " << Vigilance() << "(" << vigilance() << " dices) | "
+			<< "Coercion: " << Coercion() << "(" << coercion() << " dices)\n"
+			<< "Perception: " << Perception() << "(" << perception() << " dices) | "
+			<< "Skullduggery: " << Skullduggery() << "(" << skullduggery() << " dices) | "
+			<< "Survival: " << Survival() << "(" << survival() << " dices)\n"
+			<< "Cool: " << Cool() << "(" << cool() << " dices) | "
+			<< "Charm: " << Charm() << "(" << charm() << " dices) | "
+			<< "Negotiation: " << Negotiation() << "(" << negotiation() << " dices)\n"
 	}
 };
 
