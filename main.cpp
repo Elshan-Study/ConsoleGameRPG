@@ -12,6 +12,12 @@ int main()
 
     createPC.initialize(PC);
 
+    PC.printInfo();
+
+    PC.useItem<Potion>(0); 
+
+    PC.printInfo();
+
     return 0;
 }
 

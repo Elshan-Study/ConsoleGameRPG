@@ -83,30 +83,31 @@ public:
 	void fullRecover() { if (!archetype) { return; } recoverHP(); recoverAP(); }
 
 
-	size_t useItem(int effect, std::string name) 
-	{ 
-		for (size_t i = 0; i < inventory.getSize(); i++)
-		{
-			if (inventory.items[i]->Name() == name)
-			{
-				return inventory.items[i]->useItem(effect);
-				break;
-			}
-		}
-		return 0;
+	bool addItem(std::unique_ptr<Item> item) {
+		inventory.addItem(std::move(item));
+		return true;
 	}
-	
-	template <typename T>
-	size_t useItem(int effect) {
+
+	size_t useItem(int effect, const std::string& name) {
 		for (size_t i = 0; i < inventory.getSize(); ++i) {
-			if (auto item = dynamic_cast<T*>(inventory[i])) {
-				return item->useItem(effect); 
+			if (inventory[i] && inventory[i]->Name() == name) {
+				return inventory[i]->useItem(effect);
 			}
 		}
 		return 0;
 	}
 
-	bool addItem(Item* item) { inventory.addItem(item); return 1; }
+	template<typename T>
+	void useItem(int effect) {
+		for (size_t i = 0; i < inventory.getSize(); ++i)
+		{
+			Item* rawPtr = inventory[i].get();
+			if (T* specific = dynamic_cast<T*>(rawPtr)) {
+				specific->useItem(effect);
+			}
+		}
+	}
+
 
 	void printInfo()
 	{

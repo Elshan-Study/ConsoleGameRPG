@@ -21,17 +21,15 @@ public:
 		std::unique_ptr<Specialization> spec;
 		int choice;
 		bool flag = true;
+
+		std::cout << "Character create MENU: \n";
+		std::cout << "Input your name: ";
+		std::string name;
+		std::getline(std::cin, name);
+		PC.name = name;
+
 		while (flag)
 		{
-			std::cout << "Character create MENU: \n";
-
-			std::string name;
-			std::cout << "Input your name: ";
-			std::getline(std::cin, name);
-			std::cout << std::endl;
-
-			PC.name = name;
-
 			std::cout << "1.Choose Archetype\n";
 			std::cout << "2.Choose Specialization\n";
 			std::cout << "0.Finish\n";
@@ -48,7 +46,7 @@ public:
 			switch (choice)
 			{
 			case 1:
-				while (!arch)
+				while (true)
 				{
 					std::cout << "Choose Archetype: \n";
 					std::cout << "1.Sturdy - high Brawn, small Willpower\n";
@@ -86,7 +84,7 @@ public:
 				}
 				break;
 			case 2:
-				while (!spec)
+				while (true)
 				{
 					std::cout << "Choose Specialization: \n";
 					std::cout << "1.Wizard: Alchemy 2, Magic 2, Discipline 2, Perception 2\n";
@@ -98,7 +96,7 @@ public:
 					std::cin >> choice;
 					std::cout << "\n";
 
-					if (choice < 0 || choice > 4)
+					if (choice < 0 || choice > 5)
 					{
 						std::cout << "Wrong choice!" << std::endl;
 						continue;
@@ -144,6 +142,8 @@ public:
 
 		flag = true;
 
+		PC.SetAll();
+
 		size_t alchemy = PC.Alchemy();
 		size_t mechanics = PC.Mechanics();
 		size_t magic = PC.Magic();
@@ -169,10 +169,11 @@ public:
 		size_t willpower = PC.Willpower();
 		size_t presence = PC.Presence();
 
+		size_t experience = 100;
+
 		while (flag)
 		{
-			size_t experience = 100;
-
+			std::cout << "---------------------------------------------------------\n";
 			PC.printInfo();
 
 			std::cout << "You have " << experience << "exp\n";
@@ -218,43 +219,43 @@ public:
 					case 1:
 						if (PC.Brawn() != 5 && experience >= (PC.Brawn() + 1) * 10)
 						{
-							PC.archetype->Brawn += 1;
 							experience -= (PC.Brawn() + 1) * 10;
+							PC.archetype->Brawn += 1;
 						}
 						break;
 					case 2:
 						if (PC.Agility() != 5 && experience >= (PC.Agility() + 1) * 10)
 						{
-							PC.archetype->Agility += 1;
 							experience -= (PC.Agility() + 1) * 10;
+							PC.archetype->Agility += 1;
 						}
 						break;
 					case 3:
 						if (PC.Intellect() != 5 && experience >= (PC.Intellect() + 1) * 10)
 						{
-							PC.archetype->Intellect += 1;
 							experience -= (PC.Intellect() + 1) * 10;
+							PC.archetype->Intellect += 1;
 						}
 						break;
 					case 4:
 						if (PC.Cunning() != 5 && experience >= (PC.Cunning() + 1) * 10)
 						{
-							PC.archetype->Cunning += 1;
 							experience -= (PC.Cunning() + 1) * 10;
+							PC.archetype->Cunning += 1;
 						}
 						break;
 					case 5:
 						if (PC.Willpower() != 5 && experience >= (PC.Willpower() + 1) * 10)
 						{
-							PC.archetype->Willpower += 1;
 							experience -= (PC.Willpower() + 1) * 10;
+							PC.archetype->Willpower += 1;
 						}
 						break;
 					case 6:
 						if (PC.Presence() != 5 && experience >= (PC.Presence() + 1) * 10)
 						{
-							PC.archetype->Presence += 1;
 							experience -= (PC.Presence() + 1) * 10;
+							PC.archetype->Presence += 1;
 						}
 						break;
 					default:
@@ -301,127 +302,144 @@ public:
 					case 1:
 						if (PC.Alchemy() != 5 && experience >= (PC.Alchemy() + 1) * 5)
 						{
-							PC.specialization->Alchemy += 1;
 							experience -= (PC.Alchemy() + 1) * 5;
+							PC.specialization->Alchemy += 1;
 						}
 						break;
 					case 2:
 						if (PC.Mechanics() != 5 && experience >= (PC.Mechanics() + 1) * 5)
 						{
-							PC.specialization->Mechanics += 1;
 							experience -= (PC.Mechanics() + 1) * 5;
+							PC.specialization->Mechanics += 1;
+							
 						}
 						break;
 					case 3:
 						if (PC.Magic() != 5 && experience >= (PC.Magic() + 1) * 5)
 						{
-							PC.specialization->Magic += 1;
 							experience -= (PC.Magic() + 1) * 5;
+							PC.specialization->Magic += 1;
+							
 						}
 						break;
 					case 4:
 						if (PC.Athletics() != 5 && experience >= (PC.Athletics() + 1) * 5)
 						{
-							PC.specialization->Athletics += 1;
 							experience -= (PC.Athletics() + 1) * 5;
+							PC.specialization->Athletics += 1;
+							
 						}
 						break;
 					case 5:
 						if (PC.Resilience() != 5 && experience >= (PC.Resilience() + 1) * 5)
 						{
-							PC.specialization->Resilience += 1;
 							experience -= (PC.Resilience() + 1) * 5;
+							PC.specialization->Resilience += 1;
+							
 						}
 						break;
 					case 6:
 						if (PC.Melee() != 5 && experience >= (PC.Melee() + 1) * 5)
 						{
-							PC.specialization->Melee += 1;
 							experience -= (PC.Melee() + 1) * 5;
+							PC.specialization->Melee += 1;
+							
 						}
 						break;
 					case 7:
 						if (PC.Coordination() != 5 && experience >= (PC.Coordination() + 1) * 5)
 						{
-							PC.specialization->Coordination += 1;
 							experience -= (PC.Coordination() + 1) * 5;
+							PC.specialization->Coordination += 1;
+							
 						}
 						break;
 					case 8:
 						if (PC.Stealth() != 5 && experience >= (PC.Stealth() + 1) * 5)
 						{
-							PC.specialization->Stealth += 1;
 							experience -= (PC.Stealth() + 1) * 5;
+							PC.specialization->Stealth += 1;
+							
 						}
 						break;
 					case 9:
 						if (PC.Ranged() != 5 && experience >= (PC.Ranged() + 1) * 5)
 						{
-							PC.specialization->Ranged += 1;
 							experience -= (PC.Ranged() + 1) * 5;
+							PC.specialization->Ranged += 1;
+							
 						}
 						break;
 					case 10:
 						if (PC.Discipline() != 5 && experience >= (PC.Discipline() + 1) * 5)
 						{
-							PC.specialization->Discipline += 1;
 							experience -= (PC.Discipline() + 1) * 5;
+							PC.specialization->Discipline += 1;
+							
 						}
 						break;
 					case 11:
 						if (PC.Vigilance() != 5 && experience >= (PC.Vigilance() + 1) * 5)
 						{
-							PC.specialization->Vigilance += 1;
 							experience -= (PC.Vigilance() + 1) * 5;
+							PC.specialization->Vigilance += 1;
+							
 						}
 						break;
 					case 12:
 						if (PC.Coercion() != 5 && experience >= (PC.Coercion() + 1) * 5)
 						{
-							PC.specialization->Coercion += 1;
 							experience -= (PC.Coercion() + 1) * 5;
+							PC.specialization->Coercion += 1;
+							
 						}
 						break;
 					case 13:
 						if (PC.Perception() != 5 && experience >= (PC.Perception() + 1) * 5)
 						{
-							PC.specialization->Perception += 1;
 							experience -= (PC.Perception() + 1) * 5;
+							PC.specialization->Perception += 1;
+							
 						}
 						break;
 					case 14:
 						if (PC.Skullduggery() != 5 && experience >= (PC.Skullduggery() + 1) * 5)
 						{
-							PC.specialization->Skullduggery += 1;
 							experience -= (PC.Skullduggery() + 1) * 5;
+							PC.specialization->Skullduggery += 1;
+							
 						}
 						break;
 					case 15:
 						if (PC.Survival() != 5 && experience >= (PC.Survival() + 1) * 5)
 						{
-							PC.specialization->Survival += 1;
 							experience -= (PC.Survival() + 1) * 5;
+							PC.specialization->Survival += 1;
+							
 						}
 						break;
 					case 16:
 						if (PC.Cool() != 5 && experience >= (PC.Cool() + 1) * 5)
 						{
-							PC.specialization->Cool += 1;
 							experience -= (PC.Cool() + 1) * 5;
+							PC.specialization->Cool += 1;
+							
 						}
 						break;
 					case 17:
 						if (PC.Charm() != 5 && experience >= (PC.Charm() + 1) * 5)
 						{
-							PC.specialization->Charm += 1;
 							experience -= (PC.Charm() + 1) * 5;
+							PC.specialization->Charm += 1;
+							
 						}
 						break;
 					case 18:
 						if (PC.Negotiation() != 5 && experience >= (PC.Negotiation() + 1) * 5)
 						{
-							PC.specialization->Negotiation += 1;
 							experience -= (PC.Negotiation() + 1) * 5;
+							PC.specialization->Negotiation += 1;
+							
 						}
 						break;
 					default:
@@ -457,6 +475,7 @@ public:
 				PC.archetype->Cunning = cunning;
 				PC.archetype->Willpower = willpower;
 				PC.archetype->Presence = presence;
+				experience = 100;
 				PC.SetAll();
 				break;
 			case 0:
@@ -471,11 +490,11 @@ public:
 			}
 		}
 
-		if (Wizard* wizard = dynamic_cast<Wizard*>(spec.get())) 
+		if (Wizard* wizard = dynamic_cast<Wizard*>(PC.specialization.get()))
 		{
-			std::shared_ptr<Item> healer = std::make_shared<Potion>("Heal potion", 5);
+			std::unique_ptr<Item> healer = std::make_unique<Potion>("Heal potion", 5);
 			healer->addCopy(3);
-			PC.addItem(healer.get());
+			PC.addItem(std::move(healer));
 		}
 
 	};
