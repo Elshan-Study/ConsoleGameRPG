@@ -29,6 +29,8 @@ public:
 	void SetAll()
 	{
 		if (!archetype || !specialization) { return; }
+		archetype->setHP();
+		archetype->setAP();
 		currentHP = archetype->getHP();
 		currentAP = archetype->getAP();
 		specialization->setAllDices(archetype.get());
@@ -104,7 +106,7 @@ public:
 		return 0;
 	}
 
-	bool addItem(Item* item) { inventory.addItem(item); }
+	bool addItem(Item* item) { inventory.addItem(item); return 1; }
 
 	void printInfo()
 	{
@@ -135,6 +137,7 @@ public:
 			<< "Cool: " << Cool() << "(" << cool() << " dices) | "
 			<< "Charm: " << Charm() << "(" << charm() << " dices) | "
 			<< "Negotiation: " << Negotiation() << "(" << negotiation() << " dices)\n";
+		std::cout << "Inventory: \n" << inventory;
 	}
 };
 
