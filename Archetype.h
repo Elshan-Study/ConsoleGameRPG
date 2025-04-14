@@ -23,8 +23,8 @@ public:
 		Presence = presence;
 	};
 	virtual ~Archetype() = default;
-	virtual void setHP() = 0;
-	virtual void setAP() = 0;
+	virtual void setHP() {};
+	virtual void setAP() {};
 	size_t getHP() const { return HP; };
 	size_t getAP() const { return AP; };
 	void changeHP(int mod) { HP += mod; }; /*!Need exceptions: if mod > value */

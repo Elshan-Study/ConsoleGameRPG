@@ -2,6 +2,7 @@
 #include "Archetype.h"
 #include "Specialization.h"
 #include "Inventory.h"
+#include "Character.h"
 
 int main()
 {
@@ -23,18 +24,21 @@ int main()
     Inventory inventory;
     std::unique_ptr<Item> heal = std::make_unique<Potion>("Heal potion", 3);
     std::unique_ptr<Item> sword = std::make_unique<Weapon>("Sword", 5, 3);
-   /* inventory.addItem(heal.get());
+    inventory.addItem(heal.get());
     inventory.addItem(sword.get());
     std::cout << inventory;
     inventory[0]->useItem(0);
     inventory.CheckInventory();
-    std::cout << inventory;*/
+    std::cout << inventory;
     inventory[0] = sword.get();
     inventory[1] = sword.get();
     inventory[5] = sword.get();
     std::cout << inventory;
+    std::unique_ptr<Archetype> arch = std::make_unique<Aristocrat>();
+    std::unique_ptr<Specialization> spec = std::make_unique<Craftsman>();
+    Character PC("PC", arch.get(), spec.get());
+
 
     return 0;
-
 }
 

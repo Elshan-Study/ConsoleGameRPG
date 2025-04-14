@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="Archetype.cpp" />
     <ClCompile Include="Character.cpp" />
+    <ClCompile Include="Interface.cpp" />
     <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="main.cpp" />
@@ -138,6 +139,7 @@
   <ItemGroup>
     <ClInclude Include="Archetype.h" />
     <ClInclude Include="Character.h" />
+    <ClInclude Include="Interface.h" />
     <ClInclude Include="Inventory.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="Skill.h" />

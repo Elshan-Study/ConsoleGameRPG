@@ -44,7 +44,7 @@ public:
 		return mod + effect;
 	}
 
-	void addCopy(size_t value)
+	void addCopy(size_t value) override
 	{
 		count += value;
 		isExist = 1;
@@ -102,6 +102,8 @@ public:
 	{
 		os << name << "(Damage: " << damage << "; Critic: " << critic << ")" << "\n";
 	}
+
+	void addCopy(size_t value) override {}
 };
 
 class QuestItem final : public Item
@@ -122,4 +124,6 @@ public:
 	{
 		os << name << "\n";
 	}
+
+	void addCopy(size_t value) override {}
 };
