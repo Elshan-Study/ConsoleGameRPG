@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "Quest.h"
 class Location
 {
 protected:
@@ -11,6 +12,9 @@ public:
 	Location() : name("Unknown"), description_file("Unknown") {};
 	Location(const std::string& name, const std::string& filename) : name(name), description_file(filename) {};
 	virtual ~Location() = default;
+
+    virtual void Activate(const std::string& key) = 0;
+    virtual bool Status() const = 0;
 
 	void readDescription()
 	{
@@ -34,11 +38,17 @@ class QuestGetPointer final : public Location
 {
 private:
     std::string key;
-    /*Quest quest;*/
+    bool isQuestQet;
+    std::unique_ptr<Quest> quest;
 public:
-    QuestGetPointer(const std::string& name, const std::string& description_filename, const std::string& key) : Location(name, description_filename), key(key) {};
+    QuestGetPointer(const std::string& name, const std::string& description_filename, 
+        const std::string& key, std::unique_ptr<Quest> quest) : Location(name, description_filename), 
+        key(key), isQuestQet(false), quest(std::move(quest)){};
 
-    std::string getKey() const { return key; }
+    void Activate(const std::string& key) override { isQuestQet = true; }
+    bool Status() const override { return isQuestQet; }
+
+    std::string getKey() const { if (isQuestQet) { return key; } else { "Error"; } }
 };
 
 class QuestPointer final : public Location
@@ -46,17 +56,20 @@ class QuestPointer final : public Location
 private:
     std::string lock;
     bool activate_status;
-    /*Quest quest;*/
+    std::unique_ptr<Quest> quest;
 public:
-    QuestPointer(const std::string& name, const std::string& description_filename, const std::string& lock) : Location(name, description_filename), lock(lock), activate_status(false){};
+    QuestPointer(const std::string& name, const std::string& description_filename, 
+        const std::string& lock, std::unique_ptr<Quest> quest) : Location(name, description_filename), lock(lock), 
+        activate_status(false), quest(std::move(quest)) {};
 
-    void Activate(const std::string& key)
+    void Activate(const std::string& key) override
     {
         if (key == lock)
         {
             activate_status = true;
         }
     }
+    bool Status() const override { return activate_status; }
 };
 
 class Map final : public Location
@@ -67,6 +80,8 @@ protected:
     std::unique_ptr<Location> locations[MAX_LOCATION];
 public:
     Map(const std::string& name, const std::string& description_filename) : Location(name, description_filename), size(0) {};
+    
+    void Activate(const std::string& key) override {};
     
     void addLocation(std::unique_ptr<Location> location)
     {
@@ -92,4 +107,6 @@ public:
         }
         return locations[index];
     }
+
+    bool Status() const override {};
 };

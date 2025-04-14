@@ -135,6 +135,7 @@
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="Location.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Quest.cpp" />
     <ClCompile Include="Skill.cpp" />
     <ClCompile Include="Specialization.cpp" />
   </ItemGroup>
@@ -146,6 +147,7 @@
     <ClInclude Include="Inventory.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="Location.h" />
+    <ClInclude Include="Quest.h" />
     <ClInclude Include="Skill.h" />
     <ClInclude Include="Specialization.h" />
   </ItemGroup>
