@@ -110,7 +110,7 @@ class QuestItem final : public Item
 {
 public:
 	QuestItem() {};
-	explicit QuestItem(std::string name) : Item(name, 1) {};
+	explicit QuestItem(std::string name) : Item(name, 0) {};
 	QuestItem(const QuestItem& other) : Item(other) {};
 
 	size_t useItem(int effect = 0) override
