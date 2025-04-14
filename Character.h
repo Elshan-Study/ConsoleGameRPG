@@ -16,6 +16,12 @@ public:
 	Inventory inventory;
 
 	Character() : name("name"), archetype(nullptr), specialization(nullptr), currentHP(0), currentAP(0) {};
+	explicit Character(std::string name, Archetype* archetype, Specialization* specialization) : name(name), archetype(archetype), specialization(specialization)
+	{
+		currentHP = archetype->getHP();
+		currentAP = archetype->getAP();
+		specialization->setAllDices(archetype);
+	}
 
 	~Character() = default;
 
@@ -127,7 +133,7 @@ public:
 			<< "Survival: " << Survival() << "(" << survival() << " dices)\n"
 			<< "Cool: " << Cool() << "(" << cool() << " dices) | "
 			<< "Charm: " << Charm() << "(" << charm() << " dices) | "
-			<< "Negotiation: " << Negotiation() << "(" << negotiation() << " dices)\n"
+			<< "Negotiation: " << Negotiation() << "(" << negotiation() << " dices)\n";
 	}
 };
 
