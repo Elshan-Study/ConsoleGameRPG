@@ -16,6 +16,8 @@ public:
     virtual void Activate(const std::string& key) = 0;
     virtual bool Status() const = 0;
 
+    void SetMain(const std::string& name, const std::string& filename) { this->name = name, description_file = filename; }
+
 	void readDescription()
 	{
         std::ifstream file(description_file); 
@@ -48,6 +50,7 @@ public:
     void Activate(const std::string& key) override { isQuestQet = true; }
     bool Status() const override { return isQuestQet; }
 
+    void changeKey(const std::string& key) { this->key = key;}
     std::string getKey() const { if (isQuestQet) { return key; } else { "Error"; } }
 };
 
@@ -76,10 +79,9 @@ class Map final : public Location
 {
 protected:
     static const size_t MAX_LOCATION = 5;
-    size_t size;
+    size_t size = 0;
     std::unique_ptr<Location> locations[MAX_LOCATION];
 public:
-    Map(const std::string& name, const std::string& description_filename) : Location(name, description_filename), size(0) {};
     
     void Activate(const std::string& key) override {};
     

@@ -1,5 +1,6 @@
 #pragma once
 #include "Character.h"
+#include "Location.h"
 #include <memory>
 class Interface
 {
@@ -570,3 +571,60 @@ public:
 	};
 
 };
+
+class MainMenu final : public Interface
+{
+public:
+	MainMenu() {};
+
+	int Show()
+	{
+		while (true)
+		{
+			std::cout << "Amazing Adventure\n";
+			std::cout << "_________________________________________________";
+			int choice;
+			std::cout << "Main menu: \n";
+			std::cout << "1. New Game\n";
+			std::cout << "2. Continue Game\n";
+			std::cout << "3. Load Game\n";
+			std::cout << "4. Exit\n";
+			std::cout << "\nYour choice: ";
+			std::cin >> choice;
+			std::cout << std::endl;
+
+			if (choice < 1 || choice > 4)
+			{
+				std::cerr << "Wrong choice!" << std::endl;
+				continue;
+			}
+
+			return choice;
+		}
+
+	}
+};
+
+class MapsLoading final : public Interface
+{
+public:
+	MapsLoading() {};
+
+	void initialize(Map& map1, Map& map2, Map& map3)
+	{
+		map1.SetMain("Capital City", "capital_city.txt");
+		map2.SetMain("Evil Swamp", "capital_city.txt");
+		map3.SetMain("Black Mountain", "capital_city.txt");
+
+		std::unique_ptr<Location> forge = std::make_unique<QuestGetPointer>("Forge", "forge.txt", "001");
+		std::unique_ptr<Location> alchemistHut = std::make_unique<QuestGetPointer>("Alchemist Hut", "alchemistHut.txt", "002");
+		std::unique_ptr<Location> doctorShop = std::make_unique<QuestGetPointer>("Doctor Shop", "doctorShop.txt", "003");
+		std::unique_ptr<Location> sewerage = std::make_unique<QuestPointer>("Sewerage", "sewerage.txt", "001");
+		std::unique_ptr<Location> blackMarket = std::make_unique<QuestPointer>("Black Market", "blackMarket.txt", "004");
+		std::unique_ptr<Location> trollEdge = std::make_unique<QuestPointer>("Troll Edge", "trollEdge.txt", "002");
+		std::unique_ptr<Location> darkHollow = std::make_unique<QuestPointer>("Dark Hollow", "darkHollow.txt", "005");
+		std::unique_ptr<Location> dragonCaves = std::make_unique<QuestPointer>("Dragon Caves", "dragonCaves.txt", "003");
+		std::unique_ptr<Location> royalPeak = std::make_unique<QuestPointer>("Royal Peak", "royalPeak.txt", "006");
+	}
+
+}; 
