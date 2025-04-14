@@ -16,11 +16,12 @@ public:
 	Inventory inventory;
 
 	Character() : name("name"), archetype(nullptr), specialization(nullptr), currentHP(0), currentAP(0) {};
-	explicit Character(std::string name, Archetype* archetype, Specialization* specialization) : name(name), archetype(archetype), specialization(specialization)
+	explicit Character(const std::string& name, std::unique_ptr<Archetype> archetype,
+		std::unique_ptr<Specialization> specialization) : name(name), archetype(std::move(archetype)), specialization(std::move(specialization))
 	{
-		currentHP = archetype->getHP();
-		currentAP = archetype->getAP();
-		specialization->setAllDices(archetype);
+		currentHP = this->archetype->getHP();
+		currentAP = this->archetype->getAP();
+		this->specialization->setAllDices(this->archetype.get());
 	}
 
 	~Character() = default;

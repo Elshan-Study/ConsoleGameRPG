@@ -36,7 +36,7 @@ int main()
     std::cout << inventory;
     std::unique_ptr<Archetype> arch = std::make_unique<Aristocrat>();
     std::unique_ptr<Specialization> spec = std::make_unique<Craftsman>();
-
+    Character PC("nma", std::move(arch), std::move(spec));
 
     return 0;
 }
