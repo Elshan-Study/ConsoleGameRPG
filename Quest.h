@@ -11,11 +11,13 @@ private:
     size_t optionCapacity;
     size_t stageSize;
     size_t optionSize;
+    bool isFinished;
+    int status;
 
 public:
     Quest()
         : stageCapacity(0), optionCapacity(0),
-        stageSize(0), optionSize(0) {
+        stageSize(0), optionSize(0), isFinished(false), status(0) {
     }
 
     void addStage(std::unique_ptr<QuestStage> stage) {
@@ -83,4 +85,10 @@ private:
         options = std::move(newArray);
         optionCapacity = newCapacity;
     }
+
+    void finish() { isFinished = true; }
+    void win() { status = 1; }
+    void defeat() { status = 2; }
+    int checkStatus() const { return status; }
+    bool checkFinish() const { return isFinished; }
 };
