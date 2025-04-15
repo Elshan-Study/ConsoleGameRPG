@@ -18,12 +18,9 @@ public:
 
 	void Start()
 	{
-		int choice = menu.Show();
+		char choice = menu.show();
 
-		std::cin.clear();
-		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-		switch (1)
+		switch (choice-48)
 		{
 		case 1:
 			createPC.initialize(PC);

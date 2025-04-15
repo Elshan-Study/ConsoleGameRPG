@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include "Character.h"
 #include "Location.h"
 #include <memory>
@@ -21,7 +22,7 @@ public:
 		std::unique_ptr<Archetype> arch;
 		while (true)
 		{
-			int choice;
+			char choice;
 			std::cout << "Choose Archetype: \n";
 			std::cout << "1.Sturdy - high Brawn, small Willpower\n";
 			std::cout << "2.Genius - high Intellect, small Agility\n";
@@ -31,20 +32,13 @@ public:
 			std::cin >> choice;
 			std::cout << "\n";
 
-			if (std::cin.fail()) {
-				std::cin.clear(); 
-				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-				std::cout << "Invalid input! Please enter a number." << std::endl;
-				continue; 
-			}
-
-			if (choice < 0 || choice > 4)
+			if (choice-48 < 0 || choice-48 > 4)
 			{
 				std::cout << "Wrong choice!" << std::endl;
 				continue;
 			}
 
-			switch (choice)
+			switch (choice-48)
 			{
 			case 1:
 				arch = std::make_unique<Sturdy>();
@@ -72,7 +66,7 @@ public:
 		std::unique_ptr<Specialization> spec;
 		while (true)
 		{
-			int choice;
+			char choice;
 			std::cout << "Choose Specialization: \n";
 			std::cout << "1.Wizard: Alchemy 2, Magic 2, Discipline 2, Perception 2\n";
 			std::cout << "2.Knight: Athletics 2, Resilience 2, Melee 2, Coercion 2\n";
@@ -83,20 +77,13 @@ public:
 			std::cin >> choice;
 			std::cout << "\n";
 
-			if (std::cin.fail()) {
-				std::cin.clear();
-				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-				std::cout << "Invalid input! Please enter a number." << std::endl;
-				continue;
-			}
-
-			if (choice < 0 || choice > 5)
+			if (choice-48 < 0 || choice-48 > 5)
 			{
 				std::cout << "Wrong choice!" << std::endl;
 				continue;
 			}
 
-			switch (choice)
+			switch (choice-48)
 			{
 			case 1:
 				spec = std::make_unique<Wizard>();
@@ -126,7 +113,7 @@ public:
 	{
 		while (true)
 		{
-			int choice;
+			char choice;
 			std::cout << "1.Brawn\n";
 			std::cout << "2.Agility\n";
 			std::cout << "3.Intellect\n";
@@ -137,20 +124,13 @@ public:
 			std::cin >> choice;
 			std::cout << "\n";
 
-			if (std::cin.fail()) {
-				std::cin.clear();
-				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-				std::cout << "Invalid input! Please enter a number." << std::endl;
-				continue;
-			}
-
-			if (choice < 1 || choice > 6)
+			if (choice-48 < 1 || choice-48 > 6)
 			{
 				std::cout << "Wrong choice!" << std::endl;
 				continue;
 			}
 
-			switch (choice)
+			switch (choice-48)
 			{
 			case 1:
 				if (PC.Brawn() != 5 && experience >= (PC.Brawn() + 1) * 10)
@@ -207,7 +187,7 @@ public:
 	{
 		while (true)
 		{
-			int choice;
+			char choice;
 			std::cout << "1.Alchemy\n";
 			std::cout << "2.Mechanics\n";
 			std::cout << "3.Magic\n";
@@ -230,20 +210,13 @@ public:
 			std::cin >> choice;
 			std::cout << "\n";
 
-			if (std::cin.fail()) {
-				std::cin.clear();
-				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-				std::cout << "Invalid input! Please enter a number." << std::endl;
-				continue;
-			}
-
-			if (choice < 1 || choice > 18)
+			if (choice-48 < 1 || choice-48 > 18)
 			{
 				std::cout << "Wrong choice!" << std::endl;
 				continue;
 			}
 
-			switch (choice)
+			switch (choice-48)
 			{
 			case 1:
 				if (PC.Alchemy() != 5 && experience >= (PC.Alchemy() + 1) * 5)
@@ -399,15 +372,15 @@ public:
 
 	void MainChoice(Character& PC) 
 	{
-		int choice;
+		char choice;
 		bool flag = true;
 		bool spec = false;
 		bool arch = false;
 
 		std::cout << "Character create MENU: \n";
-		std::cout << "Input your name: ";
+		std::cout << "Input your name: " << std::flush;
 		std::string name;
-		std::getline(std::cin, name);
+		std::cin >> name;
 		PC.name = name;
 
 		while (flag)
@@ -419,20 +392,13 @@ public:
 			std::cin >> choice;
 			std::cout << "\n";
 
-			if (std::cin.fail()) {
-				std::cin.clear();
-				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-				std::cout << "Invalid input! Please enter a number." << std::endl;
-				continue;
-			}
-
-			if (choice < 0 || choice > 2)
+			if (choice-48 < 0 || choice-48 > 2)
 			{
 				std::cout << "Wrong choice!" << std::endl;
 				continue;
 			}
 
-			switch (choice)
+			switch (choice-48)
 			{
 			case 1:
 				ArchetypeChoice(PC);
@@ -490,7 +456,7 @@ public:
 
 		while (flag)
 		{
-			int choice;
+			char choice;
 			std::cout << "---------------------------------------------------------\n";
 			PC.printInfo();
 
@@ -505,20 +471,13 @@ public:
 			std::cin >> choice;
 			std::cout << "\n";
 
-			if (std::cin.fail()) {
-				std::cin.clear();
-				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-				std::cout << "Invalid input! Please enter a number." << std::endl;
-				continue;
-			}
-
-			if (choice < 0 || choice > 3)
+			if (choice-48 < 0 || choice-48 > 3)
 			{
 				std::cout << "Wrong choice!" << std::endl;
 				continue;
 			}
 
-			switch (choice)
+			switch (choice-48)
 			{
 			case 1:
 				CharacteristicsEdit(PC, experience);
@@ -620,11 +579,12 @@ class MainMenu final : public Interface
 public:
 	MainMenu() {};
 
-	int Show()
+	char show()
 	{
+		char choice;
+
 		while (true)
 		{
-			int choice;
 			std::cout << "Amazing Adventure\n";
 			std::cout << "_________________________________________________\n";
 			std::cout << "Main menu: \n";
@@ -636,57 +596,16 @@ public:
 			std::cin >> choice;
 			std::cout << std::endl;
 
-			if (std::cin.fail()) {
-				std::cin.clear();
-				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-				std::cout << "Invalid input! Please enter a number." << std::endl;
-				continue;
-			}
-
-			if (choice < 1 || choice > 4)
+			if (choice-48 < 1 || choice-48 > 4)
 			{
 				std::cout << "Wrong choice!" << std::endl;
 				continue;
 			}
 
-			return choice;
+			break;
 		}
+
+		return choice;
 
 	}
 };
-
-//class MapsLoading final : public Interface
-//{
-//public:
-//	MapsLoading() {};
-//
-//	void initialize(Map& map1, Map& map2, Map& map3)
-//	{
-//		map1.SetMain("Capital City", "capital_city.txt");
-//		map2.SetMain("Evil Swamp", "capital_city.txt");
-//		map3.SetMain("Black Mountain", "capital_city.txt");
-//
-//		std::unique_ptr<Location> forge = std::make_unique<QuestGetPointer>("Forge", "forge.txt", "001");
-//		std::unique_ptr<Location> alchemistHut = std::make_unique<QuestGetPointer>("Alchemist Hut", "alchemistHut.txt", "002");
-//		std::unique_ptr<Location> doctorShop = std::make_unique<QuestGetPointer>("Doctor Shop", "doctorShop.txt", "003");
-//		std::unique_ptr<Location> sewerage = std::make_unique<QuestPointer>("Sewerage", "sewerage.txt", "001");
-//		std::unique_ptr<Location> blackMarket = std::make_unique<QuestPointer>("Black Market", "blackMarket.txt", "004");
-//		std::unique_ptr<Location> trollEdge = std::make_unique<QuestPointer>("Troll Edge", "trollEdge.txt", "002");
-//		std::unique_ptr<Location> darkHollow = std::make_unique<QuestPointer>("Dark Hollow", "darkHollow.txt", "005");
-//		std::unique_ptr<Location> dragonCaves = std::make_unique<QuestPointer>("Dragon Caves", "dragonCaves.txt", "003");
-//		std::unique_ptr<Location> royalPeak = std::make_unique<QuestPointer>("Royal Peak", "royalPeak.txt", "006");
-//
-//		map1.addLocation(std::move(forge));
-//		map1.addLocation(std::move(sewerage));
-//		map1.addLocation(std::move(blackMarket));
-//
-//		map2.addLocation(std::move(alchemistHut));
-//		map2.addLocation(std::move(trollEdge));
-//		map2.addLocation(std::move(darkHollow));
-//
-//		map3.addLocation(std::move(doctorShop));
-//		map3.addLocation(std::move(dragonCaves));
-//		map3.addLocation(std::move(royalPeak));
-//	}
-//
-//}; 
