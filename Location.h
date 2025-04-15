@@ -41,14 +41,13 @@ class QuestGetPointer final : public Location
 private:
     std::string key;
     bool isQuestQet;
-    /*Quest quest;*/
+    Quest quest;
 public:
     explicit QuestGetPointer(const std::string& name, const std::string& description_filename,
         const std::string& key, size_t stageCap, size_t optionCap)
         : Location(name, description_filename),
         key(key),
         isQuestQet(false)
-        /*quest(stageCap, optionCap)*/
     {};
 
 
@@ -64,14 +63,13 @@ class QuestPointer final : public Location
 private:
     std::string lock;
     bool activate_status;
-    /*Quest quest;*/
+    Quest quest;
 public:
     explicit QuestPointer(const std::string& name, const std::string& description_filename,
         const std::string& lock, size_t stageCap, size_t optionCap)
         : Location(name, description_filename),
         lock(lock),
         activate_status(false)
-        /*quest(stageCap, optionCap)*/
     {
     };
 
