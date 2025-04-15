@@ -7,12 +7,14 @@
 class QuestStage
 {
 protected:
-	size_t index;
+	size_t mainIndex;
+    size_t nextIndex;
 public:
-	QuestStage() : index(0) {};
-	explicit QuestStage(size_t index) : index(index) {};
+	QuestStage() : mainIndex(0), nextIndex(0) {};
+	explicit QuestStage(size_t mainIndex, size_t nextIndex) : mainIndex(mainIndex), nextIndex(nextIndex) {};
 	virtual ~QuestStage() = default;
-    size_t getIndex() const { return index; }
+    size_t nextStage() const { return mainIndex; }
+    size_t getIndex() const { return nextIndex; }
 };
 
 class TextStage final : public QuestStage
@@ -20,8 +22,8 @@ class TextStage final : public QuestStage
 private:
 	std::string filename;
 public:
-    explicit TextStage(const std::string& filename, size_t index) :
-        QuestStage(index), filename(filename) {};
+    explicit TextStage(const std::string& filename, size_t mainIndex, size_t nextIndex) :
+        QuestStage(mainIndex, nextIndex), filename(filename) {};
 
     bool on()
     {
@@ -49,8 +51,8 @@ private:
     size_t successDiff;
     size_t cost;
 public:
-    explicit AttackStage(const std::string& name, size_t index, size_t cost, size_t successDiff) :
-        QuestStage(index), name(name), successDiff(successDiff), cost(cost) {
+    explicit AttackStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost, size_t successDiff) :
+        QuestStage(mainIndex, nextIndex), name(name), successDiff(successDiff), cost(cost) {
     };
 
     enum class WeaponStatus
@@ -99,8 +101,8 @@ private:
     size_t successDiff;
     size_t cost;
 public:
-    explicit useQuestItemStage(const std::string& name, size_t index, size_t cost, size_t successDiff) :
-        QuestStage(index), name(name), successDiff(successDiff), cost(cost) {
+    explicit useQuestItemStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost, size_t successDiff) :
+        QuestStage(mainIndex, nextIndex), name(name), successDiff(successDiff), cost(cost) {
     };
 
     bool on(Character& Main, const std::string& name)
@@ -124,8 +126,8 @@ private:
     size_t successDiff;
     size_t cost;
 public:
-    explicit skillCheckStage(const std::string& name, size_t index, size_t cost, size_t successDiff) :
-        QuestStage(index), name(name), successDiff(successDiff), cost(cost) {
+    explicit skillCheckStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost, size_t successDiff) :
+        QuestStage(mainIndex, nextIndex), name(name), successDiff(successDiff), cost(cost) {
     };
 
     bool on(Character& Main, size_t numDice, size_t successDiff)
@@ -147,8 +149,8 @@ private:
     size_t successDiff;
     size_t cost;
 public:
-    explicit giveItemStage(const std::string& name, size_t index, size_t cost, size_t successDiff) :
-        QuestStage(index), name(name), successDiff(successDiff), cost(cost) {
+    explicit giveItemStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost, size_t successDiff) :
+        QuestStage(mainIndex, nextIndex), name(name), successDiff(successDiff), cost(cost) {
     };
 
     bool on(Character& Main, std::unique_ptr<Item> item)
