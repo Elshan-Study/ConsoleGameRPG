@@ -20,9 +20,10 @@ public:
 	{
 		int choice = menu.Show();
 
-		std::cin.ignore();
+		std::cin.clear();
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-		switch (choice)
+		switch (1)
 		{
 		case 1:
 			createPC.initialize(PC);

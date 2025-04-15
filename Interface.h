@@ -31,6 +31,13 @@ public:
 			std::cin >> choice;
 			std::cout << "\n";
 
+			if (std::cin.fail()) {
+				std::cin.clear(); 
+				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+				std::cout << "Invalid input! Please enter a number." << std::endl;
+				continue; 
+			}
+
 			if (choice < 0 || choice > 4)
 			{
 				std::cout << "Wrong choice!" << std::endl;
@@ -75,6 +82,13 @@ public:
 			std::cout << "Your choice: ";
 			std::cin >> choice;
 			std::cout << "\n";
+
+			if (std::cin.fail()) {
+				std::cin.clear();
+				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+				std::cout << "Invalid input! Please enter a number." << std::endl;
+				continue;
+			}
 
 			if (choice < 0 || choice > 5)
 			{
@@ -122,6 +136,13 @@ public:
 			std::cout << "Your choice: ";
 			std::cin >> choice;
 			std::cout << "\n";
+
+			if (std::cin.fail()) {
+				std::cin.clear();
+				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+				std::cout << "Invalid input! Please enter a number." << std::endl;
+				continue;
+			}
 
 			if (choice < 1 || choice > 6)
 			{
@@ -208,6 +229,13 @@ public:
 			std::cout << "Your choice: ";
 			std::cin >> choice;
 			std::cout << "\n";
+
+			if (std::cin.fail()) {
+				std::cin.clear();
+				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+				std::cout << "Invalid input! Please enter a number." << std::endl;
+				continue;
+			}
 
 			if (choice < 1 || choice > 18)
 			{
@@ -391,6 +419,13 @@ public:
 			std::cin >> choice;
 			std::cout << "\n";
 
+			if (std::cin.fail()) {
+				std::cin.clear();
+				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+				std::cout << "Invalid input! Please enter a number." << std::endl;
+				continue;
+			}
+
 			if (choice < 0 || choice > 2)
 			{
 				std::cout << "Wrong choice!" << std::endl;
@@ -469,6 +504,13 @@ public:
 			std::cout << "Your choice: ";
 			std::cin >> choice;
 			std::cout << "\n";
+
+			if (std::cin.fail()) {
+				std::cin.clear();
+				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+				std::cout << "Invalid input! Please enter a number." << std::endl;
+				continue;
+			}
 
 			if (choice < 0 || choice > 3)
 			{
@@ -582,9 +624,9 @@ public:
 	{
 		while (true)
 		{
+			int choice;
 			std::cout << "Amazing Adventure\n";
 			std::cout << "_________________________________________________\n";
-			int choice;
 			std::cout << "Main menu: \n";
 			std::cout << "1. New Game\n";
 			std::cout << "2. Continue Game\n";
@@ -594,9 +636,16 @@ public:
 			std::cin >> choice;
 			std::cout << std::endl;
 
+			if (std::cin.fail()) {
+				std::cin.clear();
+				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+				std::cout << "Invalid input! Please enter a number." << std::endl;
+				continue;
+			}
+
 			if (choice < 1 || choice > 4)
 			{
-				std::cerr << "Wrong choice!" << std::endl;
+				std::cout << "Wrong choice!" << std::endl;
 				continue;
 			}
 

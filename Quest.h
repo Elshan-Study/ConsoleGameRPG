@@ -1,11 +1,12 @@
 #pragma once
 #include "QuestStage.h"
 #include "OptionChoice.h"
+#include <memory>
 
 class Quest {
 private:
-    QuestStage** stages;
-    OptionChoice** options;
+    std::unique_ptr<std::unique_ptr<QuestStage>[]> stages;
+    std::unique_ptr<std::unique_ptr<OptionChoice>[]> options;
     size_t stageCapacity;
     size_t optionCapacity;
     size_t stageSize;
@@ -13,35 +14,22 @@ private:
 
 public:
     Quest()
-        : stages(nullptr), options(nullptr),
-        stageCapacity(10), optionCapacity(10),
+        : stageCapacity(0), optionCapacity(0),
         stageSize(0), optionSize(0) {
     }
 
-    ~Quest() {
-        for (size_t i = 0; i < stageSize; ++i) {
-            delete stages[i];
-        }
-        delete[] stages;
-
-        for (size_t i = 0; i < optionSize; ++i) {
-            delete options[i];
-        }
-        delete[] options;
-    }
-
-    void addStage(QuestStage* stage) {
+    void addStage(std::unique_ptr<QuestStage> stage) {
         if (stageSize >= stageCapacity) {
             resizeStages();
         }
-        stages[stageSize++] = stage;
+        stages[stageSize++] = std::move(stage);
     }
 
-    void addOption(OptionChoice* option) {
+    void addOption(std::unique_ptr<OptionChoice> option) {
         if (optionSize >= optionCapacity) {
             resizeOptions();
         }
-        options[optionSize++] = option;
+        options[optionSize++] = std::move(option);
     }
 
     bool linkStageToOption(size_t stageIndex, size_t optionIndex) {
@@ -62,39 +50,37 @@ public:
     }
 
     QuestStage* getStage(size_t index) const {
-        if (index < stageSize) return stages[index];
+        if (index < stageSize) return stages[index].get();
         return nullptr;
     }
 
     OptionChoice* getOption(size_t index) const {
-        if (index < optionSize) return options[index];
+        if (index < optionSize) return options[index].get();
         return nullptr;
     }
 
 private:
     void resizeStages() {
         size_t newCapacity = stageCapacity == 0 ? 4 : stageCapacity * 2;
-        QuestStage** newArray = new QuestStage * [newCapacity];
+        auto newArray = std::make_unique<std::unique_ptr<QuestStage>[]>(newCapacity);
 
         for (size_t i = 0; i < stageSize; ++i) {
-            newArray[i] = stages[i];
+            newArray[i] = std::move(stages[i]);
         }
 
-        delete[] stages;
-        stages = newArray;
+        stages = std::move(newArray);
         stageCapacity = newCapacity;
     }
 
     void resizeOptions() {
         size_t newCapacity = optionCapacity == 0 ? 4 : optionCapacity * 2;
-        OptionChoice** newArray = new OptionChoice * [newCapacity];
+        auto newArray = std::make_unique<std::unique_ptr<OptionChoice>[]>(newCapacity);
 
         for (size_t i = 0; i < optionSize; ++i) {
-            newArray[i] = options[i];
+            newArray[i] = std::move(options[i]);
         }
 
-        delete[] options;
-        options = newArray;
+        options = std::move(newArray);
         optionCapacity = newCapacity;
     }
 };
