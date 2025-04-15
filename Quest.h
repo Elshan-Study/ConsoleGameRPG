@@ -6,7 +6,6 @@
 
 class Quest {
 private:
-    std::string key;
     std::unique_ptr<std::unique_ptr<QuestStage>[]> stages;
     std::unique_ptr<std::unique_ptr<OptionChoice>[]> options;
     size_t stageCapacity;
@@ -18,11 +17,9 @@ private:
 
 public:
     Quest()
-        : key("Unknown"), stageCapacity(0), optionCapacity(0),
+        : stageCapacity(0), optionCapacity(0),
         stageSize(0), optionSize(0), isFinished(false), status(0) {
     }
-
-    void setKey(const std::string& key) { this->key = key; }
 
     void addStage(std::unique_ptr<QuestStage> stage) {
         if (stageSize >= stageCapacity) {
