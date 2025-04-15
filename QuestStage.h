@@ -9,7 +9,7 @@ protected:
 	size_t index;
 public:
 	QuestStage() : index(0) {};
-	explicit QuestStage(size_t index) : index(index) {};
+	explicit QuestStage(size_t index) : index(index), option(option) {};
 	virtual ~QuestStage() = default;
     size_t getIndex() const { return index; }
 };

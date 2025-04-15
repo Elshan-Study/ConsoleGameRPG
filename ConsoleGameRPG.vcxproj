@@ -135,7 +135,6 @@
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="Location.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="OptionChoice.cpp" />
     <ClCompile Include="Quest.cpp" />
     <ClCompile Include="QuestStage.cpp" />
     <ClCompile Include="Skill.cpp" />
@@ -149,7 +148,6 @@
     <ClInclude Include="Inventory.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="Location.h" />
-    <ClInclude Include="OptionChoice.h" />
     <ClInclude Include="Quest.h" />
     <ClInclude Include="QuestStage.h" />
     <ClInclude Include="Skill.h" />
