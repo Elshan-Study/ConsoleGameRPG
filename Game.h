@@ -16,7 +16,13 @@ public:
 	Game() = default;
 	~Game() = default;
 
-	void Start()
+	void initLevels()
+	{
+		Quest SewerageQuest;
+
+	}
+
+	void start()
 	{
 		char choice = menu.show();
 

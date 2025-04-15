@@ -4,7 +4,7 @@
 int main()
 {
     Game game;
-    game.Start();
+    game.start();
 
     return 0;
 }
