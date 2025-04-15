@@ -124,7 +124,7 @@ public:
 		return successCount;
 	}
 
-	void attack(Character& target, size_t itemIndex, size_t numDice, size_t successDiff)
+	void attack(Character& target, bool trueWeapon, size_t itemIndex, size_t numDice, size_t successDiff)
 	{
 		size_t soak = 0;
 		size_t damage = 0;
@@ -143,12 +143,12 @@ public:
 			}
 
 			size_t itemEffect = 0;
-			if (itemIndex < inventory.getSize())
+			if (trueWeapon && itemIndex < inventory.getSize())
 			{
 				Item* weapon = inventory[itemIndex].get();
 				if (dynamic_cast<Weapon*>(weapon) != nullptr)
 				{
-					itemEffect = weapon->useItem(roll) + Brawn();
+					itemEffect = weapon->useItem(roll);
 				}
 			}
 
