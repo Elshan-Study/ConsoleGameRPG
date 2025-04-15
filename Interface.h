@@ -583,7 +583,7 @@ public:
 		while (true)
 		{
 			std::cout << "Amazing Adventure\n";
-			std::cout << "_________________________________________________";
+			std::cout << "_________________________________________________\n";
 			int choice;
 			std::cout << "Main menu: \n";
 			std::cout << "1. New Game\n";
@@ -637,38 +637,38 @@ public:
 	}
 };
 
-class MapsLoading final : public Interface
-{
-public:
-	MapsLoading() {};
-
-	void initialize(Map& map1, Map& map2, Map& map3)
-	{
-		map1.SetMain("Capital City", "capital_city.txt");
-		map2.SetMain("Evil Swamp", "capital_city.txt");
-		map3.SetMain("Black Mountain", "capital_city.txt");
-
-		std::unique_ptr<Location> forge = std::make_unique<QuestGetPointer>("Forge", "forge.txt", "001");
-		std::unique_ptr<Location> alchemistHut = std::make_unique<QuestGetPointer>("Alchemist Hut", "alchemistHut.txt", "002");
-		std::unique_ptr<Location> doctorShop = std::make_unique<QuestGetPointer>("Doctor Shop", "doctorShop.txt", "003");
-		std::unique_ptr<Location> sewerage = std::make_unique<QuestPointer>("Sewerage", "sewerage.txt", "001");
-		std::unique_ptr<Location> blackMarket = std::make_unique<QuestPointer>("Black Market", "blackMarket.txt", "004");
-		std::unique_ptr<Location> trollEdge = std::make_unique<QuestPointer>("Troll Edge", "trollEdge.txt", "002");
-		std::unique_ptr<Location> darkHollow = std::make_unique<QuestPointer>("Dark Hollow", "darkHollow.txt", "005");
-		std::unique_ptr<Location> dragonCaves = std::make_unique<QuestPointer>("Dragon Caves", "dragonCaves.txt", "003");
-		std::unique_ptr<Location> royalPeak = std::make_unique<QuestPointer>("Royal Peak", "royalPeak.txt", "006");
-
-		map1.addLocation(std::move(forge));
-		map1.addLocation(std::move(sewerage));
-		map1.addLocation(std::move(blackMarket));
-
-		map2.addLocation(std::move(alchemistHut));
-		map2.addLocation(std::move(trollEdge));
-		map2.addLocation(std::move(darkHollow));
-
-		map3.addLocation(std::move(doctorShop));
-		map3.addLocation(std::move(dragonCaves));
-		map3.addLocation(std::move(royalPeak));
-	}
-
-}; 
+//class MapsLoading final : public Interface
+//{
+//public:
+//	MapsLoading() {};
+//
+//	void initialize(Map& map1, Map& map2, Map& map3)
+//	{
+//		map1.SetMain("Capital City", "capital_city.txt");
+//		map2.SetMain("Evil Swamp", "capital_city.txt");
+//		map3.SetMain("Black Mountain", "capital_city.txt");
+//
+//		std::unique_ptr<Location> forge = std::make_unique<QuestGetPointer>("Forge", "forge.txt", "001");
+//		std::unique_ptr<Location> alchemistHut = std::make_unique<QuestGetPointer>("Alchemist Hut", "alchemistHut.txt", "002");
+//		std::unique_ptr<Location> doctorShop = std::make_unique<QuestGetPointer>("Doctor Shop", "doctorShop.txt", "003");
+//		std::unique_ptr<Location> sewerage = std::make_unique<QuestPointer>("Sewerage", "sewerage.txt", "001");
+//		std::unique_ptr<Location> blackMarket = std::make_unique<QuestPointer>("Black Market", "blackMarket.txt", "004");
+//		std::unique_ptr<Location> trollEdge = std::make_unique<QuestPointer>("Troll Edge", "trollEdge.txt", "002");
+//		std::unique_ptr<Location> darkHollow = std::make_unique<QuestPointer>("Dark Hollow", "darkHollow.txt", "005");
+//		std::unique_ptr<Location> dragonCaves = std::make_unique<QuestPointer>("Dragon Caves", "dragonCaves.txt", "003");
+//		std::unique_ptr<Location> royalPeak = std::make_unique<QuestPointer>("Royal Peak", "royalPeak.txt", "006");
+//
+//		map1.addLocation(std::move(forge));
+//		map1.addLocation(std::move(sewerage));
+//		map1.addLocation(std::move(blackMarket));
+//
+//		map2.addLocation(std::move(alchemistHut));
+//		map2.addLocation(std::move(trollEdge));
+//		map2.addLocation(std::move(darkHollow));
+//
+//		map3.addLocation(std::move(doctorShop));
+//		map3.addLocation(std::move(dragonCaves));
+//		map3.addLocation(std::move(royalPeak));
+//	}
+//
+//}; 

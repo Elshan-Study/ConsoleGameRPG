@@ -110,5 +110,5 @@ public:
         return locations[index];
     }
 
-    bool Status() const override {};
+    bool Status() const override { return 0; };
 };

@@ -20,11 +20,14 @@ public:
 	{
 		int choice = menu.Show();
 
+		std::cin.ignore();
+
 		switch (choice)
 		{
 		case 1:
 			createPC.initialize(PC);
 			std::cout << "Character Create Successfully" << std::endl;
+			break;
 		default:
 			break;
 		}
