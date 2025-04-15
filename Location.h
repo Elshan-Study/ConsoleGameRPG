@@ -13,10 +13,10 @@ public:
     explicit Location(const std::string& name, const std::string& filename) : name(name), description_file(filename) {};
 	virtual ~Location() = default;
 
-    virtual void Activate(const std::string& key) = 0;
-    virtual bool Status() const = 0;
+    virtual void activate(const std::string& key) = 0;
+    virtual bool status() const = 0;
 
-    void SetMain(const std::string& name, const std::string& filename) { this->name = name, description_file = filename; }
+    void setMain(const std::string& name, const std::string& filename) { this->name = name, description_file = filename; }
 
 	void readDescription()
 	{
@@ -51,8 +51,8 @@ public:
     {};
 
 
-    void Activate(const std::string& key) override { isQuestQet = true; }
-    bool Status() const override { return isQuestQet; }
+    void activate(const std::string& key) override { isQuestQet = true; }
+    bool status() const override { return isQuestQet; }
 
     void changeKey(const std::string& key) { this->key = key;}
     std::string getKey() const { if (isQuestQet) { return key; } else { "Error"; } }
@@ -73,14 +73,14 @@ public:
     {
     };
 
-    void Activate(const std::string& key) override
+    void activate(const std::string& key) override
     {
         if (key == lock)
         {
             activate_status = true;
         }
     }
-    bool Status() const override { return activate_status; }
+    bool status() const override { return activate_status; }
 };
 
 class Map final : public Location
@@ -91,7 +91,7 @@ protected:
     std::unique_ptr<Location> locations[MAX_LOCATION];
 public:
     
-    void Activate(const std::string& key) override {};
+    void activate(const std::string& key) override {};
     
     void addLocation(std::unique_ptr<Location> location)
     {
@@ -118,5 +118,5 @@ public:
         return locations[index];
     }
 
-    bool Status() const override { return 0; };
+    bool status() const override { return 0; };
 };
