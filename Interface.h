@@ -606,33 +606,6 @@ public:
 	}
 };
 
-class OptionChoice final : public Interface
-{
-private:
-	std::unique_ptr<std::shared_ptr<size_t>[]> stages; 
-	size_t capacity;
-	size_t size;
-
-public:
-	OptionChoice(size_t cap) : capacity(cap), size(0) {
-		stages = std::make_unique<std::shared_ptr<size_t>[]>(capacity);  
-	}
-
-	bool addChoice(std::shared_ptr<size_t> index)
-	{
-		if (size < capacity) {
-			stages[size++] = index; 
-			return true;
-		}
-		return false;  
-	}
-
-	size_t getSize() const {
-		return size; 
-	}
-};
-
-
 //class MapsLoading final : public Interface
 //{
 //public:

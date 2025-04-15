@@ -41,11 +41,16 @@ class QuestGetPointer final : public Location
 private:
     std::string key;
     bool isQuestQet;
-    std::unique_ptr<Quest> quest;
+    /*Quest quest;*/
 public:
     explicit QuestGetPointer(const std::string& name, const std::string& description_filename,
-        const std::string& key, std::unique_ptr<Quest> quest) : Location(name, description_filename), 
-        key(key), isQuestQet(false), quest(std::move(quest)){};
+        const std::string& key, size_t stageCap, size_t optionCap)
+        : Location(name, description_filename),
+        key(key),
+        isQuestQet(false)
+        /*quest(stageCap, optionCap)*/
+    {};
+
 
     void Activate(const std::string& key) override { isQuestQet = true; }
     bool Status() const override { return isQuestQet; }
@@ -59,11 +64,16 @@ class QuestPointer final : public Location
 private:
     std::string lock;
     bool activate_status;
-    std::unique_ptr<Quest> quest;
+    /*Quest quest;*/
 public:
     explicit QuestPointer(const std::string& name, const std::string& description_filename,
-        const std::string& lock, std::unique_ptr<Quest> quest) : Location(name, description_filename), lock(lock), 
-        activate_status(false), quest(std::move(quest)) {};
+        const std::string& lock, size_t stageCap, size_t optionCap)
+        : Location(name, description_filename),
+        lock(lock),
+        activate_status(false)
+        /*quest(stageCap, optionCap)*/
+    {
+    };
 
     void Activate(const std::string& key) override
     {
