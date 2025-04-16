@@ -17,9 +17,16 @@ private:
 	Map BlackMountain;
 	size_t winCount;
 	size_t defeatCount;
+	std::string* keys = new std::string[QUESTCOUNT];
+	size_t keySize = 0;
 public:
 	Game() = default;
-	~Game() = default;
+	~Game() { delete[] keys; }
+
+	void addKey(std::string key)
+	{
+		keys[keySize++] = key;
+	}
 
 	/*QuestPointer EvilSwamp("Evil Swamp", "evilSwamp.txt", key2);
 		QuestPointer DragonCaves("Dragon Caves", "dragonCaves.txt", key3);*/
@@ -256,6 +263,30 @@ public:
 		initLevel2();
 	}
 
+	void loadQuest() { std::cout << "Success!\n"; };
+
+	void loadLocation(size_t index, Map& map)
+	{
+		if (auto rawPtr = dynamic_cast<QuestPointer*>(map[index].get()))
+		{
+			for (size_t i = 0; i < keySize; i++)
+			{
+				rawPtr->activate(keys[i]);
+				if (rawPtr->status())
+				{
+					loadQuest();
+					return;
+				}	
+			}
+		}
+		else if (auto rawPtr = dynamic_cast<QuestGetPointer*>(map[index].get()))
+		{
+			rawPtr->activate("Ok");
+			addKey(rawPtr->getKey());
+			std::cout << "Key Added!\n";
+		}
+	}
+
 	void gamePlay(size_t choice)
 	{
 		if (choice == 1)
@@ -295,6 +326,7 @@ public:
 			std::cout << std::endl;
 			MapMenu newMenu;
 			choice = newMenu.show(CapitalCity);
+			loadLocation(choice - 48 - 1, CapitalCity);
 
 			return;
 		}

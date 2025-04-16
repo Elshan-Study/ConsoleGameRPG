@@ -100,10 +100,6 @@ public:
             locations[size++] = std::move(location);
             return;
         }
-        else 
-        {
-            std::cerr << "Map is full!\n";
-        }
     }
 
     size_t getSize() const { return size; }
