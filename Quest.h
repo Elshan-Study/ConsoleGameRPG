@@ -41,7 +41,7 @@ public:
         }
 
         size_t targetStageIndex = stages[stageIndex]->getIndex();
-        return options[optionIndex]->addChoice(std::make_shared<size_t>(targetStageIndex));
+        return options[optionIndex]->addChoice(targetStageIndex);
     }
 
     size_t getStageCount() const {

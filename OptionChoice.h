@@ -3,19 +3,17 @@
 
 class OptionChoice {
 private:
-    std::unique_ptr<std::shared_ptr<size_t>[]> stages;
+    size_t* stages;
     size_t capacity;
     size_t size;
 
 public:
     OptionChoice(size_t cap)
-        : capacity(cap), size(0),
-        stages(std::make_unique<std::shared_ptr<size_t>[]>(cap)) {
+        : capacity(cap), size(0), stages(new size_t[cap]) {
     }
 
     OptionChoice(const OptionChoice& other)
-        : capacity(other.capacity), size(other.size),
-        stages(std::make_unique<std::shared_ptr<size_t>[]>(other.capacity)) {
+        : capacity(other.capacity), size(other.size), stages(new size_t[other.capacity]) {
         for (size_t i = 0; i < size; ++i) {
             stages[i] = other.stages[i];
         }
@@ -25,9 +23,11 @@ public:
         if (this == &other)
             return *this;
 
+        delete[] stages;
+
         capacity = other.capacity;
         size = other.size;
-        stages = std::make_unique<std::shared_ptr<size_t>[]>(capacity);
+        stages = new size_t[capacity];
         for (size_t i = 0; i < size; ++i) {
             stages[i] = other.stages[i];
         }
@@ -36,9 +36,8 @@ public:
     }
 
     OptionChoice(OptionChoice&& other) noexcept
-        : stages(std::move(other.stages)),
-        capacity(other.capacity),
-        size(other.size) {
+        : stages(other.stages), capacity(other.capacity), size(other.size) {
+        other.stages = nullptr;
         other.capacity = 0;
         other.size = 0;
     }
@@ -47,17 +46,24 @@ public:
         if (this == &other)
             return *this;
 
-        stages = std::move(other.stages);
+        delete[] stages;
+
+        stages = other.stages;
         capacity = other.capacity;
         size = other.size;
 
+        other.stages = nullptr;
         other.capacity = 0;
         other.size = 0;
 
         return *this;
     }
 
-    bool addChoice(std::shared_ptr<size_t> index) {
+    ~OptionChoice() {
+        delete[] stages;
+    }
+
+    bool addChoice(size_t index) {
         if (size < capacity) {
             stages[size++] = index;
             return true;
@@ -67,5 +73,9 @@ public:
 
     size_t getSize() const {
         return size;
+    }
+
+    size_t operator[](size_t i) const {
+        return stages[i];
     }
 };

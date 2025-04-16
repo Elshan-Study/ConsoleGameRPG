@@ -7,12 +7,13 @@
 class QuestStage
 {
 protected:
+    std::string name;
 	size_t mainIndex;
     size_t cost;
 public:
     size_t nextIndex;
-	QuestStage() : mainIndex(0), nextIndex(0), cost(0) {};
-	explicit QuestStage(size_t mainIndex, size_t nextIndex, size_t cost) : mainIndex(mainIndex), nextIndex(nextIndex), cost(cost) {};
+	QuestStage() : name("Not set"), mainIndex(0), nextIndex(0), cost(0) {};
+	explicit QuestStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost) : name(name), mainIndex(mainIndex), nextIndex(nextIndex), cost(cost) {};
 	virtual ~QuestStage() = default;
     virtual bool on() = 0;
     size_t getIndex() const { return mainIndex; }
@@ -21,27 +22,19 @@ public:
 class TextStage final : public QuestStage
 {
 private:
-	std::string filename;
+    Character& Main;
 public:
-    explicit TextStage(const std::string& filename, size_t mainIndex, size_t nextIndex, size_t cost) :
-        QuestStage(mainIndex, nextIndex, cost), filename(filename) {};
+    explicit TextStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost, Character& Main) :
+        QuestStage(name, mainIndex, nextIndex, cost), Main(Main) {};
 
     bool on() override
     {
-        std::ifstream file(filename);
-
-        if (!file.is_open()) {
-            std::cerr << "Can't open the file!" << std::endl;
-            return 0;
+        if (Main.currentAP <= cost)
+        {
+            Main.currentAP -= cost;
+            return 1;
         }
-
-        std::string line;
-        while (std::getline(file, line)) {
-            std::cout << line << std::endl;
-        }
-
-        file.close();
-
+        else { return 0; }
     }
 };
 
@@ -55,7 +48,6 @@ public:
         Ranged
     };
 private:
-    std::string name;
     size_t successDiff;
     WeaponStatus status;
     Character& Main;
@@ -63,7 +55,7 @@ private:
 public:
     explicit AttackStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost, 
         size_t successDiff, Character& Main, Character& Target) :
-        QuestStage(mainIndex, nextIndex, cost), name(name), successDiff(successDiff), 
+        QuestStage(name, mainIndex, nextIndex, cost), successDiff(successDiff), 
         status(WeaponStatus::Default), Main(Main), Target(Target) {
     };
 
@@ -103,15 +95,12 @@ public:
 class useQuestItemStage : public QuestStage
 {
 private:
-    std::string name;
-    size_t successDiff;
     Character& Main;
     std::string itemName;
 public:
-    explicit useQuestItemStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost, 
-        size_t successDiff, Character& Main, const std::string& itemName) :
-        QuestStage(mainIndex, nextIndex, cost), name(name), successDiff(successDiff),
-        Main(Main), itemName(itemName) {
+    explicit useQuestItemStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost,
+        Character& Main, const std::string& itemName) :
+        QuestStage(name, mainIndex, nextIndex, cost), Main(Main), itemName(itemName) {
     };
 
     bool on() override
@@ -131,14 +120,13 @@ public:
 class skillCheckStage : public QuestStage
 {
 private:
-    std::string name;
     size_t successDiff;
     Character& Main;
     size_t numDice;
 public:
     explicit skillCheckStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost, 
         size_t successDiff, Character& Main, size_t numDice) :
-        QuestStage(mainIndex, nextIndex, cost), name(name), successDiff(successDiff),
+        QuestStage(name, mainIndex, nextIndex, cost), successDiff(successDiff),
         Main(Main), numDice(numDice){
     };
 
@@ -157,15 +145,12 @@ public:
 class giveItemStage : public QuestStage
 {
 private:
-    std::string name;
-    size_t successDiff;
     Character& Main;
     std::unique_ptr<Item> item;
 public:
-    explicit giveItemStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost, size_t successDiff,
+    explicit giveItemStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost,
         Character& Main, std::unique_ptr<Item> item) :
-        QuestStage(mainIndex, nextIndex, cost), name(name), successDiff(successDiff),
-        Main(Main), item(std::move(item)){};
+        QuestStage(name, mainIndex, nextIndex, cost), Main(Main), item(std::move(item)){};
 
     bool on() override
     {
