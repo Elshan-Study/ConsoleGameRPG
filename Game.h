@@ -167,13 +167,13 @@ public:
 		/*Endings:*/
 		std::unique_ptr<QuestStage> stageSQ50 = std::make_unique<TextStage>(
 			"You gather enough evidence to turn the case over to the city guard. The cult is exposed and the water contamination is stopped.",
-			50, 0, 0, PC);
+			50, 50, 0, PC);
 		std::unique_ptr<QuestStage> stageSQ60 = std::make_unique<TextStage>(
 			"The city continues to suffer, and the disease slowly spreads. Perhaps you will return... when it is too late.",
-			60, 0, 0, PC);
+			60, 60, 0, PC);
 		std::unique_ptr<QuestStage> stageSQ70 = std::make_unique<TextStage>(
 			"You bring the cultist's body and the contents of the lab upstairs. The people are grateful, but the fear of the underground secrets remains.",
-			70, 0, 0, PC);
+			70, 70, 0, PC);
 		rawPtr->quest.addStage(std::move(stageSQ50)); /*24*/
 		rawPtr->quest.addStage(std::move(stageSQ60)); /*25*/
 		rawPtr->quest.addStage(std::move(stageSQ70)); /*26*/
@@ -181,9 +181,78 @@ public:
 		CapitalCity.addLocation(std::move(Sewerage));
 	}
 
+	void initLevel2()
+	{
+		std::unique_ptr<Location> GuardBarracks = std::make_unique<QuestGetPointer>("GuardBarracks", "quardBarracks.txt", key1);
+		QuestGetPointer* rawPtr = dynamic_cast<QuestGetPointer*>(GuardBarracks.get());
+
+		/*Base*/
+		std::unique_ptr<QuestStage> stageGB10 = std::make_unique<TextStage>(
+			"Guard: Are you here about the mission? I hope you're not one of those hoping for easy money. Because the sewers aren't just dirt. They're... worse.",
+			10, 0, 0, PC);
+		std::unique_ptr<QuestStage> stageGB30 = std::make_unique<TextStage>(
+			"Guard: We are waiting for you to take action.",
+			30, 30, 0, PC);
+		std::unique_ptr<QuestStage> stageGB40 = std::make_unique<TextStage>(
+			"Guard: You let us down!",
+			40, 40, 0, PC);
+		std::unique_ptr<QuestStage> stageGB50 = std::make_unique<TextStage>(
+			"Guard: Look, a real hero!",
+			50, 50, 0, PC);
+		rawPtr->quest.addStage(std::move(stageGB10)); /*0*/
+		rawPtr->quest.addStage(std::move(stageGB30)); /*1*/
+		rawPtr->quest.addStage(std::move(stageGB40)); /*2*/
+		rawPtr->quest.addStage(std::move(stageGB50)); /*3*/
+		
+		/*Option*/
+		std::unique_ptr<QuestStage> stageGB11 = std::make_unique<TextStage>(
+			"I heard that someone there is sick. I want to find out.",
+			11, 20, 0, PC);
+		std::unique_ptr<QuestStage> stageGB12 = std::make_unique<TextStage>(
+			"Money is not the main thing. I'm looking for where my skills will be useful.",
+			12, 20, 0, PC);
+		std::unique_ptr<QuestStage> stageGB13 = std::make_unique<TextStage>(
+			"The sooner I get down there, the sooner you can sleep peacefully again.",
+			13, 20, 0, PC);
+		std::unique_ptr<QuestStage> stageGB14 = std::make_unique<TextStage>(
+			"[Nod silently]",
+			14, 20, 0, PC);
+		std::unique_ptr<OptionChoice> optionGB0 = std::make_unique<OptionChoice>(4);
+		rawPtr->quest.addStage(std::move(stageGB11)); /*4*/
+		rawPtr->quest.addStage(std::move(stageGB12)); /*5*/
+		rawPtr->quest.addStage(std::move(stageGB13)); /*6*/
+		rawPtr->quest.addStage(std::move(stageGB14)); /*7*/
+		rawPtr->quest.addOption(std::move(optionGB0));
+		rawPtr->quest.linkStageToOption(4, 0);
+		rawPtr->quest.linkStageToOption(5, 0);
+		rawPtr->quest.linkStageToOption(6, 0);
+		rawPtr->quest.linkStageToOption(7, 0);
+
+		/*Quest Stage*/
+		std::unique_ptr<QuestStage> stageGB20 = std::make_unique<TextStage>(
+			"Guard: He snorts, not looking up. Okay. We're short-handed anyway.\n"
+			"People are disappearing. The water is getting murky. None of my men will go there - they say,\n"
+			"there's someone watching from below.\n" 
+			"He rummages under the table, takes out a burnt torch.", 
+			20, 21, 0, PC);
+		std::unique_ptr<QuestStage> stageGB21 = std::make_unique<TextStage>(
+			"[You receive: Torch]\n"
+			"[New Quest : Sewerage Quest]",
+			21, 22, 0, PC);
+		std::unique_ptr<QuestStage> stageGB22 = std::make_unique<TextStage>(
+			"Guard: The entrance to the tunnels is behind the market, under a hatch with the mark of an old guild sign.",
+			22, 22, 0, PC);
+		rawPtr->quest.addStage(std::move(stageGB20)); /*8*/
+		rawPtr->quest.addStage(std::move(stageGB21)); /*9*/
+		rawPtr->quest.addStage(std::move(stageGB22)); /*10*/
+
+		CapitalCity.addLocation(std::move(GuardBarracks));
+	}
+
 	void initLevels()
 	{
 		initLevel1();
+		initLevel2();
 	}
 
 	void start()
