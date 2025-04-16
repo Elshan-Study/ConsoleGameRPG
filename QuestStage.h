@@ -17,6 +17,7 @@ public:
 	virtual ~QuestStage() = default;
     virtual bool on() = 0;
     size_t getIndex() const { return mainIndex; }
+    std::string showName() const { return name; }
 };
 
 class TextStage final : public QuestStage

@@ -683,7 +683,36 @@ class SceneControl final : public Interface
 public:
 	void loadNPCScene(Character&PC, QuestGetPointer*& location)
 	{
-		std::cout << "Success!\n";
+		size_t currentStage{};
+		size_t nextStage;
+
+		if (!location->status()) {currentStage = 10;}
+		else if(!location->quest.finishStatus()) { currentStage = 30; }
+		else if (location->quest.getStatus() == 1) { currentStage = 50; }
+		else if (location->quest.getStatus() == 2) { currentStage = 40; }
+		else { std::cerr << "Error of Scene Control" << std::flush; return; }
+
+		QuestStage* stage = location->quest.findStage(currentStage);
+		std::cout << stage->showName();
+		nextStage = stage->nextIndex;
+		
+		while (true)
+		{
+			if (nextStage == currentStage) { std::cout << "You have left the location" << std::endl; return; }
+			else if (nextStage < 10)
+			{
+				currentStage = nextStage;
+				size_t optionSize = location->quest.getOptionCount();
+				OptionChoice* option = location->quest.getOption(currentStage);
+				for (size_t i = 0; i < optionSize; i++)
+				{
+					stage = location->quest.findStage((*option)[i]);
+					std::cout << i+1 << ". " << stage->showName();
+				}
+
+			}
+		}
+		
 	};
 
 	void loadQuest(Character& PC, Character& Enemy, QuestPointer*& location)

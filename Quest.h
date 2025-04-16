@@ -5,6 +5,13 @@
 #include <string>
 
 class Quest {
+public:
+    enum QuestStatus
+    {
+        neutral,
+        win,
+        defeat
+    };
 private:
     std::unique_ptr<std::unique_ptr<QuestStage>[]> stages;
     std::unique_ptr<std::unique_ptr<OptionChoice>[]> options;
@@ -13,12 +20,12 @@ private:
     size_t stageSize;
     size_t optionSize;
     bool isFinished;
-    int status;
+    int status = QuestStatus::neutral;
 
 public:
     Quest()
         : stageCapacity(0), optionCapacity(0),
-        stageSize(0), optionSize(0), isFinished(false), status(0) {
+        stageSize(0), optionSize(0), isFinished(false) {
     }
 
     void addStage(std::unique_ptr<QuestStage> stage) {
@@ -57,10 +64,27 @@ public:
         return nullptr;
     }
 
+    QuestStage* findStage(size_t index) const {
+        for (size_t i = 0; i < stageSize; i++)
+        {
+            if (stages[index]->getIndex() == index)
+            {
+                return stages[index].get();
+            }
+        }
+        return nullptr;
+    }
+
     OptionChoice* getOption(size_t index) const {
         if (index < optionSize) return options[index].get();
         return nullptr;
     }
+
+    void setStatus(QuestStatus status) { this->status = status; }
+    int getStatus() const { return status; }
+    void finish() { isFinished = true; }
+    bool finishStatus() { return isFinished; }
+
 
 private:
     void resizeStages() {
@@ -86,10 +110,4 @@ private:
         options = std::move(newArray);
         optionCapacity = newCapacity;
     }
-
-    void finish() { isFinished = true; }
-    void win() { status = 1; }
-    void defeat() { status = 2; }
-    int checkStatus() const { return status; }
-    bool checkFinish() const { return isFinished; }
 };
