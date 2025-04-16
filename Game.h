@@ -12,6 +12,7 @@ private:
 	PCCharacterCreate createPC;
 	MainMenu menu;
 	InsideGameMenu menu2;
+	SceneControl sceneControl;
 	Map CapitalCity;
 	Map EvilSwamp;
 	Map BlackMountain;
@@ -263,8 +264,6 @@ public:
 		initLevel2();
 	}
 
-	void loadQuest() { std::cout << "Success!\n"; };
-
 	void loadLocation(size_t index, Map& map)
 	{
 		if (auto rawPtr = dynamic_cast<QuestPointer*>(map[index].get()))
@@ -274,13 +273,18 @@ public:
 				rawPtr->activate(keys[i]);
 				if (rawPtr->status())
 				{
-					loadQuest();
+					rawPtr->readDescription();
+					sceneControl.loadQuest(PC, EnemyCultist, rawPtr);
 					return;
 				}	
 			}
+
+			std::cout << "Meeting location prohibited!\n\n";
 		}
 		else if (auto rawPtr = dynamic_cast<QuestGetPointer*>(map[index].get()))
 		{
+			rawPtr->readDescription();
+			sceneControl.loadNPCScene(PC, rawPtr);
 			rawPtr->activate("Ok");
 			addKey(rawPtr->getKey());
 			std::cout << "Key Added!\n";

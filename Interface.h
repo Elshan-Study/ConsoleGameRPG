@@ -677,3 +677,17 @@ public:
 	}
 
 };
+
+class SceneControl final : public Interface
+{
+public:
+	void loadNPCScene(Character&PC, QuestGetPointer*& location)
+	{
+		std::cout << "Success!\n";
+	};
+
+	void loadQuest(Character& PC, Character& Enemy, QuestPointer*& location)
+	{
+		std::cout << "Success!\n";
+	};
+};
