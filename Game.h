@@ -11,6 +11,7 @@ private:
 	Character PC;
 	PCCharacterCreate createPC;
 	MainMenu menu;
+	InsideGameMenu menu2;
 	Map CapitalCity;
 	Map EvilSwamp;
 	Map BlackMountain;
@@ -255,19 +256,86 @@ public:
 		initLevel2();
 	}
 
+	void gamePlay(size_t choice)
+	{
+		if (choice == 1)
+		{
+			if (PC.currentAP == PC.archetype->getAP())
+			{
+				std::cout << "AP is full!\n";
+				return;
+			}
+			if (PC.skillCheck(PC.discipline(), 2))
+			{
+				PC.recoverAP();
+				size_t mod = 5 - PC.Discipline();
+				PC.currentAP -= mod;
+				std::cout << "Some AP recovered\n";
+			}
+		}
+		else if (choice == 2)
+		{
+			if (PC.currentHP == PC.archetype->getHP()) 
+			{ 
+				std::cout << "HP is full!\n";
+				return; 
+			}
+			if (PC.skillCheck(PC.resilience(), 2))
+			{
+				PC.recoverHP();
+				size_t mod = 5 - PC.Resilience();
+				PC.currentHP -= mod;
+				std::cout << "Some HP recovered\n";
+			}
+		}
+		else if (choice == 3)
+		{
+			static_cast<char>(choice);
+			CapitalCity.readDescription();
+			std::cout << std::endl;
+			MapMenu newMenu;
+			choice = newMenu.show(CapitalCity);
+
+			return;
+		}
+	}
+
 	void start()
 	{
-		initLevels();
-		char choice = menu.show();
-
-		switch (choice-48)
+		while (true)
 		{
-		case 1:
-			createPC.initialize(PC);
-			std::cout << "Character Create Successfully" << std::endl;
-			break;
-		default:
-			break;
+			CapitalCity.setMain("Capital City", "capitalCity.txt");
+			initLevels();
+			char choice = menu.show();
+
+			switch (choice - 48)
+			{
+			case 1:
+				createPC.initialize(PC);
+				std::cout << "Character Create Successfully" << std::endl;
+				choice = menu2.show();
+				if (choice - 48 != 6)
+				{
+					gamePlay(choice - 48);
+				}
+				break;
+			case 2:
+				PC.printInfo();
+				choice = menu2.show();
+				if (choice - 48 != 6)
+				{
+					gamePlay(choice - 48);
+				}
+				break;
+			case 3:
+				break;
+			case 4:
+				break;
+			case 5:
+				return;
+			default:
+				break;
+			}
 		}
 	}
 };

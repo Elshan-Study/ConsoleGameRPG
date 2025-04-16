@@ -590,13 +590,14 @@ public:
 			std::cout << "Main menu: \n";
 			std::cout << "1. New Game\n";
 			std::cout << "2. Continue Game\n";
-			std::cout << "3. Load Game\n";
-			std::cout << "4. Exit\n";
+			std::cout << "3. Save Game\n";
+			std::cout << "4. Load Game\n";
+			std::cout << "5. Exit\n";
 			std::cout << "\nYour choice: ";
 			std::cin >> choice;
 			std::cout << std::endl;
 
-			if (choice-48 < 1 || choice-48 > 4)
+			if (choice-48 < 1 || choice-48 > 5)
 			{
 				std::cout << "Wrong choice!" << std::endl;
 				continue;
@@ -608,4 +609,71 @@ public:
 		return choice;
 
 	}
+};
+
+class InsideGameMenu final : public Interface
+{
+public:
+	InsideGameMenu() {};
+
+	char show()
+	{
+		char choice;
+
+		while (true)
+		{
+			std::cout << "1. Restore AP\n";
+			std::cout << "2. Restore HP\n";
+			std::cout << "3. Visit Capital City\n";
+			std::cout << "4. Visit Evil Swamp\n";
+			std::cout << "5. Visit Black Mountain\n";
+			std::cout << "6. Return to main menu\n";
+			std::cout << "\nYour choice: ";
+			std::cin >> choice;
+			std::cout << std::endl;
+
+			if (choice - 48 < 1 || choice - 48 > 6)
+			{
+				std::cout << "Wrong choice!" << std::endl;
+				continue;
+			}
+
+			break;
+		}
+
+		return choice;
+	}
+};
+
+class MapMenu final : public Interface
+{
+public:
+	MapMenu() {};
+
+	char show(Map& map)
+	{
+		char choice;
+
+		while (true)
+		{
+			std::cout << "1. " << map[0]->getName() << "\n";
+			std::cout << "2. " << map[1]->getName() << "\n";
+			std::cout << "3. Return to menu\n";
+
+			std::cout << "\nYour choice: ";
+			std::cin >> choice;
+			std::cout << std::endl;
+
+			if (choice - 48 < 1 || choice - 48 > 3)
+			{
+				std::cout << "Wrong choice!" << std::endl;
+				continue;
+			}
+
+			break;
+		}
+
+		return choice;
+	}
+
 };

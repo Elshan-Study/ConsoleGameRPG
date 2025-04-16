@@ -17,6 +17,7 @@ public:
     virtual bool status() const = 0;
 
     void setMain(const std::string& name, const std::string& filename) { this->name = name, description_file = filename; }
+    std::string getName() const { return name; }
 
 	void readDescription()
 	{
