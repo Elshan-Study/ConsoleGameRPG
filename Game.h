@@ -7,32 +7,32 @@
 class Game
 {
 private:
+	const size_t QUESTCOUNT = 3;
 	Character PC;
 	PCCharacterCreate createPC;
 	MainMenu menu;
 	Map CapitalCity;
 	Map EvilSwamp;
 	Map BlackMountain;
-	Character EnemyCultist;
+	size_t winCount;
+	size_t defeatCount;
 public:
 	Game() = default;
 	~Game() = default;
 
+	/*QuestPointer EvilSwamp("Evil Swamp", "evilSwamp.txt", key2);
+		QuestPointer DragonCaves("Dragon Caves", "dragonCaves.txt", key3);*/
+
+	std::string key1 = "011K";
+	std::string key2 = "021K";
+	std::string key3 = "031K";
+
+	Character EnemyCultist;
+
 	void initLevel1()
 	{
-		std::string key1 = "011K";
-		/*std::string key2 = "012K";
-		std::string key3 = "021K";
-		std::string key4 = "022K";
-		std::string key5 = "031K";
-		std::string key6 = "032K";*/
-
-		QuestPointer Sewerage("Sewerage", "sewerage.txt", key1);
-		/*QuestPointer BlackMarket("Black Market", "blackMarket.txt", key2);
-		QuestPointer EvilSwamp("Evil Swamp", "evilSwamp.txt", key3);
-		QuestPointer TrollEdge("Troll Edge", "trollEdge.txt", key4);
-		QuestPointer DragonCaves("Dragon Caves", "dragonCaves.txt", key5);
-		QuestPointer RoyalPeak("Royal Peak", "royalPeak.txt", key6);*/
+		std::unique_ptr<Location> Sewerage = std::make_unique<QuestPointer>("Sewerage", "sewerage.txt", key1);
+		QuestPointer* rawPtr = dynamic_cast<QuestPointer*>(Sewerage.get());
 
 		/*Base thread:*/
 		std::unique_ptr<QuestStage> stageSQ1 = std::make_unique<useQuestItemStage>(
@@ -44,15 +44,15 @@ public:
 		std::unique_ptr<QuestStage> stageSQ4 = std::make_unique<TextStage>(
 			"Go straight ahead towards the grinding (5 AP)", 40, 41, 5, PC);
 		std::unique_ptr<OptionChoice> optionSQ0 = std::make_unique<OptionChoice>(4);
-		Sewerage.quest.addStage(std::move(stageSQ1)); /*0*/
-		Sewerage.quest.addStage(std::move(stageSQ2)); /*1*/
-		Sewerage.quest.addStage(std::move(stageSQ3)); /*2*/
-		Sewerage.quest.addStage(std::move(stageSQ4)); /*3*/
-		Sewerage.quest.addOption(std::move(optionSQ0)); /*0*/
-		Sewerage.quest.linkStageToOption(0, 0);
-		Sewerage.quest.linkStageToOption(1, 0);
-		Sewerage.quest.linkStageToOption(2, 0);
-		Sewerage.quest.linkStageToOption(3, 0);
+		rawPtr->quest.addStage(std::move(stageSQ1)); /*0*/
+		rawPtr->quest.addStage(std::move(stageSQ2)); /*1*/
+		rawPtr->quest.addStage(std::move(stageSQ3)); /*2*/
+		rawPtr->quest.addStage(std::move(stageSQ4)); /*3*/
+		rawPtr->quest.addOption(std::move(optionSQ0)); /*0*/
+		rawPtr->quest.linkStageToOption(0, 0);
+		rawPtr->quest.linkStageToOption(1, 0);
+		rawPtr->quest.linkStageToOption(2, 0);
+		rawPtr->quest.linkStageToOption(3, 0);
 
 		/*Thread 2:*/
 		std::unique_ptr<QuestStage> stageSQ11 = std::make_unique<TextStage>(
@@ -64,9 +64,9 @@ public:
 		std::unique_ptr<QuestStage> stageSQ41 = std::make_unique<TextStage>(
 			"You rush forward and find yourself in a lab hidden deep in the sewers. Flasks are boiling, bodies are mutilated in tanks, and someone in a hood turns to you...",
 			41, 4, 0, PC);
-		Sewerage.quest.addStage(std::move(stageSQ11)); /*4*/
-		Sewerage.quest.addStage(std::move(stageSQ21)); /*5*/
-		Sewerage.quest.addStage(std::move(stageSQ41)); /*6*/
+		rawPtr->quest.addStage(std::move(stageSQ11)); /*4*/
+		rawPtr->quest.addStage(std::move(stageSQ21)); /*5*/
+		rawPtr->quest.addStage(std::move(stageSQ41)); /*6*/
 		
 		/*Option 1:*/
 		std::unique_ptr<QuestStage> stageSQ111 = std::make_unique<skillCheckStage>(
@@ -74,11 +74,11 @@ public:
 		std::unique_ptr<QuestStage> stageSQ112 = std::make_unique<TextStage>(
 			"Follow the tracks (2 AP)", 112, 1121, 2, PC);
 		std::unique_ptr<OptionChoice> optionSQ1 = std::make_unique<OptionChoice>(2);
-		Sewerage.quest.addStage(std::move(stageSQ111)); /*7*/
-		Sewerage.quest.addStage(std::move(stageSQ112)); /*8*/
-		Sewerage.quest.addOption(std::move(optionSQ1)); /*1*/
-		Sewerage.quest.linkStageToOption(7, 1);
-		Sewerage.quest.linkStageToOption(8, 1);
+		rawPtr->quest.addStage(std::move(stageSQ111)); /*7*/
+		rawPtr->quest.addStage(std::move(stageSQ112)); /*8*/
+		rawPtr->quest.addOption(std::move(optionSQ1)); /*1*/
+		rawPtr->quest.linkStageToOption(7, 1);
+		rawPtr->quest.linkStageToOption(8, 1);
 
 		/*Option 2:*/
 		std::unique_ptr<QuestStage> stageSQ211 = std::make_unique<skillCheckStage>(
@@ -87,11 +87,11 @@ public:
 		std::unique_ptr<QuestStage> stageSQ212 = std::make_unique<giveItemStage>(
 			"Save the sample and move on (1 AP)", 212, 0, 1, PC, std::move(dangerSample));
 		std::unique_ptr<OptionChoice> optionSQ2 = std::make_unique<OptionChoice>(2);
-		Sewerage.quest.addStage(std::move(stageSQ211)); /*9*/
-		Sewerage.quest.addStage(std::move(stageSQ212)); /*10*/
-		Sewerage.quest.addOption(std::move(optionSQ2)); /*2*/
-		Sewerage.quest.linkStageToOption(9, 2);
-		Sewerage.quest.linkStageToOption(10, 2);
+		rawPtr->quest.addStage(std::move(stageSQ211)); /*9*/
+		rawPtr->quest.addStage(std::move(stageSQ212)); /*10*/
+		rawPtr->quest.addOption(std::move(optionSQ2)); /*2*/
+		rawPtr->quest.linkStageToOption(9, 2);
+		rawPtr->quest.linkStageToOption(10, 2);
 
 		/*Option 3:*/
 		std::unique_ptr<QuestStage> stageSQ31 = std::make_unique<skillCheckStage>(
@@ -99,11 +99,11 @@ public:
 		std::unique_ptr<QuestStage> stageSQ32 = std::make_unique<TextStage>(
 			"Call - \"Is there anyone alive here ?\" (1 AP)", 32, 321, 1, PC);
 		std::unique_ptr<OptionChoice> optionSQ3 = std::make_unique<OptionChoice>(2);
-		Sewerage.quest.addStage(std::move(stageSQ31)); /*11*/
-		Sewerage.quest.addStage(std::move(stageSQ32)); /*12*/
-		Sewerage.quest.addOption(std::move(optionSQ3)); /*3*/
-		Sewerage.quest.linkStageToOption(11, 3);
-		Sewerage.quest.linkStageToOption(12, 3);
+		rawPtr->quest.addStage(std::move(stageSQ31)); /*11*/
+		rawPtr->quest.addStage(std::move(stageSQ32)); /*12*/
+		rawPtr->quest.addOption(std::move(optionSQ3)); /*3*/
+		rawPtr->quest.linkStageToOption(11, 3);
+		rawPtr->quest.linkStageToOption(12, 3);
 
 		/*Option 4:*/
 		std::unique_ptr<QuestStage> stageSQ411 = std::make_unique<AttackStage>(
@@ -111,11 +111,11 @@ public:
 		std::unique_ptr<QuestStage> stageSQ412 = std::make_unique<skillCheckStage>(
 			"Hide and watch (2 AP)", 412, 4121, 2, 2, PC, PC.stealth());
 		std::unique_ptr<OptionChoice> optionSQ4 = std::make_unique<OptionChoice>(2);
-		Sewerage.quest.addStage(std::move(stageSQ411)); /*13*/
-		Sewerage.quest.addStage(std::move(stageSQ412)); /*14*/
-		Sewerage.quest.addOption(std::move(optionSQ4)); /*4*/
-		Sewerage.quest.linkStageToOption(13, 4);
-		Sewerage.quest.linkStageToOption(14, 4);
+		rawPtr->quest.addStage(std::move(stageSQ411)); /*13*/
+		rawPtr->quest.addStage(std::move(stageSQ412)); /*14*/
+		rawPtr->quest.addOption(std::move(optionSQ4)); /*4*/
+		rawPtr->quest.linkStageToOption(13, 4);
+		rawPtr->quest.linkStageToOption(14, 4);
 
 		/*Thread 3:*/
 		std::unique_ptr<QuestStage> stageSQ1111 = std::make_unique<TextStage>(
@@ -139,13 +139,13 @@ public:
 		std::unique_ptr<QuestStage> stageSQ4121 = std::make_unique<TextStage>(
 			"You overhear a conversation about supplies from the city pharmacy. Perhaps someone higher up is involved.",
 			4121, 50, 0, PC);
-		Sewerage.quest.addStage(std::move(stageSQ1111)); /*15*/
-		Sewerage.quest.addStage(std::move(stageSQ1121)); /*16*/
-		Sewerage.quest.addStage(std::move(stageSQ2111)); /*17*/
-		Sewerage.quest.addStage(std::move(stageSQ311)); /*18*/
-		Sewerage.quest.addStage(std::move(stageSQ321)); /*19*/
-		Sewerage.quest.addStage(std::move(stageSQ4111)); /*20*/
-		Sewerage.quest.addStage(std::move(stageSQ4121)); /*21*/
+		rawPtr->quest.addStage(std::move(stageSQ1111)); /*15*/
+		rawPtr->quest.addStage(std::move(stageSQ1121)); /*16*/
+		rawPtr->quest.addStage(std::move(stageSQ2111)); /*17*/
+		rawPtr->quest.addStage(std::move(stageSQ311)); /*18*/
+		rawPtr->quest.addStage(std::move(stageSQ321)); /*19*/
+		rawPtr->quest.addStage(std::move(stageSQ4111)); /*20*/
+		rawPtr->quest.addStage(std::move(stageSQ4121)); /*21*/
 
 		/*Option 5:*/
 		std::unique_ptr<QuestStage> stageSQ11211 = std::make_unique<skillCheckStage>(
@@ -153,16 +153,16 @@ public:
 		std::unique_ptr<OptionChoice> optionSQ5 = std::make_unique<OptionChoice>(2);
 		std::unique_ptr<QuestStage> stageSQ11212 = std::make_unique<useQuestItemStage>(
 			"Try using a Danger Sample (1 AP)", 11212, 112110, 1, PC, "Danger Sample");
-		Sewerage.quest.addStage(std::move(stageSQ11211)); /*22*/
-		Sewerage.quest.addStage(std::move(stageSQ11212)); /*23*/
-		Sewerage.quest.addOption(std::move(optionSQ5)); /*5*/
-		Sewerage.quest.linkStageToOption(22, 5);
-		Sewerage.quest.linkStageToOption(23, 5);
+		rawPtr->quest.addStage(std::move(stageSQ11211)); /*22*/
+		rawPtr->quest.addStage(std::move(stageSQ11212)); /*23*/
+		rawPtr->quest.addOption(std::move(optionSQ5)); /*5*/
+		rawPtr->quest.linkStageToOption(22, 5);
+		rawPtr->quest.linkStageToOption(23, 5);
 
 		std::unique_ptr<QuestStage> stageSQ112110 = std::make_unique<TextStage>(
 			"You open the door and enter the lab, attacking the cultist you caught off guard.",
 			112110, 4111, 0, PC);
-		Sewerage.quest.addStage(std::move(stageSQ112110)); /*24*/
+		rawPtr->quest.addStage(std::move(stageSQ112110)); /*24*/
 
 		/*Endings:*/
 		std::unique_ptr<QuestStage> stageSQ50 = std::make_unique<TextStage>(
@@ -174,9 +174,11 @@ public:
 		std::unique_ptr<QuestStage> stageSQ70 = std::make_unique<TextStage>(
 			"You bring the cultist's body and the contents of the lab upstairs. The people are grateful, but the fear of the underground secrets remains.",
 			70, 0, 0, PC);
-		Sewerage.quest.addStage(std::move(stageSQ50)); /*24*/
-		Sewerage.quest.addStage(std::move(stageSQ60)); /*25*/
-		Sewerage.quest.addStage(std::move(stageSQ70)); /*26*/
+		rawPtr->quest.addStage(std::move(stageSQ50)); /*24*/
+		rawPtr->quest.addStage(std::move(stageSQ60)); /*25*/
+		rawPtr->quest.addStage(std::move(stageSQ70)); /*26*/
+
+		CapitalCity.addLocation(std::move(Sewerage));
 	}
 
 	void initLevels()
