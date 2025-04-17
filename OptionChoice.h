@@ -64,11 +64,21 @@ public:
     }
 
     bool addChoice(size_t index) {
-        if (size < capacity) {
-            stages[size++] = index;
-            return true;
+        if (size >= capacity) {
+            size_t newCapacity = capacity == 0 ? 1 : capacity * 2;
+            size_t* newStages = new size_t[newCapacity];
+
+            for (size_t i = 0; i < size; ++i) {
+                newStages[i] = stages[i];
+            }
+
+            delete[] stages;
+            stages = newStages;
+            capacity = newCapacity;
         }
-        return false;
+
+        stages[size++] = index;
+        return true;
     }
 
     size_t getSize() const {

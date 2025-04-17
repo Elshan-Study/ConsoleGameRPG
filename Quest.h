@@ -67,9 +67,9 @@ public:
     QuestStage* findStage(size_t index) const {
         for (size_t i = 0; i < stageSize; i++)
         {
-            if (stages[index]->getIndex() == index)
+            if (stages[i]->getIndex() == index)
             {
-                return stages[index].get();
+                return stages[i].get();
             }
         }
         return nullptr;

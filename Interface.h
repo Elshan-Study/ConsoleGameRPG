@@ -681,42 +681,78 @@ public:
 class SceneControl final : public Interface
 {
 public:
-	void loadNPCScene(Character&PC, QuestGetPointer*& location)
+	bool loadNPCScene(Character&PC, QuestGetPointer*& location)
 	{
 		size_t currentStage{};
 		size_t nextStage;
+		bool isKeyAdded = false;
 
-		if (!location->status()) {currentStage = 10;}
+		if (!location->status()) { currentStage = 10; isKeyAdded = true; }
 		else if(!location->quest.finishStatus()) { currentStage = 30; }
 		else if (location->quest.getStatus() == 1) { currentStage = 50; }
 		else if (location->quest.getStatus() == 2) { currentStage = 40; }
-		else { std::cerr << "Error of Scene Control" << std::flush; return; }
+		else { std::cerr << "Error of Scene Control" << std::flush; return isKeyAdded; }
 
 		QuestStage* stage = location->quest.findStage(currentStage);
-		std::cout << stage->showName();
+		std::cout << stage->showName() << "\n";
+		std::cin.get();
 		nextStage = stage->nextIndex;
 		
 		while (true)
 		{
-			if (nextStage == currentStage) { std::cout << "You have left the location" << std::endl; return; }
+			if (nextStage == currentStage) { 
+				std::cout << "You have left the location" << "\n\n";
+				std::cin.get();
+				return isKeyAdded;
+			}
 			else if (nextStage < 10)
 			{
 				currentStage = nextStage;
 				size_t optionSize = location->quest.getOptionCount();
 				OptionChoice* option = location->quest.getOption(currentStage);
-				for (size_t i = 0; i < optionSize; i++)
+				for (size_t i = 0; i <= optionSize+1; i++)
 				{
 					stage = location->quest.findStage((*option)[i]);
-					std::cout << i+1 << ". " << stage->showName();
+					std::cout << i + 1 << ". " << stage->showName() << "\n";
 				}
+				std::cout << "\n";
 
+				while (true)
+				{
+					char choice;
+					std::cout << "Your choice: ";
+					std::cin >> choice;
+					std::cout << "\n";
+
+					if (choice - 48 < 1 || choice - 48 > option->getSize())
+					{
+						std::cout << "Wrong choice!\n";
+						continue;
+					}
+
+					stage = location->quest.findStage((*option)[choice - 49]);
+					nextStage = stage->nextIndex;
+
+					break;
+				}
 			}
+			else
+			{
+				currentStage = nextStage;
+				stage = location->quest.findStage(currentStage);
+				std::cout << stage->showName() << "\n\n";
+				std::cin.get();
+				nextStage = stage->nextIndex;
+			}
+
 		}
 		
+		return isKeyAdded;
 	};
 
 	void loadQuest(Character& PC, Character& Enemy, QuestPointer*& location)
 	{
 		std::cout << "Success!\n";
 	};
+
 };

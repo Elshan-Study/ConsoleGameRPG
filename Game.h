@@ -280,14 +280,22 @@ public:
 			}
 
 			std::cout << "Meeting location prohibited!\n\n";
+			std::cin.get();
 		}
 		else if (auto rawPtr = dynamic_cast<QuestGetPointer*>(map[index].get()))
 		{
 			rawPtr->readDescription();
-			sceneControl.loadNPCScene(PC, rawPtr);
-			rawPtr->activate("Ok");
-			addKey(rawPtr->getKey());
-			std::cout << "Key Added!\n";
+			std::cout << "\n";
+			std::cin.get();
+			bool isKeyAdded = sceneControl.loadNPCScene(PC, rawPtr);
+			if (isKeyAdded)
+			{
+				rawPtr->activate("OK");
+				std::string newKey = rawPtr->getKey();
+				addKey(newKey);
+				std::cout << "Key Added!\n\n";
+				std::cin.get();
+			}
 		}
 	}
 
