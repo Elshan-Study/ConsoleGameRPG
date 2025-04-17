@@ -4,6 +4,7 @@
 #include "Interface.h"
 #include "Location.h"
 #include "Quest.h"
+
 class Game
 {
 private:
@@ -295,6 +296,7 @@ public:
 				addKey(newKey);
 				std::cout << "Key Added!\n\n";
 				std::cin.get();
+				clearScreen();
 			}
 		}
 	}
@@ -338,9 +340,25 @@ public:
 			std::cout << std::endl;
 			MapMenu newMenu;
 			choice = newMenu.show(CapitalCity);
+			clearScreen();
 			loadLocation(choice - 48 - 1, CapitalCity);
 
 			return;
+		}
+	}
+
+	int MenuControl()
+	{
+		while (true)
+		{
+			PC.printInfo();
+			char choice = menu2.show();
+			clearScreen();
+			if (choice - 48 != 6)
+			{
+				gamePlay(choice - 48);
+			}
+			return choice - 48;
 		}
 	}
 
@@ -351,24 +369,25 @@ public:
 			CapitalCity.setMain("Capital City", "capitalCity.txt");
 			initLevels();
 			char choice = menu.show();
+			clearScreen();
 
 			switch (choice - 48)
 			{
 			case 1:
 				createPC.initialize(PC);
 				std::cout << "Character Create Successfully" << std::endl;
-				choice = menu2.show();
-				if (choice - 48 != 6)
+				clearScreen();
+				while (true)
 				{
-					gamePlay(choice - 48);
+					int switchControl = MenuControl();
+					if (switchControl == 6) { break; }
 				}
 				break;
 			case 2:
-				PC.printInfo();
-				choice = menu2.show();
-				if (choice - 48 != 6)
+				while (true)
 				{
-					gamePlay(choice - 48);
+					int switchControl = MenuControl();
+					if (switchControl == 6) { break; }
 				}
 				break;
 			case 3:

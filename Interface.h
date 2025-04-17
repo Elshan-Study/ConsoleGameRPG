@@ -4,6 +4,15 @@
 #include "Location.h"
 #include <memory>
 #include "QuestStage.h"
+
+static void clearScreen() {
+#ifdef _WIN32
+	system("cls");
+#else
+	system("clear");
+#endif
+}
+
 class Interface
 {
 public:
@@ -402,10 +411,12 @@ public:
 			{
 			case 1:
 				ArchetypeChoice(PC);
+				clearScreen();
 				arch = true;
 				break;
 			case 2:
 				SpecializationChoice(PC);
+				clearScreen();
 				spec = true;
 				break;
 			case 0:
@@ -481,9 +492,11 @@ public:
 			{
 			case 1:
 				CharacteristicsEdit(PC, experience);
+				clearScreen();
 				break;
 			case 2:
 				SkillEdit(PC, experience);
+				clearScreen();
 				break;
 			case 3:
 				PC.specialization->Alchemy = alchemy;
@@ -565,10 +578,13 @@ public:
 	void initialize(Character& PC)
 	{
 		MainChoice(PC);
+		clearScreen();
 		
 		CharacterEdit(PC);
+		clearScreen();
 
 		StartItemSet(PC);
+		clearScreen();
 
 	};
 
