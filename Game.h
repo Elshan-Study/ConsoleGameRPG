@@ -145,7 +145,7 @@ public:
 			321, 60, 0, PC);
 		std::unique_ptr<QuestStage> stageSQ4111 = std::make_unique<TextStage>(
 			"You engage in combat with an alchemist cultist. The battle is intense, but victory gives you evidence and ingredients for an antidote.",
-			4111, 70, 0, PC);
+			4111, 50, 0, PC);
 		std::unique_ptr<QuestStage> stageSQ4121 = std::make_unique<TextStage>(
 			"You overhear a conversation about supplies from the city pharmacy. Perhaps someone higher up is involved.",
 			4121, 50, 0, PC);
@@ -181,12 +181,11 @@ public:
 		std::unique_ptr<QuestStage> stageSQ60 = std::make_unique<TextStage>(
 			"The city continues to suffer, and the disease slowly spreads. Perhaps you will return... when it is too late.",
 			60, 60, 0, PC);
-		std::unique_ptr<QuestStage> stageSQ70 = std::make_unique<TextStage>(
-			"You bring the cultist's body and the contents of the lab upstairs. The people are grateful, but the fear of the underground secrets remains.",
-			70, 70, 0, PC);
+		std::unique_ptr<QuestStage> stageSQ0 = std::make_unique<TextStage>(
+			"The cool air smells of mold, moisture runs down the walls. Somewhere ahead, you hear a strange metallic grinding sound...", 999, 0, 0, PC);
 		rawPtr->quest.addStage(std::move(stageSQ50)); /*24*/
 		rawPtr->quest.addStage(std::move(stageSQ60)); /*25*/
-		rawPtr->quest.addStage(std::move(stageSQ70)); /*26*/
+		rawPtr->quest.addStage(std::move(stageSQ0));
 
 		CapitalCity.addLocation(std::move(Sewerage));
 	}
@@ -245,10 +244,11 @@ public:
 			"there's someone watching from below.\n" 
 			"He rummages under the table, takes out a burnt torch.", 
 			20, 21, 0, PC);
-		std::unique_ptr<QuestStage> stageGB21 = std::make_unique<TextStage>(
+		std::unique_ptr<Item> Torch = std::make_unique<QuestItem>("Torch");
+		std::unique_ptr<QuestStage> stageGB21 = std::make_unique<giveItemStage>(
 			"[You receive: Torch]\n"
 			"[New Quest : Sewerage Quest]",
-			21, 22, 0, PC);
+			21, 22, 0, PC, std::move(Torch));
 		std::unique_ptr<QuestStage> stageGB22 = std::make_unique<TextStage>(
 			"Guard: The entrance to the tunnels is behind the market, under a hatch with the mark of an old guild sign.",
 			22, 22, 0, PC);
@@ -275,7 +275,20 @@ public:
 				if (rawPtr->status())
 				{
 					rawPtr->readDescription();
-					sceneControl.loadQuest(PC, EnemyCultist, rawPtr);
+					bool isQuestEnded = sceneControl.loadQuest(PC, rawPtr, 999, 50, 60);
+					if(isQuestEnded)
+					{
+						if (rawPtr->status() == Quest::win) {
+							winCount += 1;
+							map.setFinishStatus(Quest::win);
+						}
+						else if (rawPtr->status() == Quest::defeat) {
+							defeatCount += 1;
+							map.setFinishStatus(Quest::defeat);
+						}
+					}
+					clearScreen();
+
 					return;
 				}	
 			}
@@ -288,7 +301,7 @@ public:
 			rawPtr->readDescription();
 			std::cout << "\n";
 			std::cin.get();
-			bool isKeyAdded = sceneControl.loadNPCScene(PC, rawPtr);
+			bool isKeyAdded = sceneControl.loadNPCScene(rawPtr, map.getFinishStatus());
 			if (isKeyAdded)
 			{
 				rawPtr->activate("OK");
@@ -357,6 +370,7 @@ public:
 			if (choice - 48 != 6)
 			{
 				gamePlay(choice - 48);
+				clearScreen();
 			}
 			return choice - 48;
 		}
@@ -384,8 +398,10 @@ public:
 				}
 				break;
 			case 2:
+				createPC.TestPC(PC);
 				while (true)
 				{
+					
 					int switchControl = MenuControl();
 					if (switchControl == 6) { break; }
 				}

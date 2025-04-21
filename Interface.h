@@ -23,6 +23,7 @@ public:
 class PCCharacterCreate final : public Interface
 {
 public:
+	size_t experience = 100;
 
 	PCCharacterCreate() {};
 
@@ -327,7 +328,6 @@ public:
 				{
 					experience -= (PC.Perception() + 1) * 5;
 					PC.specialization->Perception += 1;
-
 				}
 				break;
 			case 14:
@@ -463,8 +463,6 @@ public:
 		size_t willpower = PC.Willpower();
 		size_t presence = PC.Presence();
 
-		size_t experience = 100;
-
 		while (flag)
 		{
 			char choice;
@@ -588,6 +586,17 @@ public:
 
 	};
 
+	void TestPC(Character& PC)
+	{
+		PC.name = "Test";
+		std::unique_ptr<Archetype> arch = std::make_unique<Simpleton>();
+		PC.archetype = std::move(arch);
+		std::unique_ptr<Specialization> spec = std::make_unique<Wizard>();
+		PC.specialization = std::move(spec);
+		PC.specialization->Alchemy += 2;
+		PC.SetAll();
+	}
+
 };
 
 class MainMenu final : public Interface
@@ -697,16 +706,18 @@ public:
 class SceneControl final : public Interface
 {
 public:
-	bool loadNPCScene(Character&PC, QuestGetPointer*& location)
+
+	bool loadNPCScene(QuestGetPointer*& location, size_t questStatus)
 	{
 		size_t currentStage{};
 		size_t nextStage;
 		bool isKeyAdded = false;
-
-		if (!location->status()) { currentStage = 10; isKeyAdded = true; }
-		else if(!location->quest.finishStatus()) { currentStage = 30; }
-		else if (location->quest.getStatus() == 1) { currentStage = 50; }
-		else if (location->quest.getStatus() == 2) { currentStage = 40; }
+		
+		if (questStatus == Quest::win) { currentStage = 50; }
+		else if (questStatus == Quest::defeat) { currentStage = 40; }
+		else if (!location->status()) { currentStage = 10; isKeyAdded = true; }
+		else if (!location->quest.finishStatus()) { currentStage = 30; }
+		
 		else { std::cerr << "Error of Scene Control" << std::flush; return isKeyAdded; }
 
 		QuestStage* stage = location->quest.findStage(currentStage);
@@ -724,9 +735,8 @@ public:
 			else if (nextStage < 10)
 			{
 				currentStage = nextStage;
-				size_t optionSize = location->quest.getOptionCount();
 				OptionChoice* option = location->quest.getOption(currentStage);
-				for (size_t i = 0; i <= optionSize+1; i++)
+				for (size_t i = 0; i < option->getSize(); i++)
 				{
 					stage = location->quest.findStage((*option)[i]);
 					std::cout << i + 1 << ". " << stage->showName() << "\n";
@@ -756,6 +766,7 @@ public:
 			{
 				currentStage = nextStage;
 				stage = location->quest.findStage(currentStage);
+				stage->on();
 				std::cout << stage->showName() << "\n\n";
 				std::cin.get();
 				nextStage = stage->nextIndex;
@@ -766,9 +777,119 @@ public:
 		return isKeyAdded;
 	};
 
-	void loadQuest(Character& PC, Character& Enemy, QuestPointer*& location)
+	bool loadQuest(Character& PC, QuestPointer*& location, size_t startStage, size_t winStage, size_t defeatStage)
 	{
-		std::cout << "Success!\n";
-	};
+		if (location->quest.finishStatus())
+		{
+			std::cout << "You finished this quest\n\n";
+			std::cin.get();
+			return false;
+		}
+
+		size_t currentStage = startStage;
+		QuestStage* stage = location->quest.findStage(currentStage);
+		size_t nextStage = stage->nextIndex;
+		bool successStatus = true;
+
+		while (true)
+		{
+			if (!successStatus)
+			{
+				std::cout << "Unsuccess. Try next time\n\n";
+				std::cin.get();
+				currentStage = startStage;
+				stage = location->quest.findStage(currentStage);
+				nextStage = stage->nextIndex;
+				successStatus = true;
+				continue;
+			}
+
+			if (PC.currentAP <= 0)
+			{
+				std::cout << "You don't have enough AP or HP to continue. Restore and come back!\n\n";
+				std::cin.get();
+				return false;
+			}
+
+			if (nextStage == currentStage)
+			{
+				if (currentStage == winStage) location->quest.setStatus(Quest::win);
+				else if (currentStage == defeatStage) location->quest.setStatus(Quest::defeat);
+				std::cout << "Check get status: " << location->quest.getStatus();
+
+				std::cout << "You have left the location\n\n";
+				std::cin.get();
+				location->quest.finish();
+				return true;
+			}
+
+			if (nextStage < 10)
+			{
+				std::cout << PC.name << "\n";
+				std::cout << "Your current HP: " << PC.currentHP << "\n";
+				std::cout << "Your current AP: " << PC.currentAP << "\n";
+				std::cout << PC.inventory;
+				std::cin.get();
+
+				currentStage = nextStage;
+				OptionChoice* option = location->quest.getOption(currentStage);
+
+				for (size_t i = 0; i < option->getSize(); ++i)
+				{
+					stage = location->quest.findStage((*option)[i]);
+					std::cout << i + 1 << ". " << stage->showName() << "\n";
+				}
+				std::cout << "\n";
+
+				while (true)
+				{
+					std::cout << "Your choice: ";
+					char choice;
+					std::cin >> choice;
+
+					int choiceNum = choice - '0';
+
+					if (choiceNum < 1 || choiceNum > option->getSize())
+					{
+						std::cout << "Wrong choice!\n";
+						continue;
+					}
+
+					stage = location->quest.findStage((*option)[choiceNum - 1]);
+					successStatus = stage->on();
+					if (auto attackStage = dynamic_cast<AttackStage*>(stage))
+					{
+						std::cout << "Fight start\n";
+						std::cin.get();
+
+						if (!successStatus)
+						{
+							currentStage = defeatStage;
+							nextStage = defeatStage;
+						}
+						else
+						{
+							nextStage = stage->nextIndex;
+						}
+					}
+					else
+					{
+						nextStage = stage->nextIndex;
+					}
+					nextStage = stage->nextIndex;
+					break;
+				}
+			}
+			else 
+			{
+				currentStage = nextStage;
+				stage = location->quest.findStage(currentStage);
+				std::cout << stage->showName() << "\n\n";
+				std::cin.get();
+				nextStage = stage->nextIndex;
+			}
+		}
+	}
+
 
 };

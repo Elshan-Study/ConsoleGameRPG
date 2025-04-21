@@ -8,6 +8,7 @@ class Location
 protected:
     std::string name;
 	std::string description_file;
+    size_t finishStatus = 0;
 public:
 	Location() : name("Unknown"), description_file("Unknown") {};
     explicit Location(const std::string& name, const std::string& filename) : name(name), description_file(filename) {};
@@ -35,6 +36,9 @@ public:
 
         file.close(); 
 	}
+
+    void setFinishStatus(size_t status) { finishStatus = status; }
+    size_t getFinishStatus() const { return finishStatus; }
 };
 
 class QuestGetPointer final : public Location
@@ -86,7 +90,7 @@ public:
 
 class Map final : public Location
 {
-protected:
+private:
     static const size_t MAX_LOCATION = 5;
     size_t size = 0;
     std::unique_ptr<Location> locations[MAX_LOCATION];

@@ -30,7 +30,7 @@ public:
 
     bool on() override
     {
-        if (Main.currentAP <= cost)
+        if (Main.currentAP >= cost)
         {
             Main.currentAP -= cost;
             return 1;
@@ -81,7 +81,7 @@ public:
 
         size_t dices = status == WeaponStatus::Mellee ? Main.melee() : Main.ranged();
 
-        if (Main.currentAP <= cost)
+        if (Main.currentAP >= cost)
         {
             Main.attack(Target, trueWeapon, itemIndex, dices, successDiff);
             Main.inventory.CheckInventory();
@@ -133,10 +133,11 @@ public:
 
     bool on() override
     {
-        if (Main.currentAP <= cost)
+        if (Main.currentAP >= cost)
         {
             Main.currentAP -= cost;
-            return Main.skillCheck(numDice, successDiff);
+            bool check = Main.skillCheck(numDice, successDiff);
+            return check;
         }
 
         return 0;
@@ -155,7 +156,7 @@ public:
 
     bool on() override
     {
-        if (Main.currentAP <= cost)
+        if (Main.currentAP >= cost)
         {
             Main.currentAP -= cost;
             Main.inventory.addItem(std::move(item));
