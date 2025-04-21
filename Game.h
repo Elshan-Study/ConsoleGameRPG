@@ -46,7 +46,7 @@ public:
 
 		/*Base thread:*/
 		std::unique_ptr<QuestStage> stageSQ1 = std::make_unique<useQuestItemStage>(
-			"Explore the nearest tunnel with Torch (2 AP)", 10, 11, 2, PC, "Torch");
+			"Explore the nearest tunnel with Torch", 10, 11, PC, "Torch");
 		std::unique_ptr<QuestStage> stageSQ2 = std::make_unique<skillCheckStage>(
 			"Check water for impurities or mucus (3 AP)", 20, 21, 3, 2, PC, PC.alchemy());
 		std::unique_ptr<QuestStage> stageSQ3 = std::make_unique<skillCheckStage>(
@@ -162,7 +162,7 @@ public:
 			"Try to pick the lock (3 AP)", 11211, 112110, 3, 2, PC, PC.skullduggery());
 		std::unique_ptr<OptionChoice> optionSQ5 = std::make_unique<OptionChoice>(2);
 		std::unique_ptr<QuestStage> stageSQ11212 = std::make_unique<useQuestItemStage>(
-			"Try using a Danger Sample (1 AP)", 11212, 112110, 1, PC, "Danger Sample");
+			"Try using a Danger Sample", 11212, 112110, PC, "Danger Sample");
 		rawPtr->quest.addStage(std::move(stageSQ11211)); /*22*/
 		rawPtr->quest.addStage(std::move(stageSQ11212)); /*23*/
 		rawPtr->quest.addOption(std::move(optionSQ5)); /*5*/
@@ -380,8 +380,6 @@ public:
 	{
 		while (true)
 		{
-			CapitalCity.setMain("Capital City", "capitalCity.txt");
-			initLevels();
 			char choice = menu.show();
 			clearScreen();
 
@@ -390,6 +388,8 @@ public:
 			case 1:
 				createPC.initialize(PC);
 				std::cout << "Character Create Successfully" << std::endl;
+				CapitalCity.setMain("Capital City", "capitalCity.txt");
+				initLevels();
 				clearScreen();
 				while (true)
 				{
@@ -399,6 +399,8 @@ public:
 				break;
 			case 2:
 				createPC.TestPC(PC);
+				CapitalCity.setMain("Capital City", "capitalCity.txt");
+				initLevels();
 				while (true)
 				{
 					

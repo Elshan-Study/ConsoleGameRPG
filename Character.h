@@ -110,12 +110,12 @@ public:
 
 	size_t rollDice(size_t numDice, size_t difficulty) {
 		std::srand(static_cast<unsigned int>(std::time(nullptr)));
-
+		std::cout << "(check value: " << difficulty << ")\n";
 		size_t successCount = 0;
 
 		for (int i = 0; i < numDice; ++i) {
 			int roll = rand() % 10 + 1;
-			std::cout << "Dice #" << (i + 1) << ": " << roll << '\n';
+			std::cout << "Dice #" << (i + 1) << ": " << roll << '\n\n';
 			if (roll >= difficulty) {
 				successCount++;
 			}
@@ -128,6 +128,7 @@ public:
 	{
 		size_t soak = 0;
 		size_t damage = 0;
+		std::cout << "Difficult: " << successDiff << " success ";
 		size_t roll = rollDice(numDice, 6);
 
 		if (roll >= successDiff)

@@ -99,9 +99,9 @@ private:
     Character& Main;
     std::string itemName;
 public:
-    explicit useQuestItemStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost,
+    explicit useQuestItemStage(const std::string& name, size_t mainIndex, size_t nextIndex,
         Character& Main, const std::string& itemName) :
-        QuestStage(name, mainIndex, nextIndex, cost), Main(Main), itemName(itemName) {
+        QuestStage(name, mainIndex, nextIndex, 0), Main(Main), itemName(itemName) {
     };
 
     bool on() override
