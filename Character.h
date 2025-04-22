@@ -144,7 +144,7 @@ public:
 			}
 
 			size_t itemEffect = 0;
-			if (trueWeapon && itemIndex < inventory.getSize())
+			if (trueWeapon && (itemIndex < inventory.getSize()))
 			{
 				Item* weapon = inventory[itemIndex].get();
 				if (dynamic_cast<Weapon*>(weapon) != nullptr)
@@ -181,6 +181,13 @@ public:
 		}
 
 		return 0;
+	}
+
+	size_t initiative(size_t numDice)
+	{
+		size_t roll = rollDice(numDice, 3);
+
+		return roll;
 	}
 
 	void printInfo()

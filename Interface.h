@@ -703,6 +703,163 @@ public:
 
 };
 
+class FightingScene final : public Interface
+{
+public:
+	enum InitiativeSkill
+	{
+		Vigilance,
+		Cool
+	};
+
+	enum EnemyBehavior
+	{
+		MeleeMod,
+		BalanceMod,
+		RangeMod
+	};
+
+private:
+	Character& Enemy;
+	Character& PC;
+	size_t distanceBetween;
+	size_t initiativeSkill;
+	size_t enemyBehavior;
+
+	enum class CharacterQueue
+	{
+		PC,
+		Enemy
+	};
+
+public:
+	FightingScene(Character& enemy, Character& PC, size_t distanceBetween, size_t initiativeSkill, size_t enemyBehavior) : Enemy(enemy), PC(PC),
+		distanceBetween(distanceBetween), initiativeSkill(initiativeSkill), enemyBehavior(enemyBehavior) {};
+
+	bool isClose() { if (distanceBetween == 0) return 1; return 0; }
+
+	void enemyMelee(size_t itemIndex)
+	{
+		if (isClose())
+		{
+			Enemy.attack(PC, itemIndex, 0, Enemy.melee(), 2);
+			std::cout << Enemy.name << " melee attack\n";
+			std::cout << "Your HP now: " << PC.currentHP << "\n";
+			std::cin.get();
+		}
+		else
+		{
+			size_t steps = Enemy.Athletics() + 1;
+			std::cout << Enemy.name << " make" << steps << "steps to you.\n";
+			std::cin.get();
+
+			if (steps > distanceBetween)
+			{
+				distanceBetween -= steps;
+			}
+			else {
+				distanceBetween = 0;
+			}
+		}
+	}
+
+	void enemyRanged(size_t itemIndex)
+	{
+		if (!isClose())
+		{
+			Enemy.attack(PC, itemIndex, 0, Enemy.ranged(), 2);
+			std::cout << Enemy.name << " ranged attack\n";
+			std::cout << "Your HP now: " << PC.currentHP << "\n";
+			std::cin.get();
+		}
+		else
+		{
+			size_t steps = Enemy.Athletics() + 1;
+			std::cout << Enemy.name << " make" << steps << "steps from you.\n";
+			std::cin.get();
+
+			distanceBetween += steps;
+		}
+	}
+
+	CharacterQueue initiativeCheck()
+	{
+		std::cout << Enemy.name << " roll initiative!\n";
+		std::cin.get();
+
+		size_t enemyInitiative = 0;
+		size_t pcInitiative = 0;
+
+		if (initiativeSkill == InitiativeSkill::Vigilance)
+		{
+			size_t enemyInitiative = Enemy.initiative(Enemy.vigilance());
+		}
+		else { size_t enemyInitiative = Enemy.initiative(Enemy.cool()); }
+
+		std::cout << PC.name << " roll initiative!\n";
+
+		if (initiativeSkill == InitiativeSkill::Vigilance)
+		{
+			size_t pcInitiative = PC.initiative(PC.vigilance());
+		}
+		else { size_t pcInitiative = PC.initiative(PC.cool()); }
+
+		CharacterQueue queue = pcInitiative >= enemyInitiative ? CharacterQueue::PC : CharacterQueue::Enemy;
+
+		return queue;
+	}
+
+	bool start()
+	{
+		std::cout << "Fight scene with " << Enemy.name << " start!\n";
+		std::cout << "Distance between " << PC.name << " and " << Enemy.name << " " << distanceBetween << " steps\n";
+		std::cin.get();
+
+		bool coercionStatus = 0;
+
+		CharacterQueue queue = initiativeCheck();
+
+		while (true)
+		{
+			if (queue == CharacterQueue::Enemy)
+			{
+				if (enemyBehavior == EnemyBehavior::MeleeMod && !coercionStatus)
+				{
+					enemyMelee(0);
+				}
+				else if (enemyBehavior == EnemyBehavior::RangeMod && !coercionStatus)
+				{
+					enemyRanged(0);
+				}
+				else if (enemyBehavior == EnemyBehavior::BalanceMod && !coercionStatus)
+				{
+					std::srand(static_cast<unsigned int>(std::time(nullptr)));
+					int roll = rand() % 2 + 1;
+					if (roll == 1)
+					{
+						enemyMelee(0);
+					}
+					else
+					{
+						enemyRanged(1);
+					}
+				}
+				else
+				{
+					coercionStatus = 0;
+				}
+
+				queue = CharacterQueue::PC;
+			}
+		}
+		
+		
+			
+
+
+	}
+};
+
 class SceneControl final : public Interface
 {
 public:
