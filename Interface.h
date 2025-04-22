@@ -13,6 +13,14 @@ static void clearScreen() {
 #endif
 }
 
+static bool isNumber(const std::string& str) {
+	if (str.empty()) return false;
+	for (char ch : str) {
+		if (!isdigit(ch)) return false;
+	}
+	return true;
+}
+
 class Interface
 {
 public:
@@ -723,6 +731,7 @@ private:
 	Character& Enemy;
 	Character& PC;
 	size_t distanceBetween;
+	size_t distanceMax;
 	size_t initiativeSkill;
 	size_t enemyBehavior;
 
@@ -733,8 +742,8 @@ private:
 	};
 
 public:
-	FightingScene(Character& enemy, Character& PC, size_t distanceBetween, size_t initiativeSkill, size_t enemyBehavior) : Enemy(enemy), PC(PC),
-		distanceBetween(distanceBetween), initiativeSkill(initiativeSkill), enemyBehavior(enemyBehavior) {};
+	FightingScene(Character& enemy, Character& PC, size_t distanceBetween, size_t distanceMax, size_t initiativeSkill, size_t enemyBehavior) : Enemy(enemy), PC(PC),
+		distanceBetween(distanceBetween), distanceMax(distanceMax), initiativeSkill(initiativeSkill), enemyBehavior(enemyBehavior) {};
 
 	bool isClose() { if (distanceBetween == 0) return 1; return 0; }
 
@@ -778,7 +787,13 @@ public:
 			std::cout << Enemy.name << " make" << steps << "steps from you.\n";
 			std::cin.get();
 
-			distanceBetween += steps;
+			if (distanceBetween + steps < distanceMax)
+			{
+				distanceBetween += steps;
+			}
+			else {
+				distanceBetween = distanceMax;
+			}
 		}
 	}
 
@@ -812,8 +827,6 @@ public:
 	bool start()
 	{
 		std::cout << "Fight scene with " << Enemy.name << " start!\n";
-		std::cout << "Distance between " << PC.name << " and " << Enemy.name << " " << distanceBetween << " steps\n";
-		std::cin.get();
 
 		bool coercionStatus = 0;
 
@@ -821,8 +834,14 @@ public:
 
 		while (true)
 		{
+			std::cout << "Distance between " << PC.name << " and " << Enemy.name << " " << distanceBetween << " steps\n";
+			std::cin.get();
+
 			if (queue == CharacterQueue::Enemy)
 			{
+				std::cout << Enemy.name << " turn\n";
+				std::cin.get();
+
 				if (enemyBehavior == EnemyBehavior::MeleeMod && !coercionStatus)
 				{
 					enemyMelee(0);
@@ -850,6 +869,96 @@ public:
 				}
 
 				queue = CharacterQueue::PC;
+			}
+			else
+			{
+				bool flag = true;
+
+				while (flag)
+				{
+					std::cout << "Your turn\n";
+					std::cin.get();
+
+					std::cout << "Make choice: \n";
+					std::cout << "1. Main action: Make steps to enemy.\n";
+					std::cout << "2. Main action: Make steps from enemy.\n";
+					if (isClose()) { std::cout << "3. Main action: Melee attack.\n"; }
+					else { std::cout << "3. Main action: Ranged attack.\n"; }
+					std::cout << "4. Main action: Use magic.\n";
+					std::cout << "5. Additional action: Use Heal Potion.\n";
+					std::cout << "6. Additional action: Use Poison.\n";
+					std::cin.get();
+					std::string input;
+					std::cout << "Your choice: ";
+
+					std::getline(std::cin, input);
+
+					if (!isNumber(input)) {
+						std::cout << "Wrong input!" << std::endl;
+						continue;
+					}
+
+					int choice = std::stoi(input);
+
+					if (choice < 0 || choice > 5) {
+						std::cout << "Wrong choice!" << std::endl;
+						continue;
+					}
+
+					switch (choice)
+					{
+					case 1:
+						size_t steps = PC.Athletics() + 1;
+						std::cout << PC.name << " make" << steps << "steps to " << Enemy.name << ".\n";
+						std::cin.get();
+
+						if (steps > distanceBetween)
+						{
+							distanceBetween -= steps;
+						}
+						else {
+							distanceBetween = 0;
+						}
+
+						flag = false;
+						break;
+					case 2:
+						size_t steps = PC.Athletics() + 1;
+						std::cout << PC.name << " make" << steps << "steps from " << Enemy.name << ".\n";
+						std::cin.get();
+
+						if (distanceBetween + steps < distanceMax)
+						{
+							distanceBetween += steps;
+						}
+						else {
+							distanceBetween = distanceMax;
+						}
+						flag = false;
+						break;
+					case 3:
+						if (isClose())
+						break;
+					case 4:
+						break;
+					case 5:
+						break;
+					case 6:
+						break;
+					}
+				}
+				
+
+				/*if (itemIndex < PC.inventory.getSize())
+				{
+					for (size_t i = 0; i < PC.inventory.getSize(); ++i) {
+						if (PC.inventory[i] && PC.inventory[i]->Name() == "Heal potion") {
+							itemIndex = i;
+							choiceMax += 1;
+							
+						}
+					}
+				}*/
 			}
 		}
 		
