@@ -599,10 +599,20 @@ public:
 		PC.name = "Test";
 		std::unique_ptr<Archetype> arch = std::make_unique<Simpleton>();
 		PC.archetype = std::move(arch);
-		std::unique_ptr<Specialization> spec = std::make_unique<Wizard>();
+		/*std::unique_ptr<Specialization> spec = std::make_unique<Wizard>();*/
+		std::unique_ptr<Specialization> spec = std::make_unique<Knight>();
 		PC.specialization = std::move(spec);
 		PC.specialization->Alchemy += 2;
+		PC.specialization->Magic += 2;
+		PC.specialization->Melee += 2;
+		PC.specialization->Ranged += 1;
 		PC.SetAll();
+		/*std::unique_ptr<Item> item = std::make_unique<Potion>("Heal potion", 5);
+		item->addCopy(2);*/
+		std::unique_ptr<Item> item = std::make_unique<Weapon>("Sword", 5, 3);
+		PC.addItem(std::move(item));
+		std::unique_ptr<Item> item2 = std::make_unique<Weapon>("Bow", 3, 3);
+		PC.addItem(std::move(item2));
 	}
 
 };
@@ -714,258 +724,239 @@ public:
 class FightingScene final : public Interface
 {
 public:
-	enum InitiativeSkill
-	{
-		Vigilance,
-		Cool
-	};
-
-	enum EnemyBehavior
-	{
-		MeleeMod,
-		BalanceMod,
-		RangeMod
-	};
+	enum InitiativeSkill { Vigilance, Cool };
+	enum EnemyBehavior { MeleeMod, BalanceMod, RangeMod };
 
 private:
-	Character& Enemy;
+	Character* Enemy;
 	Character& PC;
 	size_t distanceBetween;
 	size_t distanceMax;
 	size_t initiativeSkill;
 	size_t enemyBehavior;
 
-	enum class CharacterQueue
-	{
-		PC,
-		Enemy
-	};
+	enum class CharacterQueue { PC, Enemy };
 
 public:
-	FightingScene(Character& enemy, Character& PC, size_t distanceBetween, size_t distanceMax, size_t initiativeSkill, size_t enemyBehavior) : Enemy(enemy), PC(PC),
-		distanceBetween(distanceBetween), distanceMax(distanceMax), initiativeSkill(initiativeSkill), enemyBehavior(enemyBehavior) {};
+	FightingScene(Character* enemy, Character& pc, size_t distanceBetween, size_t distanceMax, size_t initSkill, size_t behavior)
+		: Enemy(enemy), PC(pc), distanceBetween(distanceBetween), distanceMax(distanceMax),
+		initiativeSkill(initSkill), enemyBehavior(behavior) {
+	}
 
-	bool isClose() { if (distanceBetween == 0) return 1; return 0; }
+
+	bool isClose() const { return distanceBetween == 0; }
 
 	void enemyMelee(size_t itemIndex)
 	{
-		if (isClose())
-		{
-			Enemy.attack(PC, itemIndex, 0, Enemy.melee(), 2);
-			std::cout << Enemy.name << " melee attack\n";
+		if (isClose()) {
+			std::cout << Enemy->name << " melee attack\n";
+			Enemy->attack(PC, 1, itemIndex, Enemy->melee(), 2);
 			std::cout << "Your HP now: " << PC.currentHP << "\n";
-			std::cin.get();
 		}
-		else
-		{
-			size_t steps = Enemy.Athletics() + 1;
-			std::cout << Enemy.name << " make" << steps << "steps to you.\n";
-			std::cin.get();
-
-			if (steps > distanceBetween)
-			{
-				distanceBetween -= steps;
-			}
-			else {
-				distanceBetween = 0;
-			}
+		else {
+			size_t steps = Enemy->Athletics() + 1;
+			std::cout << Enemy->name << " make " << steps << " steps to you.\n";
+			distanceBetween = steps >= distanceBetween ? 0 : distanceBetween - steps;
 		}
+		std::cin.get();
 	}
 
 	void enemyRanged(size_t itemIndex)
 	{
-		if (!isClose())
-		{
-			Enemy.attack(PC, itemIndex, 0, Enemy.ranged(), 2);
-			std::cout << Enemy.name << " ranged attack\n";
-			std::cout << "Your HP now: " << PC.currentHP << "\n";
-			std::cin.get();
+		if (!isClose()) {
+			std::cout << Enemy->name << " ranged attack\n";
+			Enemy->attack(PC, 1, itemIndex, Enemy->ranged(), 2);
+			std::cout << "Your HP now : " << PC.currentHP << "\n";
 		}
-		else
-		{
-			size_t steps = Enemy.Athletics() + 1;
-			std::cout << Enemy.name << " make" << steps << "steps from you.\n";
-			std::cin.get();
-
-			if (distanceBetween + steps < distanceMax)
-			{
-				distanceBetween += steps;
-			}
-			else {
-				distanceBetween = distanceMax;
-			}
+		else {
+			size_t steps = Enemy->Athletics() + 1;
+			std::cout << Enemy->name << " make " << steps << " steps from you.\n";
+			distanceBetween = std::min(distanceBetween + steps, distanceMax);
 		}
+		std::cin.get();
 	}
 
 	CharacterQueue initiativeCheck()
 	{
-		std::cout << Enemy.name << " roll initiative!\n";
-		std::cin.get();
-
-		size_t enemyInitiative = 0;
-		size_t pcInitiative = 0;
-
-		if (initiativeSkill == InitiativeSkill::Vigilance)
-		{
-			size_t enemyInitiative = Enemy.initiative(Enemy.vigilance());
-		}
-		else { size_t enemyInitiative = Enemy.initiative(Enemy.cool()); }
+		std::cout << Enemy->name << " roll initiative!\n"; 
+		size_t enemyInitiative = (initiativeSkill == Vigilance) ? Enemy->initiative(Enemy->cool()) : Enemy->initiative(Enemy->vigilance());
 
 		std::cout << PC.name << " roll initiative!\n";
+		size_t pcInitiative = (initiativeSkill == Vigilance) ? PC.initiative(PC.vigilance()) : PC.initiative(PC.cool());
+		std::cin.get();
 
-		if (initiativeSkill == InitiativeSkill::Vigilance)
-		{
-			size_t pcInitiative = PC.initiative(PC.vigilance());
-		}
-		else { size_t pcInitiative = PC.initiative(PC.cool()); }
-
-		CharacterQueue queue = pcInitiative >= enemyInitiative ? CharacterQueue::PC : CharacterQueue::Enemy;
-
-		return queue;
+		return pcInitiative >= enemyInitiative ? CharacterQueue::PC : CharacterQueue::Enemy;
 	}
 
 	bool start()
 	{
-		std::cout << "Fight scene with " << Enemy.name << " start!\n";
-
-		bool coercionStatus = 0;
-
+		Enemy->printInfo();
+		std::cout << "Fight scene with " << Enemy->name << " start!\n";
+		bool coercionStatus = false;
 		CharacterQueue queue = initiativeCheck();
 
 		while (true)
 		{
-			std::cout << "Distance between " << PC.name << " and " << Enemy.name << " " << distanceBetween << " steps\n";
+			std::cout << "Distance between " << PC.name << " and " << Enemy->name << ": " << distanceBetween << " steps\n";
+			std::cout << "Your current HP: " << PC.currentHP << "\n";
+			std::cout << "Your current AP: " << PC.currentAP << "\n";
+			std::cout << PC.inventory;
 			std::cin.get();
 
 			if (queue == CharacterQueue::Enemy)
 			{
-				std::cout << Enemy.name << " turn\n";
-				std::cin.get();
+				std::cout << Enemy->name << " turn\n"; std::cin.get();
 
-				if (enemyBehavior == EnemyBehavior::MeleeMod && !coercionStatus)
+				if (!coercionStatus)
 				{
-					enemyMelee(0);
-				}
-				else if (enemyBehavior == EnemyBehavior::RangeMod && !coercionStatus)
-				{
-					enemyRanged(0);
-				}
-				else if (enemyBehavior == EnemyBehavior::BalanceMod && !coercionStatus)
-				{
-					std::srand(static_cast<unsigned int>(std::time(nullptr)));
-					int roll = rand() % 2 + 1;
-					if (roll == 1)
+					if (enemyBehavior == MeleeMod) enemyMelee(0);
+					else if (enemyBehavior == RangeMod) enemyRanged(0);
+					else if (enemyBehavior == BalanceMod)
 					{
-						enemyMelee(0);
-					}
-					else
-					{
-						enemyRanged(1);
+						int roll = rand() % 2;
+						if (roll == 0) enemyMelee(0);
+						else enemyRanged(1);
 					}
 				}
-				else
-				{
-					coercionStatus = 0;
-				}
+				else coercionStatus = false;
 
+				if (PC.currentHP == 0)
+				{
+					std::cout << PC.name << " lost!\n"; std::cin.get();
+					return false;
+				}
 				queue = CharacterQueue::PC;
 			}
 			else
 			{
-				bool flag = true;
+				bool turnInProgress = true;
 
-				while (flag)
+				while (turnInProgress)
 				{
-					std::cout << "Your turn\n";
-					std::cin.get();
+					std::cout << "Your turn\n"; std::cin.get();
+					std::cout << "Make choice:\n";
+					std::cout << "1. Move to enemy\n2. Move from enemy\n";
+					std::cout << (isClose() ? "3. Melee attack\n" : "3. Ranged attack\n");
+					std::cout << "4. Use magic\n5. Use Coercion\n6. Use Heal Potion\n7. Use Poison\n";
 
-					std::cout << "Make choice: \n";
-					std::cout << "1. Main action: Make steps to enemy.\n";
-					std::cout << "2. Main action: Make steps from enemy.\n";
-					if (isClose()) { std::cout << "3. Main action: Melee attack.\n"; }
-					else { std::cout << "3. Main action: Ranged attack.\n"; }
-					std::cout << "4. Main action: Use magic.\n";
-					std::cout << "5. Additional action: Use Heal Potion.\n";
-					std::cout << "6. Additional action: Use Poison.\n";
-					std::cin.get();
 					std::string input;
 					std::cout << "Your choice: ";
-
 					std::getline(std::cin, input);
 
 					if (!isNumber(input)) {
-						std::cout << "Wrong input!" << std::endl;
-						continue;
+						std::cout << "Wrong input!\n"; continue;
 					}
 
 					int choice = std::stoi(input);
-
-					if (choice < 0 || choice > 5) {
-						std::cout << "Wrong choice!" << std::endl;
-						continue;
+					if (choice < 1 || choice > 7) {
+						std::cout << "Wrong choice!\n"; continue;
 					}
+
+					size_t steps = PC.Athletics() + 1;
+					bool skillCheck = false;
+					bool itemUsed = false;
+					size_t itemIndex = 0, effect = 0;
+					std::string weapon1, weapon2, attackType;
 
 					switch (choice)
 					{
 					case 1:
-						size_t steps = PC.Athletics() + 1;
-						std::cout << PC.name << " make" << steps << "steps to " << Enemy.name << ".\n";
-						std::cin.get();
-
-						if (steps > distanceBetween)
-						{
-							distanceBetween -= steps;
-						}
-						else {
-							distanceBetween = 0;
-						}
-
-						flag = false;
+						std::cout << PC.name << " make " << steps << " steps to " << Enemy->name << ".\n";
+						distanceBetween = steps >= distanceBetween ? 0 : distanceBetween - steps;
+						turnInProgress = false;
 						break;
 					case 2:
-						size_t steps = PC.Athletics() + 1;
-						std::cout << PC.name << " make" << steps << "steps from " << Enemy.name << ".\n";
-						std::cin.get();
-
-						if (distanceBetween + steps < distanceMax)
-						{
-							distanceBetween += steps;
-						}
-						else {
-							distanceBetween = distanceMax;
-						}
-						flag = false;
+						std::cout << PC.name << " make " << steps << " steps from " << Enemy->name << ".\n";
+						distanceBetween = std::min(distanceBetween + steps, distanceMax);
+						turnInProgress = false;
 						break;
 					case 3:
-						if (isClose())
+					{
+						size_t dice = isClose() ? PC.melee() : PC.ranged();
+						weapon1 = isClose() ? "Sword" : "Bow";
+						weapon2 = isClose() ? "Knife" : "Crossbow";
+
+						bool hasWeapon = false;
+						for (size_t i = 0; i < PC.inventory.getSize(); i++) {
+							if (PC.inventory[i]->Name() == weapon1 || PC.inventory[i]->Name() == weapon2) {
+								hasWeapon = true; itemIndex = i; break;
+							}
+						}
+
+						PC.attack(*Enemy, hasWeapon, itemIndex, dice, 2);
+						std::cout << "Enemy HP now : " << Enemy->currentHP << "\n";
+						std::cin.get();
+						turnInProgress = false;
 						break;
+					}
 					case 4:
+						if (PC.Magic() == 0 || PC.currentAP == 0) {
+							std::cout << "You can't use Magic!\n"; std::cin.get(); break;
+						}
+						skillCheck = PC.skillCheck(PC.magic(), 3);
+						PC.currentAP = PC.currentAP > 0 ? PC.currentAP - 1 : 0;
+
+						if (skillCheck) {
+							std::srand(static_cast<unsigned>(std::time(nullptr)));
+							switch (rand() % 4 + 1) {
+							case 1: Enemy->currentHP = (Enemy->currentHP > 5) ? Enemy->currentHP - 5 : 0;
+								std::cout << "Magic: Enemy HP -5. Now: " << Enemy->currentHP << "\n"; break;
+							case 2: Enemy->currentHP = std::min(Enemy->currentHP + 5, Enemy->archetype->getHP());
+								std::cout << "Magic: Enemy HP +5. Now: " << Enemy->currentHP << "\n"; break;
+							case 3: Enemy->specialization->Athletics = std::max<size_t>(Enemy->specialization->Athletics.getValue() - 1, 0);
+								std::cout << "Magic: Enemy Athletics -1\n"; break;
+							case 4: Enemy->specialization->Athletics = std::min<size_t>(Enemy->specialization->Athletics.getValue() + 1, 5);
+								std::cout << "Magic: Enemy Athletics +1\n"; break;
+							}
+						}
+						else {
+							std::cout << "Unsuccess!\n";
+						}
+						std::cin.get(); turnInProgress = false;
 						break;
 					case 5:
-						break;
+						if (PC.currentAP == 0) {
+							std::cout << "You don't have any AP\n"; std::cin.get(); break;
+						}
+						skillCheck = PC.skillCheck(PC.coercion(), 2);
+						PC.currentAP = PC.currentAP > 0 ? PC.currentAP - 1 : 0;
+						std::cout << (skillCheck ? "Enemy is scared\n" : "Your attempts made the enemy laugh\n");
+						coercionStatus = skillCheck;
+						std::cin.get(); break;
 					case 6:
+					case 7:
+					{
+						std::string itemName = (choice == 6) ? "Heal potion" : "Poison";
+						for (size_t i = 0; i < PC.inventory.getSize(); ++i) {
+							if (PC.inventory[i] && PC.inventory[i]->Name() == itemName) {
+								effect = PC.inventory[i]->useItem(0);
+								if (choice == 6)
+									PC.currentHP = std::min(PC.currentHP + effect, PC.archetype->getHP());
+								else
+									Enemy->currentHP = (Enemy->currentHP > effect) ? Enemy->currentHP - effect : 0;
+
+								PC.inventory.CheckInventory();
+								std::cout << itemName << " used\n";
+								if (choice == 7) std::cout << "Enemy current HP: " << Enemy->currentHP << "\n";
+								std::cin.get(); itemUsed = true; break;
+							}
+						}
+						if (!itemUsed) {
+							std::cout << "You don't have " << itemName << "\n"; std::cin.get();
+						}
 						break;
+					}
 					}
 				}
-				
 
-				/*if (itemIndex < PC.inventory.getSize())
+				if (Enemy->currentHP == 0)
 				{
-					for (size_t i = 0; i < PC.inventory.getSize(); ++i) {
-						if (PC.inventory[i] && PC.inventory[i]->Name() == "Heal potion") {
-							itemIndex = i;
-							choiceMax += 1;
-							
-						}
-					}
-				}*/
+					std::cout << PC.name << " won!\n"; std::cin.get();
+					return true;
+				}
+				queue = CharacterQueue::Enemy;
 			}
 		}
-		
-		
-			
-
-
 	}
 };
 
@@ -1033,7 +1024,7 @@ public:
 				currentStage = nextStage;
 				stage = location->quest.findStage(currentStage);
 				stage->on();
-				std::cout << stage->showName() << "\n\n";
+				std::cout << stage->showName() << "\n";
 				std::cin.get();
 				nextStage = stage->nextIndex;
 			}
@@ -1043,7 +1034,7 @@ public:
 		return isKeyAdded;
 	};
 
-	bool loadQuest(Character& PC, QuestPointer*& location, size_t startStage, size_t winStage, size_t defeatStage)
+	bool loadQuest(Character& PC, QuestPointer*& location, FightingScene& fighting, size_t startStage, size_t winStage, size_t defeatStage)
 	{
 		if (location->quest.finishStatus())
 		{
@@ -1095,7 +1086,6 @@ public:
 				std::cout << "Your current HP: " << PC.currentHP << "\n";
 				std::cout << "Your current AP: " << PC.currentAP << "\n";
 				std::cout << PC.inventory;
-				std::cin.get();
 
 				currentStage = nextStage;
 				OptionChoice* option = location->quest.getOption(currentStage);
@@ -1122,10 +1112,10 @@ public:
 					}
 
 					stage = location->quest.findStage((*option)[choiceNum - 1]);
-					successStatus = stage->on();
+					stage->on();
 					if (auto attackStage = dynamic_cast<AttackStage*>(stage))
 					{
-						std::cout << "Fight start\n";
+						successStatus = fighting.start();
 						std::cin.get();
 
 						if (!successStatus)

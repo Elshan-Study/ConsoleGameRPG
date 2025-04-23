@@ -17,8 +17,8 @@ public:
 	virtual ~Skill() = default;
 	
 	void operator=(int new_value) { dices -= value; value = new_value; dices += new_value; }
-	void operator+=(size_t mod) { dices += mod; value += mod;} /*!Need exceptions: if mod < 0*/
-	void operator-=(size_t mod) { dices -= mod; value -= mod; } /*!Need exceptions: if mod < 0 && mod > value */
+	void operator+=(size_t mod) { dices += mod; value += mod;}
+	void operator-=(size_t mod) { dices -= mod; value -= mod; } 
 };
 
 class IntSkill final : public Skill

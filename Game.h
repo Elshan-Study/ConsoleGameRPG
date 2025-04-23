@@ -9,6 +9,7 @@ class Game
 {
 private:
 	const size_t QUESTCOUNT = 3;
+	const size_t ENEMYCOUNT = 3;
 	Character PC;
 	PCCharacterCreate createPC;
 	MainMenu menu;
@@ -20,14 +21,21 @@ private:
 	size_t winCount;
 	size_t defeatCount;
 	std::string* keys = new std::string[QUESTCOUNT];
+	Character* enemies = new Character[ENEMYCOUNT];
 	size_t keySize = 0;
+	size_t enemySize = 0;
 public:
 	Game() = default;
-	~Game() { delete[] keys; }
+	~Game() { delete[] keys; delete[] enemies; }
 
 	void addKey(std::string key)
 	{
 		keys[keySize++] = key;
+	}
+
+	void addEnemy(Character&& enemy)
+	{
+		enemies[enemySize++] = std::move(enemy);
 	}
 
 	/*QuestPointer EvilSwamp("Evil Swamp", "evilSwamp.txt", key2);
@@ -36,8 +44,6 @@ public:
 	std::string key1 = "011K";
 	std::string key2 = "021K";
 	std::string key3 = "031K";
-
-	Character EnemyCultist;
 
 	void initLevel1()
 	{
@@ -117,7 +123,7 @@ public:
 
 		/*Option 4:*/
 		std::unique_ptr<QuestStage> stageSQ411 = std::make_unique<AttackStage>(
-			"Attack First (3 AP)", 411, 4111, 3, 2, PC, EnemyCultist);
+			"Attack First (3 AP)", 411, 4111, 3, 2, PC);
 		std::unique_ptr<QuestStage> stageSQ412 = std::make_unique<skillCheckStage>(
 			"Hide and watch (2 AP)", 412, 4121, 2, 2, PC, PC.stealth());
 		std::unique_ptr<OptionChoice> optionSQ4 = std::make_unique<OptionChoice>(2);
@@ -265,7 +271,23 @@ public:
 		initLevel2();
 	}
 
-	void loadLocation(size_t index, Map& map)
+	void initEnemies()
+	{
+		/*Cultist*/
+		std::unique_ptr<Archetype> arch = std::make_unique<Genius>();
+		std::unique_ptr<Specialization> spec = std::make_unique<Thief>();
+		Character cultist("Cultist", std::move(arch), std::move(spec));
+		cultist.specialization->Athletics += 2;
+		cultist.specialization->Melee += 2;
+		cultist.specialization->Vigilance += 2;
+		cultist.SetAll();
+		std::unique_ptr<Item> item = std::make_unique<Weapon>("Knife", 3, 2);
+		cultist.addItem(std::move(item));
+
+		addEnemy(std::move(cultist));
+	}
+
+	void loadLocation(size_t index, Map& map, FightingScene& fight)
 	{
 		if (auto rawPtr = dynamic_cast<QuestPointer*>(map[index].get()))
 		{
@@ -275,7 +297,7 @@ public:
 				if (rawPtr->status())
 				{
 					rawPtr->readDescription();
-					bool isQuestEnded = sceneControl.loadQuest(PC, rawPtr, 999, 50, 60);
+					bool isQuestEnded = sceneControl.loadQuest(PC, rawPtr, fight, 999, 50, 60);
 					if(isQuestEnded)
 					{
 						if (rawPtr->status() == Quest::win) {
@@ -354,7 +376,10 @@ public:
 			MapMenu newMenu;
 			choice = newMenu.show(CapitalCity);
 			clearScreen();
-			loadLocation(choice - 48 - 1, CapitalCity);
+
+			FightingScene sewerFight(&enemies[0], PC, 10, 10, FightingScene::Vigilance, FightingScene::MeleeMod);
+		
+			loadLocation(choice - 48 - 1, CapitalCity, sewerFight);
 
 			return;
 		}
@@ -388,6 +413,7 @@ public:
 			case 1:
 				createPC.initialize(PC);
 				std::cout << "Character Create Successfully" << std::endl;
+				initEnemies();
 				CapitalCity.setMain("Capital City", "capitalCity.txt");
 				initLevels();
 				clearScreen();
@@ -399,6 +425,8 @@ public:
 				break;
 			case 2:
 				createPC.TestPC(PC);
+				initEnemies();
+				addKey("011K");
 				CapitalCity.setMain("Capital City", "capitalCity.txt");
 				initLevels();
 				while (true)

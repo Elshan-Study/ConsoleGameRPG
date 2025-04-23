@@ -11,6 +11,29 @@ public:
 	std::unique_ptr<Item> items[MAX_ITEMS];
 	Inventory() : size(0) {}
 
+	Inventory(const Inventory& other) = delete;
+
+	Inventory& operator=(const Inventory& other) = delete;
+
+	Inventory(Inventory&& other) noexcept : size(other.size) {
+		for (size_t i = 0; i < MAX_ITEMS; ++i) {
+			items[i] = std::move(other.items[i]);
+		}
+		other.size = 0;
+	}
+
+	Inventory& operator=(Inventory&& other) noexcept {
+		if (this != &other) {
+			size = other.size;
+			for (size_t i = 0; i < MAX_ITEMS; ++i) {
+				items[i] = std::move(other.items[i]);
+			}
+			other.size = 0;
+		}
+		return *this;
+	}
+
+
 	~Inventory() = default;
 
 	size_t getSize() const { return size; }

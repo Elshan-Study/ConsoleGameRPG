@@ -50,41 +50,43 @@ public:
     };
 private:
     size_t successDiff;
-    WeaponStatus status;
+   /* WeaponStatus status;*/
     Character& Main;
-    Character& Target;
+    /*Character& Target;*/
 public:
     explicit AttackStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost, 
-        size_t successDiff, Character& Main, Character& Target) :
+        size_t successDiff, Character& Main/*, Character& Target*/) :
         QuestStage(name, mainIndex, nextIndex, cost), successDiff(successDiff), 
-        status(WeaponStatus::Default), Main(Main), Target(Target) {
+        /*status(WeaponStatus::Default),*/ Main(Main)/*, Target(Target)*/ {
     };
 
     bool on() override
     {
-        bool trueWeapon = false;
+        /*DON'T USE IN CURRENT VERSION OF GAME*/
+
+        /*bool trueWeapon = false;
         size_t itemIndex = 0;
 
         for (size_t i = 0; i < Main.inventory.getSize(); i++)
         {
-            if (status == WeaponStatus::Ranged && Main.inventory[i]->Name() == "Bow") {
+            if (status == WeaponStatus::Ranged && (Main.inventory[i]->Name() == "Bow" || Main.inventory[i]->Name() == "Crossbow")) {
                 trueWeapon = true;
                 itemIndex = i;
                 break;
             }     
-            else if (status == WeaponStatus::Mellee && Main.inventory[i]->Name() != "Bow") {
+            else if (status == WeaponStatus::Mellee && (Main.inventory[i]->Name() != "Sword" || Main.inventory[i]->Name() != "Knife")) {
                 trueWeapon = true;
                 itemIndex = i;
                 break;
             }
         }
 
-        size_t dices = status == WeaponStatus::Mellee ? Main.melee() : Main.ranged();
+        size_t dices = status == WeaponStatus::Mellee ? Main.melee() : Main.ranged();*/
 
         if (Main.currentAP >= cost)
         {
-            Main.attack(Target, trueWeapon, itemIndex, dices, successDiff);
-            Main.inventory.CheckInventory();
+           /* Main.attack(Target, trueWeapon, itemIndex, dices, successDiff);
+            Main.inventory.CheckInventory();*/
             Main.currentAP -= cost;
             return 1;
         }

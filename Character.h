@@ -24,6 +24,31 @@ public:
 		this->specialization->setAllDices(this->archetype.get());
 	}
 
+	Character(const Character& other) = delete;
+
+	Character& operator=(const Character& other) = delete;
+
+	Character(Character&& other) noexcept
+		: name(std::move(other.name)),
+		currentHP(other.currentHP),
+		currentAP(other.currentAP),
+		archetype(std::move(other.archetype)),
+		specialization(std::move(other.specialization)),
+		inventory(std::move(other.inventory)) {
+	}
+
+	Character& operator=(Character&& other) noexcept {
+		if (this != &other) {
+			name = std::move(other.name);
+			currentHP = other.currentHP;
+			currentAP = other.currentAP;
+			archetype = std::move(other.archetype);
+			specialization = std::move(other.specialization);
+			inventory = std::move(other.inventory);
+		}
+		return *this;
+	}
+
 	~Character() = default;
 
 	void SetAll()
@@ -109,17 +134,17 @@ public:
 	}
 
 	size_t rollDice(size_t numDice, size_t difficulty) {
-		std::srand(static_cast<unsigned int>(std::time(nullptr)));
 		std::cout << "(check value: " << difficulty << ")\n";
 		size_t successCount = 0;
 
 		for (int i = 0; i < numDice; ++i) {
 			int roll = rand() % 10 + 1;
-			std::cout << "Dice #" << (i + 1) << ": " << roll << '\n\n';
+			std::cout << "Dice #" << (i + 1) << ": " << roll << "\n";
 			if (roll >= difficulty) {
 				successCount++;
 			}
 		}
+		std::cout << "\n";
 
 		return successCount;
 	}
@@ -150,25 +175,29 @@ public:
 				if (dynamic_cast<Weapon*>(weapon) != nullptr)
 				{
 					itemEffect = weapon->useItem(roll);
+					std::cout << *weapon;
 				}
 			}
 
 			if (itemEffect == 0)
 			{
 				itemEffect = Brawn(); 
+				std::cout << name << " without weapon attack\n";
 			}
 
-			if (soak >= roll + itemEffect)
+			if (soak >= itemEffect)
 			{
 				damage = 0;
 			}
 			else
 			{
-				damage = roll + itemEffect - soak;
+				damage = itemEffect - soak;
 			}
+			std::cout << "Total damage: " << damage << "\n";
 
 			target.currentHP = (damage >= target.currentHP) ? 0 : target.currentHP - damage;
 		}
+		else { std::cout << "Unsuccess!\n"; }
 	}
 
 	bool skillCheck(size_t numDice, size_t successDiff)
@@ -185,9 +214,7 @@ public:
 
 	size_t initiative(size_t numDice)
 	{
-		size_t roll = rollDice(numDice, 3);
-
-		return roll;
+		return rollDice(numDice, 3);
 	}
 
 	void printInfo()
