@@ -75,10 +75,13 @@ public:
 		return soak;
 	}
 
+	void addCopy(size_t value) override {}
+
 	void print(std::ostream& os) const override
 	{
 		os << name << "(Soak: " << soak << "; Armor HP: " << armor_hp << ")" << "\n";
 	}
+
 };
 
 class Weapon final : public Item

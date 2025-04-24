@@ -281,8 +281,10 @@ public:
 		cultist.specialization->Melee += 2;
 		cultist.specialization->Vigilance += 2;
 		cultist.SetAll();
-		std::unique_ptr<Item> item = std::make_unique<Weapon>("Knife", 3, 2);
-		cultist.addItem(std::move(item));
+		std::unique_ptr<Item> weapon = std::make_unique<Weapon>("Knife", 3, 2);
+		cultist.addItem(std::move(weapon));
+		std::unique_ptr<Item> mantle = std::make_unique<Armor>("Mantle", 5, 1);
+		cultist.addItem(std::move(mantle));
 
 		addEnemy(std::move(cultist));
 	}

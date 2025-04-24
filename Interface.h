@@ -625,6 +625,8 @@ public:
 		PC.addItem(std::move(item));
 		std::unique_ptr<Item> item2 = std::make_unique<Weapon>("Bow", 3, 3);
 		PC.addItem(std::move(item2));
+		std::unique_ptr<Item> mantle = std::make_unique<Armor>("Mantle", 5, 1);
+		PC.addItem(std::move(mantle));
 	}
 
 };
@@ -772,6 +774,7 @@ public:
 			std::cout << Enemy->name << " melee attack\n";
 			Enemy->attack(PC, 1, itemIndex, Enemy->melee(), 2);
 			std::cout << "Your HP now: " << PC.currentHP << "\n";
+			PC.inventory.CheckInventory();
 		}
 		else {
 			size_t steps = Enemy->Athletics() + 1;
@@ -787,6 +790,7 @@ public:
 			std::cout << Enemy->name << " ranged attack\n";
 			Enemy->attack(PC, 1, itemIndex, Enemy->ranged(), 2);
 			std::cout << "Your HP now : " << PC.currentHP << "\n";
+			PC.inventory.CheckInventory();
 		}
 		else {
 			size_t steps = Enemy->Athletics() + 1;
@@ -906,6 +910,7 @@ public:
 						PC.attack(*Enemy, hasWeapon, itemIndex, dice, 2);
 						std::cout << "Enemy HP now : " << Enemy->currentHP << "\n";
 						std::cin.get();
+						Enemy->inventory.CheckInventory();
 						turnInProgress = false;
 						break;
 					}
@@ -1073,7 +1078,7 @@ public:
 
 		while (true)
 		{
-			if (!successStatus)
+			if (!successStatus && currentStage == defeatStage)
 			{
 				std::cout << "Unsuccess. Try next time\n\n";
 				std::cin.get();
@@ -1095,7 +1100,6 @@ public:
 			{
 				if (currentStage == winStage) location->quest.setStatus(Quest::win);
 				else if (currentStage == defeatStage) location->quest.setStatus(Quest::defeat);
-				std::cout << "Check get status: " << location->quest.getStatus();
 
 				std::cout << "You have left the location\n\n";
 				std::cin.get();
