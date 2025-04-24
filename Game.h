@@ -370,7 +370,6 @@ public:
 		}
 		else if (choice == 3)
 		{
-			static_cast<char>(choice);
 			CapitalCity.readDescription();
 			std::cout << std::endl;
 			MapMenu newMenu;
@@ -379,7 +378,7 @@ public:
 
 			FightingScene sewerFight(&enemies[0], PC, 10, 10, FightingScene::Vigilance, FightingScene::MeleeMod);
 		
-			loadLocation(choice - 48 - 1, CapitalCity, sewerFight);
+			loadLocation(choice - 1, CapitalCity, sewerFight);
 
 			return;
 		}
@@ -390,14 +389,14 @@ public:
 		while (true)
 		{
 			PC.printInfo();
-			char choice = menu2.show();
+			int choice = menu2.show();
 			clearScreen();
-			if (choice - 48 != 6)
+			if (choice != 6)
 			{
-				gamePlay(choice - 48);
+				gamePlay(choice);
 				clearScreen();
 			}
-			return choice - 48;
+			return choice;
 		}
 	}
 
@@ -405,10 +404,10 @@ public:
 	{
 		while (true)
 		{
-			char choice = menu.show();
+			int choice = menu.show();
 			clearScreen();
 
-			switch (choice - 48)
+			switch (choice)
 			{
 			case 1:
 				createPC.initialize(PC);

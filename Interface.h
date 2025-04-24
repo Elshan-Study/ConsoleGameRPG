@@ -40,23 +40,25 @@ public:
 		std::unique_ptr<Archetype> arch;
 		while (true)
 		{
-			char choice;
 			std::cout << "Choose Archetype: \n";
 			std::cout << "1.Sturdy - high Brawn, small Willpower\n";
 			std::cout << "2.Genius - high Intellect, small Agility\n";
 			std::cout << "3.Aristocrat - high Presence, small Brawn\n";
 			std::cout << "4.Simpleton - balanced characteristics\n";
+			std::string input;
 			std::cout << "Your choice: ";
-			std::cin >> choice;
-			std::cout << "\n";
+			std::getline(std::cin, input);
 
-			if (choice-48 < 0 || choice-48 > 4)
-			{
-				std::cout << "Wrong choice!" << std::endl;
-				continue;
+			if (!isNumber(input)) {
+				std::cout << "Wrong input!\n"; continue;
 			}
 
-			switch (choice-48)
+			int choice = std::stoi(input);
+			if (choice < 1 || choice > 4) {
+				std::cout << "Wrong choice!\n"; continue;
+			}
+
+			switch (choice)
 			{
 			case 1:
 				arch = std::make_unique<Sturdy>();
@@ -84,24 +86,26 @@ public:
 		std::unique_ptr<Specialization> spec;
 		while (true)
 		{
-			char choice;
 			std::cout << "Choose Specialization: \n";
 			std::cout << "1.Wizard: Alchemy 2, Magic 2, Discipline 2, Perception 2\n";
 			std::cout << "2.Knight: Athletics 2, Resilience 2, Melee 2, Coercion 2\n";
 			std::cout << "3.Archer: Coordination 2, Ranged 2, Perception 2, Survival 2\n";
 			std::cout << "4.Thief: Coordination 2, Melee 2, Stealth 2, Skullduggery 2\n";
 			std::cout << "5.Craftsman: Cool 2, Charm 2, Negotiation 2, Mechanics 2\n";
+			std::string input;
 			std::cout << "Your choice: ";
-			std::cin >> choice;
-			std::cout << "\n";
+			std::getline(std::cin, input);
 
-			if (choice-48 < 0 || choice-48 > 5)
-			{
-				std::cout << "Wrong choice!" << std::endl;
-				continue;
+			if (!isNumber(input)) {
+				std::cout << "Wrong input!\n"; continue;
 			}
 
-			switch (choice-48)
+			int choice = std::stoi(input);
+			if (choice < 1 || choice > 5) {
+				std::cout << "Wrong choice!\n"; continue;
+			}
+
+			switch (choice)
 			{
 			case 1:
 				spec = std::make_unique<Wizard>();
@@ -131,24 +135,26 @@ public:
 	{
 		while (true)
 		{
-			char choice;
 			std::cout << "1.Brawn\n";
 			std::cout << "2.Agility\n";
 			std::cout << "3.Intellect\n";
 			std::cout << "4.Cunning\n";
 			std::cout << "5.Willpower\n";
 			std::cout << "6.Presence\n";
+			std::string input;
 			std::cout << "Your choice: ";
-			std::cin >> choice;
-			std::cout << "\n";
+			std::getline(std::cin, input);
 
-			if (choice-48 < 1 || choice-48 > 6)
-			{
-				std::cout << "Wrong choice!" << std::endl;
-				continue;
+			if (!isNumber(input)) {
+				std::cout << "Wrong input!\n"; continue;
 			}
 
-			switch (choice-48)
+			int choice = std::stoi(input);
+			if (choice < 1 || choice > 6) {
+				std::cout << "Wrong choice!\n"; continue;
+			}
+
+			switch (choice)
 			{
 			case 1:
 				if (PC.Brawn() != 5 && experience >= (PC.Brawn() + 1) * 10)
@@ -205,7 +211,6 @@ public:
 	{
 		while (true)
 		{
-			char choice;
 			std::cout << "1.Alchemy\n";
 			std::cout << "2.Mechanics\n";
 			std::cout << "3.Magic\n";
@@ -224,17 +229,20 @@ public:
 			std::cout << "16.Cool\n";
 			std::cout << "17.Charm\n";
 			std::cout << "18.Negotiation\n";
+			std::string input;
 			std::cout << "Your choice: ";
-			std::cin >> choice;
-			std::cout << "\n";
+			std::getline(std::cin, input);
 
-			if (choice-48 < 1 || choice-48 > 18)
-			{
-				std::cout << "Wrong choice!" << std::endl;
-				continue;
+			if (!isNumber(input)) {
+				std::cout << "Wrong input!\n"; continue;
 			}
 
-			switch (choice-48)
+			int choice = std::stoi(input);
+			if (choice < 1 || choice > 18) {
+				std::cout << "Wrong choice!\n"; continue;
+			}
+
+			switch (choice)
 			{
 			case 1:
 				if (PC.Alchemy() != 5 && experience >= (PC.Alchemy() + 1) * 5)
@@ -389,7 +397,6 @@ public:
 
 	void MainChoice(Character& PC) 
 	{
-		char choice;
 		bool flag = true;
 		bool spec = false;
 		bool arch = false;
@@ -405,17 +412,20 @@ public:
 			std::cout << "1.Choose Archetype\n";
 			std::cout << "2.Choose Specialization\n";
 			std::cout << "0.Finish\n";
+			std::string input;
 			std::cout << "Your choice: ";
-			std::cin >> choice;
-			std::cout << "\n";
+			std::getline(std::cin, input);
 
-			if (choice-48 < 0 || choice-48 > 2)
-			{
-				std::cout << "Wrong choice!" << std::endl;
-				continue;
+			if (!isNumber(input)) {
+				std::cout << "Wrong input!\n"; continue;
 			}
 
-			switch (choice-48)
+			int choice = std::stoi(input);
+			if (choice < 0 || choice > 2) {
+				std::cout << "Wrong choice!\n"; continue;
+			}
+
+			switch (choice)
 			{
 			case 1:
 				ArchetypeChoice(PC);
@@ -473,7 +483,6 @@ public:
 
 		while (flag)
 		{
-			char choice;
 			std::cout << "---------------------------------------------------------\n";
 			PC.printInfo();
 
@@ -484,17 +493,20 @@ public:
 			std::cout << "2.Increase Skill\n";
 			std::cout << "3.Reset\n";
 			std::cout << "0.Finish\n";
+			std::string input;
 			std::cout << "Your choice: ";
-			std::cin >> choice;
-			std::cout << "\n";
+			std::getline(std::cin, input);
 
-			if (choice-48 < 0 || choice-48 > 3)
-			{
-				std::cout << "Wrong choice!" << std::endl;
-				continue;
+			if (!isNumber(input)) {
+				std::cout << "Wrong input!\n"; continue;
 			}
 
-			switch (choice-48)
+			int choice = std::stoi(input);
+			if (choice < 0 || choice > 3) {
+				std::cout << "Wrong choice!\n"; continue;
+			}
+
+			switch (choice)
 			{
 			case 1:
 				CharacteristicsEdit(PC, experience);
@@ -622,10 +634,9 @@ class MainMenu final : public Interface
 public:
 	MainMenu() {};
 
-	char show()
+	int show()
 	{
-		char choice;
-
+		int choice = 0;
 		while (true)
 		{
 			std::cout << "Amazing Adventure\n";
@@ -636,14 +647,17 @@ public:
 			std::cout << "3. Save Game\n";
 			std::cout << "4. Load Game\n";
 			std::cout << "5. Exit\n";
-			std::cout << "\nYour choice: ";
-			std::cin >> choice;
-			std::cout << std::endl;
+			std::string input;
+			std::cout << "Your choice: ";
+			std::getline(std::cin, input);
 
-			if (choice-48 < 1 || choice-48 > 5)
-			{
-				std::cout << "Wrong choice!" << std::endl;
-				continue;
+			if (!isNumber(input)) {
+				std::cout << "Wrong input!\n"; continue;
+			}
+
+			choice = std::stoi(input);
+			if (choice < 1 || choice > 5) {
+				std::cout << "Wrong choice!\n"; continue;
 			}
 
 			break;
@@ -659,9 +673,9 @@ class InsideGameMenu final : public Interface
 public:
 	InsideGameMenu() {};
 
-	char show()
+	int show()
 	{
-		char choice;
+		int choice = 0;
 
 		while (true)
 		{
@@ -671,14 +685,17 @@ public:
 			std::cout << "4. Visit Evil Swamp\n";
 			std::cout << "5. Visit Black Mountain\n";
 			std::cout << "6. Return to main menu\n";
-			std::cout << "\nYour choice: ";
-			std::cin >> choice;
-			std::cout << std::endl;
+			std::string input;
+			std::cout << "Your choice: ";
+			std::getline(std::cin, input);
 
-			if (choice - 48 < 1 || choice - 48 > 6)
-			{
-				std::cout << "Wrong choice!" << std::endl;
-				continue;
+			if (!isNumber(input)) {
+				std::cout << "Wrong input!\n"; continue;
+			}
+
+			choice = std::stoi(input);
+			if (choice < 1 || choice > 6) {
+				std::cout << "Wrong choice!\n"; continue;
 			}
 
 			break;
@@ -693,9 +710,9 @@ class MapMenu final : public Interface
 public:
 	MapMenu() {};
 
-	char show(Map& map)
+	int show(Map& map)
 	{
-		char choice;
+		int choice = 0;
 
 		while (true)
 		{
@@ -703,14 +720,17 @@ public:
 			std::cout << "2. " << map[1]->getName() << "\n";
 			std::cout << "3. Return to menu\n";
 
-			std::cout << "\nYour choice: ";
-			std::cin >> choice;
-			std::cout << std::endl;
+			std::string input;
+			std::cout << "Your choice: ";
+			std::getline(std::cin, input);
 
-			if (choice - 48 < 1 || choice - 48 > 3)
-			{
-				std::cout << "Wrong choice!" << std::endl;
-				continue;
+			if (!isNumber(input)) {
+				std::cout << "Wrong input!\n"; continue;
+			}
+
+			choice = std::stoi(input);
+			if (choice < 1 || choice > 3) {
+				std::cout << "Wrong choice!\n"; continue;
 			}
 
 			break;
@@ -1002,18 +1022,21 @@ public:
 
 				while (true)
 				{
-					char choice;
+					int choice;
+					std::string input;
 					std::cout << "Your choice: ";
-					std::cin >> choice;
-					std::cout << "\n";
+					std::getline(std::cin, input);
 
-					if (choice - 48 < 1 || choice - 48 > option->getSize())
-					{
-						std::cout << "Wrong choice!\n";
-						continue;
+					if (!isNumber(input)) {
+						std::cout << "Wrong input!\n"; continue;
 					}
 
-					stage = location->quest.findStage((*option)[choice - 49]);
+					choice = std::stoi(input);
+					if (choice < 1 || choice > option->getSize()) {
+						std::cout << "Wrong choice!\n"; continue;
+					}
+
+					stage = location->quest.findStage((*option)[choice-1]);
 					nextStage = stage->nextIndex;
 
 					break;
@@ -1099,19 +1122,21 @@ public:
 
 				while (true)
 				{
+					int choice;
+					std::string input;
 					std::cout << "Your choice: ";
-					char choice;
-					std::cin >> choice;
+					std::getline(std::cin, input);
 
-					int choiceNum = choice - '0';
-
-					if (choiceNum < 1 || choiceNum > option->getSize())
-					{
-						std::cout << "Wrong choice!\n";
-						continue;
+					if (!isNumber(input)) {
+						std::cout << "Wrong input!\n"; continue;
 					}
 
-					stage = location->quest.findStage((*option)[choiceNum - 1]);
+					choice = std::stoi(input);
+					if (choice < 1 || choice > option->getSize()) {
+						std::cout << "Wrong choice!\n"; continue;
+					}
+
+					stage = location->quest.findStage((*option)[choice - 1]);
 					stage->on();
 					if (auto attackStage = dynamic_cast<AttackStage*>(stage))
 					{
