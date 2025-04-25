@@ -15,16 +15,14 @@ protected:
 public:
     size_t nextIndex;
 
-    QuestStage() : name("Not set"), mainIndex(0), nextIndex(0), cost(0) {}
-    explicit QuestStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost)
-        : name(name), mainIndex(mainIndex), nextIndex(nextIndex), cost(cost) {
-    }
+    QuestStage();
+    explicit QuestStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost);
 
     virtual ~QuestStage() = default;
 
     virtual bool on() = 0;
-    size_t getIndex() const { return mainIndex; }
-    std::string showName() const { return name; }
+    size_t getIndex() const;
+    std::string showName() const;
 };
 
 class TextStage final : public QuestStage {
@@ -32,17 +30,9 @@ private:
     Character& Main;
 
 public:
-    TextStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost, Character& Main)
-        : QuestStage(name, mainIndex, nextIndex, cost), Main(Main) {
-    }
+    TextStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost, Character& Main);
 
-    bool on() override {
-        if (Main.currentAP >= cost) {
-            Main.currentAP -= cost;
-            return true;
-        }
-        return false;
-    }
+    bool on() override;
 };
 
 class AttackStage : public QuestStage {
@@ -51,17 +41,9 @@ private:
     Character& Main;
 
 public:
-    AttackStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost, size_t successDiff, Character& Main)
-        : QuestStage(name, mainIndex, nextIndex, cost), successDiff(successDiff), Main(Main) {
-    }
+    AttackStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost, size_t successDiff, Character& Main);
 
-    bool on() override {
-        if (Main.currentAP >= cost) {
-            Main.currentAP -= cost;
-            return true;
-        }
-        return false;
-    }
+    bool on() override;
 };
 
 class useQuestItemStage : public QuestStage {
@@ -70,20 +52,9 @@ private:
     std::string itemName;
 
 public:
-    useQuestItemStage(const std::string& name, size_t mainIndex, size_t nextIndex, Character& Main, const std::string& itemName)
-        : QuestStage(name, mainIndex, nextIndex, 0), Main(Main), itemName(itemName) {
-    }
+    useQuestItemStage(const std::string& name, size_t mainIndex, size_t nextIndex, Character& Main, const std::string& itemName);
 
-    bool on() override {
-        for (size_t i = 0; i < Main.inventory.getSize(); i++) {
-            if (Main.inventory[i]->Name() == itemName) {
-                Main.useItem(0, itemName);
-                Main.inventory.CheckInventory();
-                return true;
-            }
-        }
-        return false;
-    }
+    bool on() override;
 };
 
 class skillCheckStage : public QuestStage {
@@ -93,17 +64,9 @@ private:
     size_t numDice;
 
 public:
-    skillCheckStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost, size_t successDiff, Character& Main, size_t numDice)
-        : QuestStage(name, mainIndex, nextIndex, cost), successDiff(successDiff), Main(Main), numDice(numDice) {
-    }
+    skillCheckStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost, size_t successDiff, Character& Main, size_t numDice);
 
-    bool on() override {
-        if (Main.currentAP >= cost) {
-            Main.currentAP -= cost;
-            return Main.skillCheck(numDice, successDiff);
-        }
-        return false;
-    }
+    bool on() override;
 };
 
 class giveItemStage : public QuestStage {
@@ -112,15 +75,7 @@ private:
     std::unique_ptr<Item> item;
 
 public:
-    giveItemStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost, Character& Main, std::unique_ptr<Item> item)
-        : QuestStage(name, mainIndex, nextIndex, cost), Main(Main), item(std::move(item)) {
-    }
+    giveItemStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost, Character& Main, std::unique_ptr<Item> item);
 
-    bool on() override {
-        if (Main.currentAP >= cost) {
-            Main.currentAP -= cost;
-            Main.inventory.addItem(std::move(item));
-        }
-        return true;
-    }
+    bool on() override;
 };

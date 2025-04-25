@@ -15,10 +15,8 @@ protected:
 public:
     enum class LocationType : uint8_t { Base, QuestPointer, QuestGetPointer, Map };
 
-    Location() : name("Unknown"), description_file("Unknown") {};
-    explicit Location(const std::string& name, const std::string& filename)
-        : name(name), description_file(filename) {
-    }
+    Location();
+    explicit Location(const std::string& name, const std::string& filename);
     virtual ~Location() = default;
 
     virtual void activate(const std::string& key) = 0;
@@ -29,30 +27,14 @@ public:
 
     virtual void deserialize(std::istream& in) = 0;
 
-    void setMain(const std::string& name, const std::string& filename) {
-        this->name = name;
-        description_file = filename;
-    }
+    void setMain(const std::string& name, const std::string& filename);
 
-    std::string getName() const { return name; }
+    std::string getName() const;
 
-    void readDescription() {
-        std::ifstream file(description_file);
-        if (!file.is_open()) {
-            std::cerr << "Can't open the file!" << std::endl;
-            return;
-        }
+    void readDescription();
 
-        std::string line;
-        while (std::getline(file, line)) {
-            std::cout << line << std::endl;
-        }
-
-        file.close();
-    }
-
-    void setFinishStatus(size_t status) { finishStatus = status; }
-    size_t getFinishStatus() const { return finishStatus; }
+    void setFinishStatus(size_t status);
+    size_t getFinishStatus() const;
 };
 
 class QuestGetPointer final : public Location
@@ -64,30 +46,20 @@ private:
 public:
     Quest quest;
 
-    QuestGetPointer() : key(" "), isQuestQet(false) {};
+    QuestGetPointer();
 
-    explicit QuestGetPointer(const std::string& name, const std::string& description_filename, const std::string& key)
-        : Location(name, description_filename), key(key), isQuestQet(false) {
-    }
+    explicit QuestGetPointer(const std::string& name, const std::string& description_filename, const std::string& key);
 
-    void activate(const std::string& key) override { isQuestQet = true; }
-    bool status() const override { return isQuestQet; }
-    LocationType getType() const override { return LocationType::QuestGetPointer; }
+    void activate(const std::string& key) override;
+    bool status() const override;
+    LocationType getType() const override;
 
-    void changeKey(const std::string& key) { this->key = key; }
-    std::string getKey() const { return isQuestQet ? key : "Error"; }
+    void changeKey(const std::string& key);
+    std::string getKey() const;
 
-    void serialize(std::ostream& out) const override {
-        out.write(reinterpret_cast<const char*>(&finishStatus), sizeof(finishStatus));
-        out.write(reinterpret_cast<const char*>(&isQuestQet), sizeof(isQuestQet));
-        quest.serialize(out);
-    }
+    void serialize(std::ostream& out) const override;
 
-    void deserialize(std::istream& in) override {
-        in.read(reinterpret_cast<char*>(&finishStatus), sizeof(finishStatus));
-        in.read(reinterpret_cast<char*>(&isQuestQet), sizeof(isQuestQet));
-        quest.deserialize(in);
-    }
+    void deserialize(std::istream& in) override;
 };
 
 class QuestPointer final : public Location
@@ -99,32 +71,18 @@ private:
 public:
     Quest quest;
 
-    QuestPointer() : lock(" "), activate_status(false) {};
+    QuestPointer();
 
-    explicit QuestPointer(const std::string& name, const std::string& description_filename, const std::string& lock)
-        : Location(name, description_filename), lock(lock), activate_status(false) {
-    }
+    explicit QuestPointer(const std::string& name, const std::string& description_filename, const std::string& lock);
 
-    void activate(const std::string& key) override {
-        if (key == lock) {
-            activate_status = true;
-        }
-    }
+    void activate(const std::string& key) override;
 
-    bool status() const override { return activate_status; }
-    LocationType getType() const override { return LocationType::QuestPointer; }
+    bool status() const override;
+    LocationType getType() const override;
 
-    void serialize(std::ostream& out) const override {
-        out.write(reinterpret_cast<const char*>(&finishStatus), sizeof(finishStatus));
-        out.write(reinterpret_cast<const char*>(&activate_status), sizeof(activate_status));
-        quest.serialize(out);
-    }
+    void serialize(std::ostream& out) const override;
 
-    void deserialize(std::istream& in) override {
-        in.read(reinterpret_cast<char*>(&finishStatus), sizeof(finishStatus));
-        in.read(reinterpret_cast<char*>(&activate_status), sizeof(activate_status));
-        quest.deserialize(in);
-    }
+    void deserialize(std::istream& in) override;
 };
 
 class Map final : public Location
@@ -135,39 +93,17 @@ private:
     std::unique_ptr<Location> locations[MAX_LOCATION];
 
 public:
-    void activate(const std::string& key) override {}
-    bool status() const override { return false; }
-    LocationType getType() const override { return LocationType::Map; }
+    void activate(const std::string& key) override;
+    bool status() const override;
+    LocationType getType() const override;
 
-    void addLocation(std::unique_ptr<Location> location) {
-        if (size < MAX_LOCATION) {
-            locations[size++] = std::move(location);
-        }
-    }
+    void addLocation(std::unique_ptr<Location> location);
 
-    size_t getSize() const { return size; }
+    size_t getSize() const;
 
-    std::unique_ptr<Location>& operator[](size_t index) {
-        if (index >= MAX_LOCATION) {
-            throw std::out_of_range("Index out of bounds");
-        }
-        if (index >= size) {
-            size = index + 1;
-        }
-        return locations[index];
-    }
+    std::unique_ptr<Location>& operator[](size_t index);
 
-    void serialize(std::ostream& out) const override {
-        out.write(reinterpret_cast<const char*>(&finishStatus), sizeof(finishStatus));
-        for (size_t i = 0; i < size; ++i) {
-            locations[i]->serialize(out);
-        }
-    }
+    void serialize(std::ostream& out) const override;
 
-    void deserialize(std::istream& in) override {
-        in.read(reinterpret_cast<char*>(&finishStatus), sizeof(finishStatus));
-        for (size_t i = 0; i < size; ++i) {
-            locations[i]->deserialize(in);
-        }
-    }
+    void deserialize(std::istream& in) override;
 };
