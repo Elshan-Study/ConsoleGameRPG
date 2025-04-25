@@ -6,20 +6,6 @@
 #include "Character.h"
 #include "Item.h"
 
-//static void writeString(std::ostream& out, const std::string& str) {
-//    size_t len = str.size();
-//    out.write(reinterpret_cast<const char*>(&len), sizeof(len));
-//    out.write(str.c_str(), len);
-//}
-//
-//static std::string readString(std::istream& in) {
-//    size_t len;
-//    in.read(reinterpret_cast<char*>(&len), sizeof(len));
-//    std::string str(len, '\0');
-//    in.read(&str[0], len);
-//    return str;
-//}
-
 class QuestStage {
 protected:
     std::string name;
@@ -39,11 +25,6 @@ public:
     virtual bool on() = 0;
     size_t getIndex() const { return mainIndex; }
     std::string showName() const { return name; }
-
-    virtual void serialize(std::ostream& out) const = 0;
-    virtual std::string getTypeName() const = 0;
-
-    /*static std::unique_ptr<QuestStage> deserialize(std::istream& in, Character& Main);*/
 };
 
 class TextStage final : public QuestStage {
@@ -62,16 +43,6 @@ public:
         }
         return false;
     }
-
-    //void serialize(std::ostream& out) const override {
-    //    writeString(out, getTypeName());
-    //    writeString(out, name);
-    //    out.write(reinterpret_cast<const char*>(&mainIndex), sizeof(mainIndex));
-    //    out.write(reinterpret_cast<const char*>(&nextIndex), sizeof(nextIndex));
-    //    out.write(reinterpret_cast<const char*>(&cost), sizeof(cost));
-    //}
-
-    std::string getTypeName() const override { return "TextStage"; }
 };
 
 class AttackStage : public QuestStage {
@@ -91,17 +62,6 @@ public:
         }
         return false;
     }
-
-    /*void serialize(std::ostream& out) const override {
-        writeString(out, getTypeName());
-        writeString(out, name);
-        out.write(reinterpret_cast<const char*>(&mainIndex), sizeof(mainIndex));
-        out.write(reinterpret_cast<const char*>(&nextIndex), sizeof(nextIndex));
-        out.write(reinterpret_cast<const char*>(&cost), sizeof(cost));
-        out.write(reinterpret_cast<const char*>(&successDiff), sizeof(successDiff));
-    }*/
-
-    std::string getTypeName() const override { return "AttackStage"; }
 };
 
 class useQuestItemStage : public QuestStage {
@@ -124,16 +84,6 @@ public:
         }
         return false;
     }
-
-    /*void serialize(std::ostream& out) const override {
-        writeString(out, getTypeName());
-        writeString(out, name);
-        out.write(reinterpret_cast<const char*>(&mainIndex), sizeof(mainIndex));
-        out.write(reinterpret_cast<const char*>(&nextIndex), sizeof(nextIndex));
-        writeString(out, itemName);
-    }*/
-
-    std::string getTypeName() const override { return "useQuestItemStage"; }
 };
 
 class skillCheckStage : public QuestStage {
@@ -154,18 +104,6 @@ public:
         }
         return false;
     }
-
-    /*void serialize(std::ostream& out) const override {
-        writeString(out, getTypeName());
-        writeString(out, name);
-        out.write(reinterpret_cast<const char*>(&mainIndex), sizeof(mainIndex));
-        out.write(reinterpret_cast<const char*>(&nextIndex), sizeof(nextIndex));
-        out.write(reinterpret_cast<const char*>(&cost), sizeof(cost));
-        out.write(reinterpret_cast<const char*>(&successDiff), sizeof(successDiff));
-        out.write(reinterpret_cast<const char*>(&numDice), sizeof(numDice));
-    }*/
-
-    std::string getTypeName() const override { return "skillCheckStage"; }
 };
 
 class giveItemStage : public QuestStage {
@@ -185,17 +123,4 @@ public:
         }
         return true;
     }
-
-    /*void serialize(std::ostream& out) const override {
-        writeString(out, getTypeName());
-        writeString(out, name);
-        out.write(reinterpret_cast<const char*>(&mainIndex), sizeof(mainIndex));
-        out.write(reinterpret_cast<const char*>(&nextIndex), sizeof(nextIndex));
-        out.write(reinterpret_cast<const char*>(&cost), sizeof(cost));
-        if (item) {
-            item->Serialize(out);
-        }
-    }*/
-
-    std::string getTypeName() const override { return "giveItemStage"; }
 };

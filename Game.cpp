@@ -24,18 +24,12 @@ void Game::start()
 			}
 			break;
 		case 2:
-
+			GameDataManager::LoadGame(*this, "autosave2.bin");
 			CapitalCity.setMain("Capital City", "capitalCity.txt");
 			initLevels();
-			GameDataManager::LoadGame(*this, "autosave2.bin");
+			std::cout << CapitalCity.getSize() << std::endl;
+			GameDataManager::LoadLocationsStatus(*this, "autosaveLocStatus.bin");
 
-
-			/*if (PC.name == "name") { continue; }*/
-			/*createPC.TestPC(PC);
-			initEnemies();
-			addKey("011K");
-			CapitalCity.setMain("Capital City", "capitalCity.txt");
-			initLevels();*/
 			while (true)
 			{
 
@@ -49,6 +43,7 @@ void Game::start()
 			break;
 		case 5:
 			GameDataManager::SaveGame(*this, "autosave2.bin");
+			GameDataManager::SaveLocationsStatus(*this, "autosaveLocStatus.bin");
 			return;
 		default:
 			break;

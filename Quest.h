@@ -97,45 +97,6 @@ public:
         in.read(reinterpret_cast<char*>(&status), sizeof(status));
     }
 
-   /* void serialize(std::ostream& out) const {
-        out.write(reinterpret_cast<const char*>(&stageSize), sizeof(stageSize));
-        for (size_t i = 0; i < stageSize; ++i) {
-            stages[i]->serialize(out);
-        }
-
-        out.write(reinterpret_cast<const char*>(&optionSize), sizeof(optionSize));
-        for (size_t i = 0; i < optionSize; ++i) {
-            options[i]->serialize(out);
-        }
-
-        out.write(reinterpret_cast<const char*>(&isFinished), sizeof(isFinished));
-        out.write(reinterpret_cast<const char*>(&status), sizeof(status));
-    }
-
-    void deserialize(std::istream& in, Character& Main) {
-        in.read(reinterpret_cast<char*>(&stageSize), sizeof(stageSize));
-        stageCapacity = stageSize;
-        stages = std::make_unique<std::unique_ptr<QuestStage>[]>(stageCapacity);
-
-        for (size_t i = 0; i < stageSize; ++i) {
-            auto stage = QuestStage::deserialize(in, Main);  
-            stages[i] = std::move(stage);
-        }
-
-        in.read(reinterpret_cast<char*>(&optionSize), sizeof(optionSize));
-        optionCapacity = optionSize;
-        options = std::make_unique<std::unique_ptr<OptionChoice>[]>(optionCapacity);
-
-        for (size_t i = 0; i < optionSize; ++i) {
-            auto option = std::make_unique<OptionChoice>();
-            option->deserialize(in);
-            options[i] = std::move(option);
-        }
-
-        in.read(reinterpret_cast<char*>(&isFinished), sizeof(isFinished));
-        in.read(reinterpret_cast<char*>(&status), sizeof(status));
-    }*/
-
 
 private:
     void resizeStages() {

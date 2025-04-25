@@ -27,9 +27,21 @@ void GameDataManager::SaveGame(const Game& game, const std::string& filename)
 
     game.PC.serialize(outFile); 
 
-    game.CapitalCity.serialize(outFile);  
-   /* game.EvilSwamp.serialize(outFile);    
-    game.BlackMountain.serialize(outFile); */
+    outFile.close();
+}
+
+void GameDataManager::SaveLocationsStatus(const Game& game, const std::string& filename)
+{
+    std::ofstream outFile(filename, std::ios::binary);
+
+    if (!outFile) {
+        std::cerr << "Error opening file for saving game." << std::endl;
+        return;
+    }
+
+    game.CapitalCity.serialize(outFile);
+    /* game.EvilSwamp.serialize(outFile);
+     game.BlackMountain.serialize(outFile); */
 
     outFile.close();
 }
@@ -62,11 +74,23 @@ void GameDataManager::LoadGame(Game& game, const std::string& filename)
 
     game.PC.deserialize(inFile); 
 
-    game.CapitalCity.deserialize(inFile);
-   /* game.EvilSwamp.deserialize(inFile, game.PC);
-    game.BlackMountain.deserialize(inFile, game.PC);*/
-
     inFile.close();
 }
 
+void GameDataManager::LoadLocationsStatus(Game& game, const std::string& filename)
+{
+    std::ifstream inFile(filename, std::ios::binary);
+
+    if (!inFile) {
+        std::cerr << "Error opening file for loading game." << std::endl;
+        return;
+    }
+
+    game.CapitalCity.deserialize(inFile);
+    /* game.EvilSwamp.deserialize(inFile, game.PC);
+     game.BlackMountain.deserialize(inFile, game.PC);*/
+
+    inFile.close();
+
+}
 
