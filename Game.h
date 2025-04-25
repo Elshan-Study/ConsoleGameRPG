@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <fstream> 
 #include "Character.h"
 #include "Interface.h"
 #include "Location.h"
@@ -10,8 +11,6 @@ class Game
 {
 private:
 	PCCharacterCreate createPC;
-	MainMenu menu;
-	InsideGameMenu menu2;
 	SceneControl sceneControl;
 	Map CapitalCity;
 	Map EvilSwamp;
@@ -420,7 +419,7 @@ public:
 		while (true)
 		{
 			PC.printInfo();
-			int choice = menu2.show();
+			int choice = InsideGameMenu::show();
 			clearScreen();
 			if (choice != 6)
 			{
@@ -430,6 +429,79 @@ public:
 			return choice;
 		}
 	}
+
+	void SaveControl()
+	{
+		int choice = SaveLoadMenu::showSaves();
+
+		switch (choice)
+		{
+		case 1:
+			GameDataManager::SaveGame(*this, "saveSlot1.bin");
+			GameDataManager::SaveLocationsStatus(*this, "saveSlot1LocStatus.bin");
+			break;
+		case 2:
+			GameDataManager::SaveGame(*this, "saveSlot2.bin");
+			GameDataManager::SaveLocationsStatus(*this, "saveSlot2LocStatus.bin");
+			break;
+		case 3:
+			GameDataManager::SaveGame(*this, "saveSlot3.bin");
+			GameDataManager::SaveLocationsStatus(*this, "saveSlot3LocStatus.bin");
+			break;
+		default:
+			break;
+		}
+	}
+
+	bool fileExists(const std::string& filename)
+	{
+		std::ifstream file(filename);
+		return file.good();
+	}
+
+	void LoadControl(bool& gameActive)
+	{
+		int choice = SaveLoadMenu::showLoads();
+
+		std::string saveFile, locStatusFile;
+
+		switch (choice)
+		{
+		case 1:
+			saveFile = "saveSlot1.bin";
+			locStatusFile = "saveSlot1LocStatus.bin";
+			break;
+		case 2:
+			saveFile = "saveSlot2.bin";
+			locStatusFile = "saveSlot2LocStatus.bin";
+			break;
+		case 3:
+			saveFile = "saveSlot3.bin";
+			locStatusFile = "saveSlot3LocStatus.bin";
+			break;
+		case 4:
+			saveFile = "autosave1.bin";
+			locStatusFile = "autosaveLocStatus1.bin";
+			break;
+		default:
+			return;
+		}
+
+		if (fileExists(saveFile) && fileExists(locStatusFile))
+		{
+			reset();
+			GameDataManager::LoadGame(*this, saveFile);
+			CapitalCity.setMain("Capital City", "capitalCity.txt");
+			initLevels();
+			GameDataManager::LoadLocationsStatus(*this, locStatusFile);
+			gameActive = true;
+		}
+		else
+		{
+			std::cout << "One or both save files were not found. Unable to load..\n";
+		}
+	}
+
 
 	void start();
 };

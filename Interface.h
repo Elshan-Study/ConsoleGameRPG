@@ -402,9 +402,9 @@ public:
 		bool arch = false;
 
 		std::cout << "Character create MENU: \n";
-		std::cout << "Input your name: " << std::flush;
+		std::cout << "Input your name: ";
 		std::string name;
-		std::cin >> name;
+		std::getline(std::cin, name);
 		PC.name = name;
 
 		while (flag)
@@ -496,6 +496,7 @@ public:
 			std::string input;
 			std::cout << "Your choice: ";
 			std::getline(std::cin, input);
+			std::cout << "\n";
 
 			if (!isNumber(input)) {
 				std::cout << "Wrong input!\n"; continue;
@@ -636,7 +637,7 @@ class MainMenu final : public Interface
 public:
 	MainMenu() {};
 
-	int show()
+	static int show()
 	{
 		int choice = 0;
 		while (true)
@@ -675,7 +676,7 @@ class InsideGameMenu final : public Interface
 public:
 	InsideGameMenu() {};
 
-	int show()
+	static int show()
 	{
 		int choice = 0;
 
@@ -1174,7 +1175,71 @@ public:
 				nextStage = stage->nextIndex;
 			}
 		}
-	}
+	};
 
 
 };
+
+class SaveLoadMenu final : public Interface
+{
+public:
+	static int showSaves()
+	{
+		int choice = 0;
+		while (true)
+		{
+			std::cout << "Save Menu\n";
+			std::cout << "1. Save in Slot 1\n";
+			std::cout << "2. Save in Slot 2\n";
+			std::cout << "3. Save in Slot 3\n";
+			std::cout << "4. Exit\n";
+			std::string input;
+			std::cout << "Your choice: ";
+			std::getline(std::cin, input);
+
+			if (!isNumber(input)) {
+				std::cout << "Wrong input!\n"; continue;
+			}
+
+			choice = std::stoi(input);
+			if (choice < 1 || choice > 4) {
+				std::cout << "Wrong choice!\n"; continue;
+			}
+
+			break;
+		}
+
+		return choice;
+	};
+
+	static int showLoads()
+	{
+		int choice = 0;
+		while (true)
+		{
+			std::cout << "Save Menu\n";
+			std::cout << "1. Load Slot 1\n";
+			std::cout << "2. Load Slot 2\n";
+			std::cout << "3. Load Slot 3\n";
+			std::cout << "4. Load Autosave\n";
+			std::cout << "5. Exit\n";
+			std::string input;
+			std::cout << "Your choice: ";
+			std::getline(std::cin, input);
+
+			if (!isNumber(input)) {
+				std::cout << "Wrong input!\n"; continue;
+			}
+
+			choice = std::stoi(input);
+			if (choice < 1 || choice > 5) {
+				std::cout << "Wrong choice!\n"; continue;
+			}
+
+			break;
+		}
+
+		return choice;
+	};
+};
+
