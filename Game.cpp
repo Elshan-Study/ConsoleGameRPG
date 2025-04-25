@@ -11,6 +11,7 @@ void Game::start()
 		{
 		case 1:
 			/*createPC.initialize(PC);*/
+			reset();
 			createPC.TestPC(PC);
 			std::cout << "Character Create Successfully" << std::endl;
 			initEnemies();

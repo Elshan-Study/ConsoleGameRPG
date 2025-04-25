@@ -49,6 +49,31 @@ public:
 	std::string key2 = "021K";
 	std::string key3 = "031K";
 
+	void reset()
+	{
+		keySize = 0;
+		enemySize = 0;
+		winCount = 0;
+		defeatCount = 0;
+
+		for (size_t i = 0; i < QUESTCOUNT; ++i)
+		{
+			keys[i].clear();
+		}
+
+		for (size_t i = 0; i < ENEMYCOUNT; ++i)
+		{
+			enemies[i] = Character(); 
+		}
+
+		PC = Character(); 
+
+
+		CapitalCity = Map();   
+		/*EvilSwamp.reset();     
+		BlackMountain.reset(); */
+	}
+
 	void initLevel1()
 	{
 		std::unique_ptr<Location> Sewerage = std::make_unique<QuestPointer>("Sewerage", "sewerage.txt", key1);
