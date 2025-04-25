@@ -19,6 +19,15 @@ public:
 	void operator=(int new_value) { dices -= value; value = new_value; dices += new_value; }
 	void operator+=(size_t mod) { dices += mod; value += mod;}
 	void operator-=(size_t mod) { dices -= mod; value -= mod; } 
+
+	virtual void Serialize(std::ostream& out) const {
+		out.write(reinterpret_cast<const char*>(&value), sizeof(value));
+	}
+
+	virtual void Deserialize(std::istream& in, Archetype* parameter) {
+		in.read(reinterpret_cast<char*>(&value), sizeof(value));
+		setDices(parameter);
+	}
 };
 
 class IntSkill final : public Skill

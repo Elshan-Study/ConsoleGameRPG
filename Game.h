@@ -3,14 +3,12 @@
 #include "Character.h"
 #include "Interface.h"
 #include "Location.h"
+#include "GameDataManager.h"
 #include "Quest.h"
 
 class Game
 {
 private:
-	const size_t QUESTCOUNT = 3;
-	const size_t ENEMYCOUNT = 3;
-	Character PC;
 	PCCharacterCreate createPC;
 	MainMenu menu;
 	InsideGameMenu menu2;
@@ -18,13 +16,19 @@ private:
 	Map CapitalCity;
 	Map EvilSwamp;
 	Map BlackMountain;
+	size_t keySize = 0;
+	size_t enemySize = 0;
 	size_t winCount;
 	size_t defeatCount;
 	std::string* keys = new std::string[QUESTCOUNT];
 	Character* enemies = new Character[ENEMYCOUNT];
-	size_t keySize = 0;
-	size_t enemySize = 0;
+	static const size_t QUESTCOUNT = 3;
+	static const size_t ENEMYCOUNT = 3;
+	Character PC;
+
+	friend class GameDataManager;
 public:
+
 	Game() = default;
 	~Game() { delete[] keys; delete[] enemies; }
 
@@ -402,51 +406,6 @@ public:
 		}
 	}
 
-	void start()
-	{
-		while (true)
-		{
-			int choice = menu.show();
-			clearScreen();
-
-			switch (choice)
-			{
-			case 1:
-				createPC.initialize(PC);
-				std::cout << "Character Create Successfully" << std::endl;
-				initEnemies();
-				CapitalCity.setMain("Capital City", "capitalCity.txt");
-				initLevels();
-				clearScreen();
-				while (true)
-				{
-					int switchControl = MenuControl();
-					if (switchControl == 6) { break; }
-				}
-				break;
-			case 2:
-				createPC.TestPC(PC);
-				initEnemies();
-				addKey("011K");
-				CapitalCity.setMain("Capital City", "capitalCity.txt");
-				initLevels();
-				while (true)
-				{
-					
-					int switchControl = MenuControl();
-					if (switchControl == 6) { break; }
-				}
-				break;
-			case 3:
-				break;
-			case 4:
-				break;
-			case 5:
-				return;
-			default:
-				break;
-			}
-		}
-	}
+	void start();
 };
 

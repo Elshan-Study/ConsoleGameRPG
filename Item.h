@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <iostream>
+#include <memory>
 
 class Item
 {
@@ -24,6 +25,10 @@ public:
 	virtual void addCopy(size_t value) = 0;
 
 	std::string Name() const { return name; }
+
+	virtual void Serialize(std::ostream& out) const = 0;
+	static std::unique_ptr<Item> Deserialize(std::istream& in);
+
 };
 
 class Potion final : public Item
@@ -55,6 +60,45 @@ public:
 		os << name << "(" << mod << ") : " << count << "\n";
 	}
 
+	void Serialize(std::ostream& out) const override {
+		std::string type = "Potion";
+		size_t len = type.size();
+		out.write(reinterpret_cast<const char*>(&len), sizeof(len));
+		out.write(type.c_str(), len);
+
+		size_t name_len = name.size();
+		out.write(reinterpret_cast<const char*>(&name_len), sizeof(name_len));
+		out.write(name.c_str(), name_len);
+
+		out.write(reinterpret_cast<const char*>(&isConsumable), sizeof(isConsumable));
+		out.write(reinterpret_cast<const char*>(&isExist), sizeof(isExist));
+		out.write(reinterpret_cast<const char*>(&mod), sizeof(mod));
+		out.write(reinterpret_cast<const char*>(&count), sizeof(count));
+	}
+
+	static std::unique_ptr<Item> DeserializePotion(std::istream& in) {
+		size_t name_len;
+		in.read(reinterpret_cast<char*>(&name_len), sizeof(name_len));
+		std::string name(name_len, '\0');
+		in.read(&name[0], name_len);
+
+		bool isConsumable;
+		bool isExist;
+		int mod;
+		size_t count;
+
+		in.read(reinterpret_cast<char*>(&isConsumable), sizeof(isConsumable));
+		in.read(reinterpret_cast<char*>(&isExist), sizeof(isExist));
+		in.read(reinterpret_cast<char*>(&mod), sizeof(mod));
+		in.read(reinterpret_cast<char*>(&count), sizeof(count));
+
+		auto potion = std::make_unique<Potion>(name, mod);
+		potion->isExist = isExist;
+		potion->addCopy(count - 1); 
+		return potion;
+	}
+
+
 };
 
 class Armor final : public Item
@@ -82,6 +126,44 @@ public:
 		os << name << "(Soak: " << soak << "; Armor HP: " << armor_hp << ")" << "\n";
 	}
 
+	void Serialize(std::ostream& out) const override {
+		std::string type = "Armor";
+		size_t len = type.size();
+		out.write(reinterpret_cast<const char*>(&len), sizeof(len));
+		out.write(type.c_str(), len);
+
+		size_t name_len = name.size();
+		out.write(reinterpret_cast<const char*>(&name_len), sizeof(name_len));
+		out.write(name.c_str(), name_len);
+
+		out.write(reinterpret_cast<const char*>(&isConsumable), sizeof(isConsumable));
+		out.write(reinterpret_cast<const char*>(&isExist), sizeof(isExist));
+		out.write(reinterpret_cast<const char*>(&armor_hp), sizeof(armor_hp));
+		out.write(reinterpret_cast<const char*>(&soak), sizeof(soak));
+	}
+
+	static std::unique_ptr<Item> DeserializeArmor(std::istream& in) {
+		size_t name_len;
+		in.read(reinterpret_cast<char*>(&name_len), sizeof(name_len));
+		std::string name(name_len, '\0');
+		in.read(&name[0], name_len);
+
+		bool isConsumable;
+		bool isExist;
+		size_t armor_hp;
+		size_t soak;
+
+		in.read(reinterpret_cast<char*>(&isConsumable), sizeof(isConsumable));
+		in.read(reinterpret_cast<char*>(&isExist), sizeof(isExist));
+		in.read(reinterpret_cast<char*>(&armor_hp), sizeof(armor_hp));
+		in.read(reinterpret_cast<char*>(&soak), sizeof(soak));
+
+		auto armor = std::make_unique<Armor>(name, armor_hp, soak);
+		armor->isExist = isExist;
+		return armor;
+	}
+
+
 };
 
 class Weapon final : public Item
@@ -107,6 +189,44 @@ public:
 	}
 
 	void addCopy(size_t value) override {}
+
+	void Serialize(std::ostream& out) const override {
+		std::string type = "Weapon";
+		size_t len = type.size();
+		out.write(reinterpret_cast<const char*>(&len), sizeof(len));
+		out.write(type.c_str(), len);
+
+		size_t name_len = name.size();
+		out.write(reinterpret_cast<const char*>(&name_len), sizeof(name_len));
+		out.write(name.c_str(), name_len);
+
+		out.write(reinterpret_cast<const char*>(&isConsumable), sizeof(isConsumable));
+		out.write(reinterpret_cast<const char*>(&isExist), sizeof(isExist));
+		out.write(reinterpret_cast<const char*>(&damage), sizeof(damage));
+		out.write(reinterpret_cast<const char*>(&critic), sizeof(critic));
+	}
+
+	static std::unique_ptr<Item> DeserializeWeapon(std::istream& in) {
+		size_t name_len;
+		in.read(reinterpret_cast<char*>(&name_len), sizeof(name_len));
+		std::string name(name_len, '\0');
+		in.read(&name[0], name_len);
+
+		bool isConsumable;
+		bool isExist;
+		size_t damage;
+		size_t critic;
+
+		in.read(reinterpret_cast<char*>(&isConsumable), sizeof(isConsumable));
+		in.read(reinterpret_cast<char*>(&isExist), sizeof(isExist));
+		in.read(reinterpret_cast<char*>(&damage), sizeof(damage));
+		in.read(reinterpret_cast<char*>(&critic), sizeof(critic));
+
+		auto weapon = std::make_unique<Weapon>(name, damage, critic);
+		weapon->isExist = isExist;
+		return weapon;
+	}
+
 };
 
 class QuestItem final : public Item
@@ -129,4 +249,36 @@ public:
 	}
 
 	void addCopy(size_t value) override {}
+
+	void Serialize(std::ostream& out) const override {
+		std::string type = "QuestItem";
+		size_t len = type.size();
+		out.write(reinterpret_cast<const char*>(&len), sizeof(len));
+		out.write(type.c_str(), len);
+
+		size_t name_len = name.size();
+		out.write(reinterpret_cast<const char*>(&name_len), sizeof(name_len));
+		out.write(name.c_str(), name_len);
+
+		out.write(reinterpret_cast<const char*>(&isConsumable), sizeof(isConsumable));
+		out.write(reinterpret_cast<const char*>(&isExist), sizeof(isExist));
+	}
+
+	static std::unique_ptr<Item> DeserializeQuestItem(std::istream& in) {
+		size_t name_len;
+		in.read(reinterpret_cast<char*>(&name_len), sizeof(name_len));
+		std::string name(name_len, '\0');
+		in.read(&name[0], name_len);
+
+		bool isConsumable;
+		bool isExist;
+
+		in.read(reinterpret_cast<char*>(&isConsumable), sizeof(isConsumable));
+		in.read(reinterpret_cast<char*>(&isExist), sizeof(isExist));
+
+		auto questItem = std::make_unique<QuestItem>(name);
+		questItem->isExist = isExist;
+		return questItem;
+	}
+
 };

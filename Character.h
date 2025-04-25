@@ -181,7 +181,7 @@ public:
 
 			if (itemEffect == 0)
 			{
-				itemEffect = Brawn(); 
+				itemEffect = Brawn();
 				std::cout << name << " without weapon attack\n";
 			}
 
@@ -248,5 +248,53 @@ public:
 			<< "Negotiation: " << Negotiation() << "(" << negotiation() << " dices)\n";
 		std::cout << "Inventory: \n" << inventory;
 	}
-};
 
+	void serialize(std::ostream& out) const {
+		size_t nameLength = name.size();
+		out.write(reinterpret_cast<const char*>(&nameLength), sizeof(nameLength));
+		out.write(name.c_str(), nameLength);
+
+		out.write(reinterpret_cast<const char*>(&currentHP), sizeof(currentHP));
+		out.write(reinterpret_cast<const char*>(&currentAP), sizeof(currentAP));
+
+		bool hasArchetype = archetype != nullptr;
+		out.write(reinterpret_cast<const char*>(&hasArchetype), sizeof(hasArchetype));
+		if (hasArchetype) {
+			archetype->Serialize(out);
+		}
+
+		bool hasSpecialization = specialization != nullptr;
+		out.write(reinterpret_cast<const char*>(&hasSpecialization), sizeof(hasSpecialization));
+		if (hasSpecialization) {
+			specialization->Serialize(out);
+			specialization->SerializeSkills(out);
+		}
+
+		inventory.Serialize(out);
+	}
+
+	void deserialize(std::istream& in) {
+		size_t nameLength;
+		in.read(reinterpret_cast<char*>(&nameLength), sizeof(nameLength));
+		name.resize(nameLength);
+		in.read(&name[0], nameLength);
+
+		in.read(reinterpret_cast<char*>(&currentHP), sizeof(currentHP));
+		in.read(reinterpret_cast<char*>(&currentAP), sizeof(currentAP));
+
+		bool hasArchetype;
+		in.read(reinterpret_cast<char*>(&hasArchetype), sizeof(hasArchetype));
+		if (hasArchetype) {
+			archetype = std::move(DeserializeArchetype(in));
+		}
+
+		bool hasSpecialization;
+		in.read(reinterpret_cast<char*>(&hasSpecialization), sizeof(hasSpecialization));
+		if (hasSpecialization) {
+			specialization = std::move(SpecializationDeserialize(in));
+			specialization->DeserializeSkills(in, archetype.get());
+		}
+
+		inventory.Deserialize(in);
+	}
+};

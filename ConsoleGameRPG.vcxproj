@@ -130,6 +130,7 @@
     <ClCompile Include="Archetype.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameDataManager.cpp" />
     <ClCompile Include="Interface.cpp" />
     <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="Item.cpp" />
@@ -145,6 +146,7 @@
     <ClInclude Include="Archetype.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameDataManager.h" />
     <ClInclude Include="Interface.h" />
     <ClInclude Include="Inventory.h" />
     <ClInclude Include="Item.h" />

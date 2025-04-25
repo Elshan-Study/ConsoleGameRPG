@@ -99,4 +99,30 @@ public:
 		return items[index];
 	}
 
+	void Serialize(std::ostream& out) const {
+		out.write(reinterpret_cast<const char*>(&size), sizeof(size));
+		for (size_t i = 0; i < size; ++i) {
+			if (items[i]) {
+				bool hasItem = true;
+				out.write(reinterpret_cast<const char*>(&hasItem), sizeof(hasItem));
+				items[i]->Serialize(out);
+			}
+			else {
+				bool hasItem = false;
+				out.write(reinterpret_cast<const char*>(&hasItem), sizeof(hasItem));
+			}
+		}
+	}
+
+	void Deserialize(std::istream& in) {
+		in.read(reinterpret_cast<char*>(&size), sizeof(size));
+		for (size_t i = 0; i < size; ++i) {
+			bool hasItem;
+			in.read(reinterpret_cast<char*>(&hasItem), sizeof(hasItem));
+			if (hasItem) {
+				items[i] = Item::Deserialize(in);
+			}
+		}
+	}
+
 };

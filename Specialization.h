@@ -1,6 +1,8 @@
 #pragma once
 #include "Skill.h"
 #include "Item.h"
+#include <fstream>
+#include <iostream>
 class Specialization
 {
 public:
@@ -46,6 +48,38 @@ public:
 		Charm.setDices(parameter);
 		Negotiation.setDices(parameter);
 	}
+
+	virtual void Serialize(std::ostream& out) const = 0;
+
+	void SerializeSkills(std::ostream& out) const {
+		Alchemy.Serialize(out);     Mechanics.Serialize(out);   Magic.Serialize(out);
+		Athletics.Serialize(out);   Resilience.Serialize(out);  Melee.Serialize(out);
+		Coordination.Serialize(out); Stealth.Serialize(out);   Ranged.Serialize(out);
+		Discipline.Serialize(out);  Vigilance.Serialize(out);  Coercion.Serialize(out);
+		Perception.Serialize(out);  Skullduggery.Serialize(out); Survival.Serialize(out);
+		Cool.Serialize(out);        Charm.Serialize(out);      Negotiation.Serialize(out);
+	}
+	void DeserializeSkills(std::istream& in, Archetype* archetype) {
+		Alchemy.Deserialize(in, archetype);
+		Mechanics.Deserialize(in, archetype);
+		Magic.Deserialize(in, archetype);
+		Athletics.Deserialize(in, archetype);
+		Resilience.Deserialize(in, archetype);
+		Melee.Deserialize(in, archetype);
+		Coordination.Deserialize(in, archetype);
+		Stealth.Deserialize(in, archetype);
+		Ranged.Deserialize(in, archetype);
+		Discipline.Deserialize(in, archetype);
+		Vigilance.Deserialize(in, archetype);
+		Coercion.Deserialize(in, archetype);
+		Perception.Deserialize(in, archetype);
+		Skullduggery.Deserialize(in, archetype);
+		Survival.Deserialize(in, archetype);
+		Cool.Deserialize(in, archetype);
+		Charm.Deserialize(in, archetype);
+		Negotiation.Deserialize(in, archetype);
+	}
+
 };
 
 class Wizard final : public Specialization
@@ -57,6 +91,13 @@ public:
 		Magic = 2;
 		Discipline = 2;
 		Perception = 2;
+	}
+
+	void Serialize(std::ostream& out) const override {
+		std::string type = "Wizard";
+		size_t len = type.size();
+		out.write(reinterpret_cast<const char*>(&len), sizeof(len));
+		out.write(type.c_str(), len);
 	}
 };
 
@@ -70,6 +111,13 @@ public:
 		Melee = 2;
 		Coercion = 2;
 	}
+
+	 void Serialize(std::ostream& out) const {
+		 std::string type = "Knight";
+		 size_t len = type.size();
+		 out.write(reinterpret_cast<const char*>(&len), sizeof(len));
+		 out.write(type.c_str(), len);
+	 }
 };
 
 class Archer final : public Specialization
@@ -81,6 +129,13 @@ public:
 		Ranged = 2;
 		Perception = 2;
 		Survival = 2;
+	}
+
+	void Serialize(std::ostream& out) const override {
+		std::string type = "Archer";
+		size_t len = type.size();
+		out.write(reinterpret_cast<const char*>(&len), sizeof(len));
+		out.write(type.c_str(), len);
 	}
 };
 
@@ -94,6 +149,13 @@ public:
 		Stealth = 2;
 		Skullduggery = 2;
 	}
+
+	void Serialize(std::ostream& out) const override {
+		std::string type = "Thief";
+		size_t len = type.size();
+		out.write(reinterpret_cast<const char*>(&len), sizeof(len));
+		out.write(type.c_str(), len);
+	}
 };
 
 class Craftsman final : public Specialization
@@ -106,4 +168,13 @@ public:
 		Negotiation = 2;
 		Mechanics = 2;
 	}
+
+	void Serialize(std::ostream& out) const override {
+		std::string type = "Craftsman";
+		size_t len = type.size();
+		out.write(reinterpret_cast<const char*>(&len), sizeof(len));
+		out.write(type.c_str(), len);
+	}
 };
+
+std::unique_ptr<Specialization> SpecializationDeserialize(std::istream& in);
