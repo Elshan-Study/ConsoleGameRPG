@@ -44,8 +44,8 @@ bool useQuestItemStage::on()  {
     return false;
 }
 
-skillCheckStage::skillCheckStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost, size_t successDiff, Character& Main, size_t numDice)
-    : QuestStage(name, mainIndex, nextIndex, cost), successDiff(successDiff), Main(Main), numDice(numDice) {
+skillCheckStage::skillCheckStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t badIndex, size_t cost, size_t successDiff, Character& Main, size_t numDice)
+    : QuestStage(name, mainIndex, nextIndex, cost), successDiff(successDiff), badIndex(badIndex), Main(Main), numDice(numDice) {
 }
 bool skillCheckStage::on()  {
     if (Main.currentAP >= cost) {

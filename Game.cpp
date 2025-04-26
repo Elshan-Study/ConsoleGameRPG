@@ -47,9 +47,9 @@ void Game::initLevel1()
 	std::unique_ptr<QuestStage> stageSQ1 = std::make_unique<useQuestItemStage>(
 		"Explore the nearest tunnel with Torch", 10, 11, PC, "Torch");
 	std::unique_ptr<QuestStage> stageSQ2 = std::make_unique<skillCheckStage>(
-		"Check water for impurities or mucus (3 AP)", 20, 21, 3, 2, PC, PC.alchemy());
+		"Check water for impurities or mucus (3 AP)", 20, 21, 999, 3, 2, PC, PC.alchemy());
 	std::unique_ptr<QuestStage> stageSQ3 = std::make_unique<skillCheckStage>(
-		"Listen to the tunnels to see if they make any strange sounds (1 AP)", 30, 3, 1, 1, PC, PC.resilience());
+		"Listen to the tunnels to see if they make any strange sounds (1 AP)", 30, 3, 999, 1, 1, PC, PC.resilience());
 	std::unique_ptr<QuestStage> stageSQ4 = std::make_unique<TextStage>(
 		"Go straight ahead towards the grinding (5 AP)", 40, 41, 5, PC);
 	std::unique_ptr<OptionChoice> optionSQ0 = std::make_unique<OptionChoice>(4);
@@ -79,7 +79,7 @@ void Game::initLevel1()
 
 	/*Option 1:*/
 	std::unique_ptr<QuestStage> stageSQ111 = std::make_unique<skillCheckStage>(
-		"Look at the symbols and try to recognize them (3 AP)", 111, 1111, 1, 2, PC, PC.perception());
+		"Look at the symbols and try to recognize them (3 AP)", 111, 1111, 999, 1, 2, PC, PC.perception());
 	std::unique_ptr<QuestStage> stageSQ112 = std::make_unique<TextStage>(
 		"Follow the tracks (2 AP)", 112, 1121, 2, PC);
 	std::unique_ptr<OptionChoice> optionSQ1 = std::make_unique<OptionChoice>(2);
@@ -91,7 +91,7 @@ void Game::initLevel1()
 
 	/*Option 2:*/
 	std::unique_ptr<QuestStage> stageSQ211 = std::make_unique<skillCheckStage>(
-		"Perform an alchemical analysis on site (4 AP)", 211, 2111, 4, 2, PC, PC.alchemy());
+		"Perform an alchemical analysis on site (4 AP)", 211, 2111, 999, 4, 2, PC, PC.alchemy());
 	std::unique_ptr<Item> dangerSample = std::make_unique<QuestItem>("Danger Sample");
 	std::unique_ptr<QuestStage> stageSQ212 = std::make_unique<giveItemStage>(
 		"Save the sample and move on (1 AP)", 212, 0, 1, PC, std::move(dangerSample));
@@ -104,7 +104,7 @@ void Game::initLevel1()
 
 	/*Option 3:*/
 	std::unique_ptr<QuestStage> stageSQ31 = std::make_unique<skillCheckStage>(
-		"Sneak silently in that direction (2 AP)", 31, 311, 2, 2, PC, PC.stealth());
+		"Sneak silently in that direction (2 AP)", 31, 311, 411, 2, 2, PC, PC.stealth());
 	std::unique_ptr<QuestStage> stageSQ32 = std::make_unique<TextStage>(
 		"Call - \"Is there anyone alive here ?\" (1 AP)", 32, 321, 1, PC);
 	std::unique_ptr<OptionChoice> optionSQ3 = std::make_unique<OptionChoice>(2);
@@ -118,7 +118,7 @@ void Game::initLevel1()
 	std::unique_ptr<QuestStage> stageSQ411 = std::make_unique<AttackStage>(
 		"Attack First (3 AP)", 411, 4111, 3, 2, PC);
 	std::unique_ptr<QuestStage> stageSQ412 = std::make_unique<skillCheckStage>(
-		"Hide and watch (2 AP)", 412, 4121, 2, 2, PC, PC.stealth());
+		"Hide and watch (2 AP)", 412, 4121, 411, 2, 2, PC, PC.stealth());
 	std::unique_ptr<OptionChoice> optionSQ4 = std::make_unique<OptionChoice>(2);
 	rawPtr->quest.addStage(std::move(stageSQ411)); /*13*/
 	rawPtr->quest.addStage(std::move(stageSQ412)); /*14*/
@@ -158,7 +158,7 @@ void Game::initLevel1()
 
 	/*Option 5:*/
 	std::unique_ptr<QuestStage> stageSQ11211 = std::make_unique<skillCheckStage>(
-		"Try to pick the lock (3 AP)", 11211, 112110, 3, 2, PC, PC.skullduggery());
+		"Try to pick the lock (3 AP)", 11211, 112110, 0, 3, 2, PC, PC.skullduggery());
 	std::unique_ptr<OptionChoice> optionSQ5 = std::make_unique<OptionChoice>(2);
 	std::unique_ptr<QuestStage> stageSQ11212 = std::make_unique<useQuestItemStage>(
 		"Try using a Danger Sample", 11212, 112110, PC, "Danger Sample");
@@ -295,11 +295,11 @@ void Game::loadLocation(size_t index, Map& map, FightingScene& fight)
 				bool isQuestEnded = sceneControl.loadQuest(PC, rawPtr, fight, 999, 50, 60);
 				if (isQuestEnded)
 				{
-					if (rawPtr->status() == Quest::win) {
+					if (rawPtr->quest.getStatus() == Quest::win) {
 						winCount += 1;
 						map.setFinishStatus(Quest::win);
 					}
-					else if (rawPtr->status() == Quest::defeat) {
+					else if (rawPtr->quest.getStatus() == Quest::defeat) {
 						defeatCount += 1;
 						map.setFinishStatus(Quest::defeat);
 					}
@@ -480,8 +480,8 @@ void Game::start()
 		{
 		case 1:
 			reset();
-			createPC.initialize(PC);
-			/*createPC.TestPC(PC);*/
+			/*createPC.initialize(PC);*/
+			createPC.TestPC(PC);
 			std::cout << "Character Create Successfully" << std::endl;
 			initEnemies();
 			CapitalCity.setMain("Capital City", "capitalCity.txt");

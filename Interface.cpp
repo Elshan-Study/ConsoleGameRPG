@@ -578,9 +578,9 @@ void PCCharacterCreate::TestPC(Character& PC)
 	std::unique_ptr<Archetype> arch = std::make_unique<Simpleton>();
 	PC.archetype = std::move(arch);
 	/*std::unique_ptr<Specialization> spec = std::make_unique<Wizard>();*/
-	std::unique_ptr<Specialization> spec = std::make_unique<Knight>();
+	std::unique_ptr<Specialization> spec = std::make_unique<Craftsman>();
 	PC.specialization = std::move(spec);
-	PC.specialization->Alchemy += 2;
+	/*PC.specialization->Alchemy += 2;*/
 	PC.specialization->Magic += 2;
 	PC.specialization->Melee += 2;
 	PC.specialization->Ranged += 1;
@@ -893,6 +893,7 @@ bool SceneControl::loadNPCScene(QuestGetPointer*& location, size_t questStatus)
 
 bool SceneControl::loadQuest(Character& PC, QuestPointer*& location, FightingScene& fighting, size_t startStage, size_t winStage, size_t defeatStage)
 {
+
 	if (location->quest.finishStatus())
 	{
 		std::cout << "You finished this quest\n\n";
@@ -909,11 +910,18 @@ bool SceneControl::loadQuest(Character& PC, QuestPointer*& location, FightingSce
 	{
 		if (!successStatus && currentStage != defeatStage)
 		{
-			std::cout << "Unsuccess. Try next time\n\n";
+			std::cout << "Unsuccess!!!\n\n";
 			std::cin.get();
-			currentStage = startStage;
-			stage = location->quest.findStage(currentStage);
-			nextStage = stage->nextIndex;
+
+			if (auto skillStage = dynamic_cast<skillCheckStage*>(stage))
+			{
+				nextStage = skillStage->badIndex;
+			}
+			else{ 
+				currentStage = startStage; 
+				stage = location->quest.findStage(currentStage);
+				nextStage = stage->nextIndex;
+			}
 			successStatus = true;
 			continue;
 		}
@@ -970,7 +978,7 @@ bool SceneControl::loadQuest(Character& PC, QuestPointer*& location, FightingSce
 				}
 
 				stage = location->quest.findStage((*option)[choice - 1]);
-				stage->on();
+				successStatus = stage->on();
 				if (auto attackStage = dynamic_cast<AttackStage*>(stage))
 				{
 					successStatus = fighting.start();
@@ -989,7 +997,7 @@ bool SceneControl::loadQuest(Character& PC, QuestPointer*& location, FightingSce
 						nextStage = stage->nextIndex;
 					}
 				}
-				else
+				else if (successStatus)
 				{
 					nextStage = stage->nextIndex;
 				}
@@ -1000,9 +1008,30 @@ bool SceneControl::loadQuest(Character& PC, QuestPointer*& location, FightingSce
 		{
 			currentStage = nextStage;
 			stage = location->quest.findStage(currentStage);
+
+			if (auto attackStage = dynamic_cast<AttackStage*>(stage))
+			{
+				successStatus = fighting.start();
+				std::cin.get();
+
+				if (!successStatus)
+				{
+					currentStage = defeatStage;
+					nextStage = defeatStage;
+					stage = location->quest.findStage(currentStage);
+				}
+				else
+				{
+					nextStage = stage->nextIndex;
+				}
+			}
+			else
+			{
+				nextStage = stage->nextIndex;
+			}
+		
 			std::cout << stage->showName() << "\n\n";
 			std::cin.get();
-			nextStage = stage->nextIndex;
 		}
 	}
 };

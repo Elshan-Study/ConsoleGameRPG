@@ -64,7 +64,9 @@ private:
     size_t numDice;
 
 public:
-    skillCheckStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost, size_t successDiff, Character& Main, size_t numDice);
+    size_t badIndex;
+
+    skillCheckStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t badIndex, size_t cost, size_t successDiff, Character& Main, size_t numDice);
 
     bool on() override;
 };
