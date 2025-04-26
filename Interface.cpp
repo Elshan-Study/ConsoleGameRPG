@@ -907,7 +907,7 @@ bool SceneControl::loadQuest(Character& PC, QuestPointer*& location, FightingSce
 
 	while (true)
 	{
-		if (!successStatus && currentStage == defeatStage)
+		if (!successStatus && currentStage != defeatStage)
 		{
 			std::cout << "Unsuccess. Try next time\n\n";
 			std::cin.get();
@@ -916,13 +916,6 @@ bool SceneControl::loadQuest(Character& PC, QuestPointer*& location, FightingSce
 			nextStage = stage->nextIndex;
 			successStatus = true;
 			continue;
-		}
-
-		if (PC.currentAP <= 0)
-		{
-			std::cout << "You don't have enough AP or HP to continue. Restore and come back!\n\n";
-			std::cin.get();
-			return false;
 		}
 
 		if (nextStage == currentStage)
@@ -934,6 +927,13 @@ bool SceneControl::loadQuest(Character& PC, QuestPointer*& location, FightingSce
 			std::cin.get();
 			location->quest.finish();
 			return true;
+		}
+
+		if (PC.currentAP <= 0)
+		{
+			std::cout << "You don't have enough AP or HP to continue. Restore and come back!\n\n";
+			std::cin.get();
+			return false;
 		}
 
 		if (nextStage < 10)
@@ -980,6 +980,9 @@ bool SceneControl::loadQuest(Character& PC, QuestPointer*& location, FightingSce
 					{
 						currentStage = defeatStage;
 						nextStage = defeatStage;
+						stage = location->quest.findStage(currentStage);
+						std::cout << stage->showName() << "\n\n";
+						std::cin.get();
 					}
 					else
 					{
@@ -990,7 +993,6 @@ bool SceneControl::loadQuest(Character& PC, QuestPointer*& location, FightingSce
 				{
 					nextStage = stage->nextIndex;
 				}
-				nextStage = stage->nextIndex;
 				break;
 			}
 		}
