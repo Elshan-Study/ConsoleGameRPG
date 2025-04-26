@@ -202,6 +202,14 @@ class SceneControl final : public Interface
 {
 public:
 
+	enum class NPCSceneReaction
+	{
+		DefaultReaction = 10,
+		WaitingReaction = 30,
+		DefeatReaction = 40,
+		WinReaction = 50
+	};
+
 	bool loadNPCScene(QuestGetPointer*& location, size_t questStatus);
 
 	bool loadQuest(Character& PC, QuestPointer*& location, FightingScene& fighting, size_t startStage, size_t winStage, size_t defeatStage);

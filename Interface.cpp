@@ -824,10 +824,10 @@ bool SceneControl::loadNPCScene(QuestGetPointer*& location, size_t questStatus)
 	size_t nextStage;
 	bool isKeyAdded = false;
 
-	if (questStatus == Quest::win) { currentStage = 50; }
-	else if (questStatus == Quest::defeat) { currentStage = 40; }
-	else if (!location->status()) { currentStage = 10; isKeyAdded = true; }
-	else if (!location->quest.finishStatus()) { currentStage = 30; }
+	if (questStatus == Quest::win) { currentStage = static_cast<size_t>(NPCSceneReaction::WinReaction); }
+	else if (questStatus == Quest::defeat) { currentStage = static_cast<size_t>(NPCSceneReaction::DefeatReaction); }
+	else if (!location->status()) { currentStage = static_cast<size_t>(NPCSceneReaction::DefaultReaction); isKeyAdded = true; }
+	else if (!location->quest.finishStatus()) { currentStage = static_cast<size_t>(NPCSceneReaction::WaitingReaction); }
 
 	else { std::cerr << "Error of Scene Control" << std::flush; return isKeyAdded; }
 
