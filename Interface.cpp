@@ -1028,10 +1028,10 @@ bool SceneControl::loadQuest(Character& PC, QuestPointer*& location, FightingSce
 			else
 			{
 				nextStage = stage->nextIndex;
+				std::cout << stage->showName() << "\n\n";
+				std::cin.get();
 			}
 		
-			std::cout << stage->showName() << "\n\n";
-			std::cin.get();
 		}
 	}
 };
