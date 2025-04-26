@@ -1,6 +1,6 @@
 #include "Character.h"
 
-Character::Character() : name("name"), archetype(nullptr), specialization(nullptr), currentHP(0), currentAP(0) {};
+Character::Character() : name("name"), archetype(nullptr), specialization(nullptr), currentHP(0), currentAP(0), money(0) {};
 Character::Character(const std::string& name, std::unique_ptr<Archetype> archetype,
 	std::unique_ptr<Specialization> specialization) : name(name), archetype(std::move(archetype)), specialization(std::move(specialization))
 {
@@ -13,6 +13,7 @@ Character::Character(Character&& other) noexcept
 	: name(std::move(other.name)),
 	currentHP(other.currentHP),
 	currentAP(other.currentAP),
+	money(other.money),
 	archetype(std::move(other.archetype)),
 	specialization(std::move(other.specialization)),
 	inventory(std::move(other.inventory)) {
@@ -23,6 +24,7 @@ Character& Character::operator=(Character&& other) noexcept {
 		name = std::move(other.name);
 		currentHP = other.currentHP;
 		currentAP = other.currentAP;
+		money = other.money;
 		archetype = std::move(other.archetype);
 		specialization = std::move(other.specialization);
 		inventory = std::move(other.inventory);
@@ -191,6 +193,7 @@ void Character::printInfo()
 	std::cout << name << "\n";
 	std::cout << "HP: " << currentHP << "/" << archetype->getHP() << "\n";
 	std::cout << "AP: " << currentAP << "/" << archetype->getAP() << "\n";
+	std::cout << "Money: " << money << "\n";
 	std::cout << "\nCharacteristics: \n";
 	std::cout << "Brawn: " << Brawn() << " | Agility: " << Agility()
 		<< " | Intellect: " << Intellect() << " | Cunning: " << Cunning()
@@ -224,6 +227,7 @@ void Character::serialize(std::ostream& out) const {
 
 	out.write(reinterpret_cast<const char*>(&currentHP), sizeof(currentHP));
 	out.write(reinterpret_cast<const char*>(&currentAP), sizeof(currentAP));
+	out.write(reinterpret_cast<const char*>(&money), sizeof(money));
 
 	bool hasArchetype = archetype != nullptr;
 	out.write(reinterpret_cast<const char*>(&hasArchetype), sizeof(hasArchetype));
@@ -249,6 +253,7 @@ void Character::deserialize(std::istream& in) {
 
 	in.read(reinterpret_cast<char*>(&currentHP), sizeof(currentHP));
 	in.read(reinterpret_cast<char*>(&currentAP), sizeof(currentAP));
+	in.read(reinterpret_cast<char*>(&money), sizeof(money));
 
 	bool hasArchetype;
 	in.read(reinterpret_cast<char*>(&hasArchetype), sizeof(hasArchetype));

@@ -11,6 +11,7 @@ public:
 	std::string name;
 	size_t currentHP;
 	size_t currentAP;
+	size_t money;
 	std::unique_ptr<Archetype> archetype;
 	std::unique_ptr<Specialization> specialization;
 	Inventory inventory;

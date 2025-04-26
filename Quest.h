@@ -21,6 +21,7 @@ private:
     size_t optionCapacity;
     size_t stageSize;
     size_t optionSize;
+    size_t reward;
     bool isFinished;
     int status = QuestStatus::neutral;
 
@@ -31,11 +32,15 @@ public:
 
     void addOption(std::unique_ptr<OptionChoice> option);
 
+    void setReward(size_t money);
+
     bool linkStageToOption(size_t stageIndex, size_t optionIndex);
 
     size_t getStageCount() const;
 
     size_t getOptionCount() const;
+
+    size_t getReward() const;
 
     QuestStage* getStage(size_t index) const;
 

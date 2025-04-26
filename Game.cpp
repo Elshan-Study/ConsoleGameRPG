@@ -186,6 +186,7 @@ void Game::initLevel1()
 	rawPtr->quest.addStage(std::move(stageSQ60)); /*25*/
 	rawPtr->quest.addStage(std::move(stageSQ0));
 
+	rawPtr->quest.setReward(100);
 	CapitalCity.addLocation(std::move(Sewerage));
 }
 
@@ -297,6 +298,10 @@ void Game::loadLocation(size_t index, Map& map, FightingScene& fight)
 				{
 					if (rawPtr->quest.getStatus() == Quest::win) {
 						winCount += 1;
+						size_t reward = rawPtr->quest.getReward();
+						std::cout << "You get " << reward << " money for quest!\n";
+						std::cin.get();
+						PC.money += reward;
 						map.setFinishStatus(Quest::win);
 					}
 					else if (rawPtr->quest.getStatus() == Quest::defeat) {

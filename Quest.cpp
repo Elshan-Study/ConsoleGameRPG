@@ -2,7 +2,7 @@
 
 Quest::Quest()
     : stageCapacity(0), optionCapacity(0),
-    stageSize(0), optionSize(0), isFinished(false) {
+    stageSize(0), optionSize(0), reward(0), isFinished(false) {
 }
 
 void Quest::addStage(std::unique_ptr<QuestStage> stage) {
@@ -17,6 +17,11 @@ void Quest::addOption(std::unique_ptr<OptionChoice> option) {
         resizeOptions();
     }
     options[optionSize++] = std::move(option);
+}
+
+void Quest::setReward(size_t money)
+{
+    reward = money;
 }
 
 bool Quest::linkStageToOption(size_t stageIndex, size_t optionIndex) {
@@ -39,6 +44,11 @@ size_t Quest::getOptionCount() const {
 QuestStage* Quest::getStage(size_t index) const {
     if (index < stageSize) return stages[index].get();
     return nullptr;
+}
+
+size_t Quest::getReward() const
+{
+    return reward;
 }
 
 QuestStage* Quest::findStage(size_t index) const {

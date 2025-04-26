@@ -81,3 +81,15 @@ public:
 
     bool on() override;
 };
+
+class buyItemStage : public QuestStage {
+private:
+    Character& Main;
+    std::unique_ptr<Item> item;
+    size_t itemCost;
+
+public:
+    buyItemStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost, size_t itemCost, Character& Main, std::unique_ptr<Item> item);
+
+    bool on() override;
+};
