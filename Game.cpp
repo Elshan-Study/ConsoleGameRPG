@@ -33,8 +33,8 @@ void Game::reset()
 
 
 	CapitalCity = Map();
-	/*EvilSwamp.reset();
-	BlackMountain.reset(); */
+	Outskirts = Map();
+	/*BlackMountain = Map();*/
 }
 
 void Game::initMaps()
@@ -153,7 +153,7 @@ void Game::initLevel11()
 
 	/*Option 1:*/
 	std::unique_ptr<QuestStage> stageSQ111 = std::make_unique<skillCheckStage>(
-		"Look at the symbols and try to recognize them (3 AP)", 111, 1111, 999, 1, 2, PC, PC.perception());
+		"Look at the symbols and try to recognize them (3 AP)", 111, 1111, 999, 3, 2, PC, PC.perception());
 	std::unique_ptr<QuestStage> stageSQ112 = std::make_unique<TextStage>(
 		"Follow the tracks (2 AP)", 112, 1121, 2, PC);
 	std::unique_ptr<OptionChoice> optionSQ1 = std::make_unique<OptionChoice>(2);
@@ -419,7 +419,119 @@ void Game::initLevel20()
 
 };
 
-void Game::initLevel21() {};
+void Game::initLevel21()
+{
+	std::unique_ptr<Location> EvilSwamp = std::make_unique<QuestPointer>("Evil Swamp", "evilSwamp.txt", key2);
+	QuestPointer* rawPtr = dynamic_cast<QuestPointer*>(EvilSwamp.get());
+
+	/*Base:*/
+	std::unique_ptr<QuestStage> stage0 = std::make_unique<TextStage>(
+		"Where are you going?", 999, 0, 0, PC);
+	std::unique_ptr<QuestStage> stage1 = std::make_unique<TextStage>(
+		"Walk along a barely visible path (2 AP)", 10, 11, 2, PC);
+	std::unique_ptr<QuestStage> stage2 = std::make_unique<TextStage>(
+		"Walk straight through the fog (3 AP)", 20, 21, 3, PC);
+	std::unique_ptr<QuestStage> stage3 = std::make_unique<TextStage>(
+		"Check out the strange glowing mushrooms by the water (1 AP)", 30, 31, 1, PC);
+	std::unique_ptr<OptionChoice> option0 = std::make_unique<OptionChoice>(3);
+	rawPtr->quest.addStage(std::move(stage0)); /*0*/
+	rawPtr->quest.addStage(std::move(stage1)); /*1*/
+	rawPtr->quest.addStage(std::move(stage2)); /*2*/
+	rawPtr->quest.addStage(std::move(stage3)); /*3*/
+	rawPtr->quest.addOption(std::move(option0)); 
+	rawPtr->quest.linkStageToOption(1, 0);
+	rawPtr->quest.linkStageToOption(2, 0);
+	rawPtr->quest.linkStageToOption(3, 0);
+
+	std::unique_ptr<QuestStage> stage11 = std::make_unique<TextStage>(
+		"You choose a narrow, almost invisible path between the swamps.Branches scratch your face, the earth squelches under your boots.", 11, 1, 0, PC);
+	std::unique_ptr<QuestStage> stage21 = std::make_unique<TextStage>(
+		"You inhale the damp air and step straight into the white shroud. With each step it becomes colder and harder to breathe.", 21, 2, 0, PC);
+	std::unique_ptr<QuestStage> stage31 = std::make_unique<TextStage>(
+		"On the surface of the swamp, blue and green lights shimmer - mushrooms that you have never seen before. Their glow is mesmerizing.", 31, 3, 0, PC);
+	rawPtr->quest.addStage(std::move(stage11)); /*4*/
+	rawPtr->quest.addStage(std::move(stage21)); /*5*/
+	rawPtr->quest.addStage(std::move(stage31)); /*6*/
+
+	/*Option 1:*/
+	std::unique_ptr<QuestStage> stage111 = std::make_unique<skillCheckStage>(
+		"Carefully make your way around the quagmire (2 AP)", 111, 1111, 1112, 2, 2, PC, PC.coordination());
+	std::unique_ptr<QuestStage> stage112 = std::make_unique<skillCheckStage>(
+		"Hurry to get out faster (1 AP)", 112, 1121, 1112, 1, 2, PC, PC.athletics());
+	std::unique_ptr<OptionChoice> option1 = std::make_unique<OptionChoice>(2);
+	rawPtr->quest.addStage(std::move(stage111)); /*7*/
+	rawPtr->quest.addStage(std::move(stage112)); /*8*/
+	rawPtr->quest.addOption(std::move(option1));
+	rawPtr->quest.linkStageToOption(7, 1);
+	rawPtr->quest.linkStageToOption(8, 1);
+
+	/*Option 2:*/
+	std::unique_ptr<QuestStage> stage211 = std::make_unique<skillCheckStage>(
+		"Navigate by hearing (3 AP)", 211, 2111, 2112, 3, 3, PC, PC.perception());
+	std::unique_ptr<QuestStage> stage212 = std::make_unique<skillCheckStage>(
+		"Go ahead, relying on swamp survival skills (2 AP)", 212, 2121, 2112, 2, 3, PC, PC.survival());
+	std::unique_ptr<OptionChoice> option2 = std::make_unique<OptionChoice>(2);
+	rawPtr->quest.addStage(std::move(stage211)); /*9*/
+	rawPtr->quest.addStage(std::move(stage212)); /*10*/
+	rawPtr->quest.addOption(std::move(option2)); 
+	rawPtr->quest.linkStageToOption(9, 2);
+	rawPtr->quest.linkStageToOption(10, 2);
+
+	/*Option 3:*/
+	std::unique_ptr<QuestStage> stage311 = std::make_unique<skillCheckStage>(
+		"Move carefully, trying not to make noise (2 AP)", 311, 1111, 3111, 2, 3, PC, PC.stealth());
+	std::unique_ptr<QuestStage> stage312 = std::make_unique<skillCheckStage>(
+		"Hurry to get out faster (1 AP)", 312, 3121, 3111, 1, 3, PC, PC.athletics());
+	std::unique_ptr<OptionChoice> option3 = std::make_unique<OptionChoice>(2);
+	rawPtr->quest.addStage(std::move(stage311)); /*11*/
+	rawPtr->quest.addStage(std::move(stage312)); /*12*/
+	rawPtr->quest.addOption(std::move(option3));
+	rawPtr->quest.linkStageToOption(11, 3);
+	rawPtr->quest.linkStageToOption(12, 3);
+
+	/*Good results:*/
+	std::unique_ptr<Item> protectiveTalisman = std::make_unique<QuestItem>("Protective Talisman");
+	std::unique_ptr<QuestStage> stage1111 = std::make_unique<giveItemStage>(
+		"You come to an abandoned altar, where among the moss you find the Protective Talisman.", 1111, 999, 0, PC, std::move(protectiveTalisman));
+	std::unique_ptr<QuestStage> stage1121 = std::make_unique<TextStage>(
+		"You reach the end of the trail, tired but whole.", 1121, 999, 0, PC);
+	std::unique_ptr<QuestStage> stage2111 = std::make_unique<TextStage>(
+		"You break out of the fog at the last moment and find traces of the victim of the swamp forces.", 2111, 999, 0, PC);
+	std::unique_ptr<QuestStage> stage2121 = std::make_unique<TextStage>(
+		"You navigate around the quicksand and reach the center of the swamp without incident.", 2121, 40, 0, PC);
+	std::unique_ptr<QuestStage> stage3121 = std::make_unique<TextStage>(
+		"You reach the end of the trail, tired but whole.", 3121, 40, 0, PC);
+	rawPtr->quest.addStage(std::move(stage1111)); /*13*/
+	rawPtr->quest.addStage(std::move(stage1121)); /*14*/
+	rawPtr->quest.addStage(std::move(stage2111)); /*15*/
+	rawPtr->quest.addStage(std::move(stage2121)); /*16*/
+	rawPtr->quest.addStage(std::move(stage3121)); /*17*/
+
+	/*Bad results:*/
+	std::unique_ptr<QuestStage> stage1112 = std::make_unique<AttackStage>(
+		"If you stumble, you attract the attention of a swamp creature.", 1112, 40, 0, 0, PC);
+	std::unique_ptr<QuestStage> stage2112 = std::make_unique<TextStage>(
+		"Lost, you find yourself trapped by spirits.", 2112, 50, 0, PC);
+	std::unique_ptr<QuestStage> stage3111 = std::make_unique<AttackStage>(
+		"You were careless and triggered the swamp creature onto yourself.", 3111, 999, 0, 0, PC);
+	rawPtr->quest.addStage(std::move(stage1112)); /*18*/
+	rawPtr->quest.addStage(std::move(stage2112)); /*19*/
+	rawPtr->quest.addStage(std::move(stage3111)); /*20*/
+
+	/*Endings:*/
+	std::unique_ptr<QuestStage> stage40 = std::make_unique<TextStage>(
+		"You reach the very center of the swamp and destroy the \"Heart of the Swamp\". Now new creatures will no longer appear.",
+		40, 40, 0, PC);
+	std::unique_ptr<QuestStage> stage50 = std::make_unique<TextStage>(
+		"When you manage to get out of the swamp after a long time, wounded and tired, you think: \"The swamps do not tolerate the weak."
+		"I barely got out alive.I will not go back there again.\"",
+		50, 50, 0, PC);
+	rawPtr->quest.addStage(std::move(stage40)); /*21*/
+	rawPtr->quest.addStage(std::move(stage50)); /*22*/
+
+	rawPtr->quest.setReward(100);
+	Outskirts.addLocation(std::move(EvilSwamp));
+}
 
 void Game::initLevels()
 {
@@ -445,9 +557,27 @@ void Game::initEnemies()
 	cultist.addItem(std::move(mantle));
 
 	addEnemy(std::move(cultist));
+
+	/*Swamp Spawn*/
+	std::unique_ptr<Archetype> arch2 = std::make_unique<Simpleton>();
+	std::unique_ptr<Specialization> spec2 = std::make_unique<Archer>();
+	Character spawn("Swamp Spawn", std::move(arch2), std::move(spec2));
+	spawn.specialization->Athletics += 1;
+	spawn.specialization->Cool += 2;
+
+	spawn.SetAll();
+	spawn.archetype->changeHP(8);
+	spawn.currentHP = spawn.archetype->getHP();
+
+	std::unique_ptr<Item> weapon2 = std::make_unique<Weapon>("Mud ball", Weapon::Range, 4, 3);
+	spawn.addItem(std::move(weapon2));
+	std::unique_ptr<Item> armor = std::make_unique<Armor>("Slippery body", 10, 1);
+	spawn.addItem(std::move(armor));
+
+	addEnemy(std::move(spawn));
 }
 
-void Game::loadLocation(size_t index, Map& map, FightingScene& fight)
+void Game::loadLocation(size_t index, Map& map, FightingScene& fight, size_t winStage, size_t defeatStage)
 {
 	if (auto rawPtr = dynamic_cast<QuestPointer*>(map[index].get()))
 	{
@@ -457,7 +587,7 @@ void Game::loadLocation(size_t index, Map& map, FightingScene& fight)
 			if (rawPtr->status())
 			{
 				rawPtr->readDescription();
-				bool isQuestEnded = sceneControl.loadQuest(PC, rawPtr, fight, 999, 50, 60);
+				bool isQuestEnded = sceneControl.loadQuest(PC, rawPtr, fight, 999, winStage, defeatStage);
 				if (isQuestEnded)
 				{
 					if (rawPtr->quest.getStatus() == Quest::win) {
@@ -505,7 +635,7 @@ void Game::gamePlay(size_t choice)
 	MapMenu newMenu;
 	bool isArmor = false;
 	FightingScene sewerFight(&enemies[0], PC, 10, 10, FightingScene::Cool, FightingScene::MeleeMod);
-	FightingScene swampFight(&enemies[0], PC, 5, 15, FightingScene::Vigilance, FightingScene::RangeMod);
+	FightingScene swampFight(&enemies[1], PC, 3, 15, FightingScene::Vigilance, FightingScene::RangeMod);
 	size_t maxAP = PC.archetype->getAP() - (5 - PC.Discipline());
 	size_t maxHP = PC.archetype->getHP() - (5 - PC.Resilience());
 	size_t maxArmorHP;
@@ -571,7 +701,7 @@ void Game::gamePlay(size_t choice)
 		choice = newMenu.show(CapitalCity);
 		clearScreen();
 		if (choice > CapitalCity.getSize()) { return; }
-		loadLocation(choice - 1, CapitalCity, sewerFight);
+		loadLocation(choice - 1, CapitalCity, sewerFight, 50, 60);
 		break;
 	case 5:
 		Outskirts.readDescription();
@@ -579,7 +709,7 @@ void Game::gamePlay(size_t choice)
 		choice = newMenu.show(Outskirts);
 		clearScreen();
 		if (choice > Outskirts.getSize()) { return; }
-		loadLocation(choice - 1, Outskirts, swampFight);
+		loadLocation(choice - 1, Outskirts, swampFight, 40, 50);
 		break;
 	default:
 		break;

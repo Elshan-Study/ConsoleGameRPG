@@ -584,10 +584,11 @@ void PCCharacterCreate::TestPC(Character& PC)
 	/*std::unique_ptr<Specialization> spec = std::make_unique<Wizard>();*/
 	std::unique_ptr<Specialization> spec = std::make_unique<Craftsman>();
 	PC.specialization = std::move(spec);
-	/*PC.specialization->Alchemy += 2;*/
+	PC.specialization->Alchemy += 2;
+	PC.specialization->Athletics += 2;
 	PC.specialization->Magic += 2;
 	PC.specialization->Melee += 2;
-	PC.specialization->Ranged += 1;
+	PC.specialization->Ranged += 2;
 	PC.SetAll();
 	std::unique_ptr<Item> item = std::make_unique<Potion>("Heal potion", 5);
 	item->addCopy(2);
@@ -1128,6 +1129,7 @@ bool SceneControl::loadQuest(Character& PC, QuestPointer*& location, FightingSce
 			{
 				nextStage = stage->nextIndex;
 				std::cout << stage->showName() << "\n\n";
+				stage->on();
 				std::cin.get();
 			}
 		
