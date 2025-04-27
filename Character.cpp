@@ -152,7 +152,7 @@ void Character::attack(Character& target, bool trueWeapon, size_t itemIndex, siz
 			soak = bestSoak;
 		}
 
-		std::cout << name << " current armor: " << choiceArmor << "\n";
+		std::cout << target.name << " current armor: " << choiceArmor << "\n";
 
 		size_t itemEffect = 0;
 		if (trueWeapon && (itemIndex < inventory.getSize()))
