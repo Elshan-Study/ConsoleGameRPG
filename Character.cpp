@@ -128,6 +128,7 @@ void Character::attack(Character& target, bool trueWeapon, size_t itemIndex, siz
 
 	if (roll >= successDiff)
 	{
+		std::string choiceArmor = "Without Armor";
 		int bestSoak = 0;
 		Armor* bestArmor = nullptr;
 
@@ -141,6 +142,7 @@ void Character::attack(Character& target, bool trueWeapon, size_t itemIndex, siz
 				{
 					bestSoak = currentSoak;
 					bestArmor = armor;
+					choiceArmor = armor->Name();
 				}
 			}
 		}
@@ -149,6 +151,8 @@ void Character::attack(Character& target, bool trueWeapon, size_t itemIndex, siz
 		{
 			soak = bestSoak;
 		}
+
+		std::cout << name << " current armor: " << choiceArmor << "\n";
 
 		size_t itemEffect = 0;
 		if (trueWeapon && (itemIndex < inventory.getSize()))

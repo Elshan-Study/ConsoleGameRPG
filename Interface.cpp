@@ -1,4 +1,5 @@
 #include "Interface.h"
+#include <vector>
 
 void PCCharacterCreate::ArchetypeChoice(Character& PC)
 {
@@ -552,7 +553,7 @@ void PCCharacterCreate::StartItemSet(Character& PC)
 	{
 		std::unique_ptr<Item> item = std::make_unique<Weapon>("Knife", Weapon::Melee, 3, 2);
 		PC.addItem(std::move(item));
-		item = std::make_unique<Potion>("Poison", 10);
+		item = std::make_unique<Potion>("Poison", 5);
 		PC.addItem(std::move(item));
 	}
 
@@ -588,12 +589,18 @@ void PCCharacterCreate::TestPC(Character& PC)
 	PC.specialization->Melee += 2;
 	PC.specialization->Ranged += 1;
 	PC.SetAll();
-	/*std::unique_ptr<Item> item = std::make_unique<Potion>("Heal potion", 5);
-	item->addCopy(2);*/
-	std::unique_ptr<Item> item = std::make_unique<Weapon>("Sword", Weapon::Melee, 5, 3);
-	PC.addItem(std::move(item));
-	std::unique_ptr<Item> item2 = std::make_unique<Weapon>("Bow", Weapon::Range, 3, 3);
+	std::unique_ptr<Item> item = std::make_unique<Potion>("Heal potion", 5);
+	item->addCopy(2);
+	std::unique_ptr<Item> item2 = std::make_unique<Weapon>("Sword", Weapon::Melee, 5, 3);
 	PC.addItem(std::move(item2));
+	std::unique_ptr<Item> item3 = std::make_unique<Weapon>("Knife", Weapon::Melee, 3, 2);
+	PC.addItem(std::move(item3));
+	std::unique_ptr<Item> item4 = std::make_unique<Potion>("Poison", 5);
+	PC.addItem(std::move(item4));
+	std::unique_ptr<Item> item5 = std::make_unique<Weapon>("Bow", Weapon::Range, 3, 3);
+	PC.addItem(std::move(item5));
+	std::unique_ptr<Item> steelArmor = std::make_unique<Armor>("Steel Armor", 10, 2);
+	PC.addItem(std::move(steelArmor));
 	std::unique_ptr<Item> mantle = std::make_unique<Armor>("Mantle", 5, 1);
 	PC.addItem(std::move(mantle));
 }
@@ -733,7 +740,7 @@ bool FightingScene::start()
 					break;
 				case 3:
 				{
-					size_t dice = isClose() ? PC.melee() : PC.ranged();
+					/*size_t dice = isClose() ? PC.melee() : PC.ranged();
 					weapon1 = isClose() ? "Sword" : "Bow";
 					weapon2 = isClose() ? "Knife" : "Crossbow";
 
@@ -746,6 +753,61 @@ bool FightingScene::start()
 
 					PC.attack(*Enemy, hasWeapon, itemIndex, dice, 2);
 					std::cout << "Enemy HP now : " << Enemy->currentHP << "\n";
+					std::cin.get();
+					Enemy->inventory.CheckInventory();
+					turnInProgress = false;
+					break;*/
+
+					size_t dice = isClose() ? PC.melee() : PC.ranged();
+					size_t desiredType = isClose() ? Weapon::WeaponType::Melee : Weapon::WeaponType::Range;
+
+					bool hasWeapon = false;
+					std::vector<size_t> matchingWeaponIndices;
+
+					for (size_t i = 0; i < PC.inventory.getSize(); ++i) {
+						Item* item = PC.inventory[i].get();
+						if (Weapon* weapon = dynamic_cast<Weapon*>(item)) {
+							if (weapon->getDistanceType() == desiredType) {
+								matchingWeaponIndices.push_back(i);
+							}
+						}
+					}
+
+					if (!matchingWeaponIndices.empty()) {
+						hasWeapon = true;
+						if (matchingWeaponIndices.size() == 1) {
+							itemIndex = matchingWeaponIndices[0];
+						}
+						else {
+							std::cout << "Choose weapon to attack:\n";
+							for (size_t idx = 0; idx < matchingWeaponIndices.size(); ++idx) {
+								std::cout << idx << ": " << *(PC.inventory[matchingWeaponIndices[idx]]) << "\n";
+							}
+
+							while (true) {
+								std::string input;
+								std::cout << "Your choice: ";
+								std::getline(std::cin, input);
+
+								try {
+									size_t choice = std::stoul(input);
+									if (choice < matchingWeaponIndices.size()) {
+										itemIndex = matchingWeaponIndices[choice];
+										break;
+									}
+									else {
+										std::cout << "Invalid choice, out of range.\n";
+									}
+								}
+								catch (...) {
+									std::cout << "Invalid input, please enter a number.\n";
+								}
+							}
+						}
+					}
+
+					PC.attack(*Enemy, hasWeapon, itemIndex, dice, 2);
+					std::cout << "Enemy HP now: " << Enemy->currentHP << "\n";
 					std::cin.get();
 					Enemy->inventory.CheckInventory();
 					turnInProgress = false;
