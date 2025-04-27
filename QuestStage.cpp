@@ -74,6 +74,7 @@ bool buyItemStage::on() {
     if (Main.money >= itemCost) {
         Main.money -= itemCost;
         Main.inventory.addItem(std::move(item));
+        return true;
     }
-    return true;
+    return false;
 }

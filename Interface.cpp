@@ -831,6 +831,9 @@ bool SceneControl::loadNPCScene(QuestGetPointer*& location, size_t questStatus)
 
 	else { std::cerr << "Error of Scene Control" << std::flush; return isKeyAdded; }
 
+	bool successStatus = true;
+	std::string badOutput;
+
 	QuestStage* stage = location->quest.findStage(currentStage);
 	std::cout << stage->showName() << "\n";
 	std::cin.get();
@@ -871,7 +874,20 @@ bool SceneControl::loadNPCScene(QuestGetPointer*& location, size_t questStatus)
 				}
 
 				stage = location->quest.findStage((*option)[choice - 1]);
-				nextStage = stage->nextIndex;
+
+				bool successStatus = stage->on();
+
+				if (auto skillStage = dynamic_cast<skillCheckStage*>(stage))
+				{
+					nextStage = !successStatus ? skillStage->badIndex : skillStage->nextIndex;
+					badOutput = "Unsuccess\n";
+				}
+				else if (auto buyStage = dynamic_cast<buyItemStage*>(stage))
+				{
+					nextStage = !successStatus ? skillStage->badIndex : skillStage->nextIndex;
+					badOutput = "You don't have enough money\n";
+				}
+				else { nextStage = stage->nextIndex; }
 
 				break;
 			}
@@ -880,8 +896,9 @@ bool SceneControl::loadNPCScene(QuestGetPointer*& location, size_t questStatus)
 		{
 			currentStage = nextStage;
 			stage = location->quest.findStage(currentStage);
-			stage->on();
-			std::cout << stage->showName() << "\n";
+			successStatus = stage->on();
+			if(successStatus) { std::cout << stage->showName() << "\n"; }
+			else { std::cout << badOutput; }
 			std::cin.get();
 			nextStage = stage->nextIndex;
 		}
