@@ -123,42 +123,42 @@ void PCCharacterCreate::CharacteristicsEdit(Character& PC, size_t& experience)
 		switch (choice)
 		{
 		case 1:
-			if (PC.Brawn() != 5 && experience >= (PC.Brawn() + 1) * 10)
+			if (PC.Brawn() != 3 && experience >= (PC.Brawn() + 1) * 10)
 			{
 				experience -= (PC.Brawn() + 1) * 10;
 				PC.archetype->Brawn += 1;
 			}
 			break;
 		case 2:
-			if (PC.Agility() != 5 && experience >= (PC.Agility() + 1) * 10)
+			if (PC.Agility() != 3 && experience >= (PC.Agility() + 1) * 10)
 			{
 				experience -= (PC.Agility() + 1) * 10;
 				PC.archetype->Agility += 1;
 			}
 			break;
 		case 3:
-			if (PC.Intellect() != 5 && experience >= (PC.Intellect() + 1) * 10)
+			if (PC.Intellect() != 3 && experience >= (PC.Intellect() + 1) * 10)
 			{
 				experience -= (PC.Intellect() + 1) * 10;
 				PC.archetype->Intellect += 1;
 			}
 			break;
 		case 4:
-			if (PC.Cunning() != 5 && experience >= (PC.Cunning() + 1) * 10)
+			if (PC.Cunning() != 3 && experience >= (PC.Cunning() + 1) * 10)
 			{
 				experience -= (PC.Cunning() + 1) * 10;
 				PC.archetype->Cunning += 1;
 			}
 			break;
 		case 5:
-			if (PC.Willpower() != 5 && experience >= (PC.Willpower() + 1) * 10)
+			if (PC.Willpower() != 3 && experience >= (PC.Willpower() + 1) * 10)
 			{
 				experience -= (PC.Willpower() + 1) * 10;
 				PC.archetype->Willpower += 1;
 			}
 			break;
 		case 6:
-			if (PC.Presence() != 5 && experience >= (PC.Presence() + 1) * 10)
+			if (PC.Presence() != 3 && experience >= (PC.Presence() + 1) * 10)
 			{
 				experience -= (PC.Presence() + 1) * 10;
 				PC.archetype->Presence += 1;
@@ -453,8 +453,8 @@ void PCCharacterCreate::CharacterEdit(Character& PC)
 		PC.printInfo();
 
 		std::cout << "You have " << experience << "exp\n";
-		std::cout << "Cost of Characteristics = New Level * 10\n";
-		std::cout << "Cost of Skills = New Level * 5\n";
+		std::cout << "Cost of Characteristics = New Level * 10 (Max level 3)\n";
+		std::cout << "Cost of Skills = New Level * 5 (Max level 5)\n";
 		std::cout << "1.Increase Characteristics\n";
 		std::cout << "2.Increase Skill\n";
 		std::cout << "3.Reset\n";
