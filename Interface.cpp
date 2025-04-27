@@ -534,19 +534,23 @@ void PCCharacterCreate::StartItemSet(Character& PC)
 
 	if (Knight* knight = dynamic_cast<Knight*>(PC.specialization.get()))
 	{
-		std::unique_ptr<Item> item = std::make_unique<Weapon>("Sword", 5, 3);
+		std::unique_ptr<Item> item = std::make_unique<Weapon>("Sword", Weapon::Melee, 5, 3);
 		PC.addItem(std::move(item));
+		std::unique_ptr<Item> steelArmor = std::make_unique<Armor>("Steel Armor", 10, 2);
+		PC.addItem(std::move(steelArmor));
 	}
 
 	if (Archer* archer = dynamic_cast<Archer*>(PC.specialization.get()))
 	{
-		std::unique_ptr<Item> item = std::make_unique<Weapon>("Bow", 6, 2);
+		std::unique_ptr<Item> item = std::make_unique<Weapon>("Bow", Weapon::Range, 6, 2);
 		PC.addItem(std::move(item));
+		std::unique_ptr<Item> mantle = std::make_unique<Armor>("Mantle", 5, 1);
+		PC.addItem(std::move(mantle));
 	}
 
 	if (Thief* thief = dynamic_cast<Thief*>(PC.specialization.get()))
 	{
-		std::unique_ptr<Item> item = std::make_unique<Weapon>("Knife", 3, 2);
+		std::unique_ptr<Item> item = std::make_unique<Weapon>("Knife", Weapon::Melee, 3, 2);
 		PC.addItem(std::move(item));
 		item = std::make_unique<Potion>("Poison", 10);
 		PC.addItem(std::move(item));
@@ -554,8 +558,7 @@ void PCCharacterCreate::StartItemSet(Character& PC)
 
 	if (Craftsman* craftsman = dynamic_cast<Craftsman*>(PC.specialization.get()))
 	{
-		std::unique_ptr<Item> item = std::make_unique<QuestItem>("Bag of coins");
-		PC.addItem(std::move(item));
+		PC.money += 50;
 	}
 }
 
@@ -587,9 +590,9 @@ void PCCharacterCreate::TestPC(Character& PC)
 	PC.SetAll();
 	/*std::unique_ptr<Item> item = std::make_unique<Potion>("Heal potion", 5);
 	item->addCopy(2);*/
-	std::unique_ptr<Item> item = std::make_unique<Weapon>("Sword", 5, 3);
+	std::unique_ptr<Item> item = std::make_unique<Weapon>("Sword", Weapon::Melee, 5, 3);
 	PC.addItem(std::move(item));
-	std::unique_ptr<Item> item2 = std::make_unique<Weapon>("Bow", 3, 3);
+	std::unique_ptr<Item> item2 = std::make_unique<Weapon>("Bow", Weapon::Range, 3, 3);
 	PC.addItem(std::move(item2));
 	std::unique_ptr<Item> mantle = std::make_unique<Armor>("Mantle", 5, 1);
 	PC.addItem(std::move(mantle));

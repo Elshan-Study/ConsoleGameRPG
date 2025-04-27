@@ -80,10 +80,15 @@ class Weapon final : public Item
 private:
 	size_t damage;
 	size_t critic;
+	size_t distanceType;
 public:
+	enum WeaponType{Melee, Range};
+
 	Weapon();
-	explicit Weapon(std::string name, size_t damage, size_t critic);
+	explicit Weapon(std::string name, size_t distanceType, size_t damage, size_t critic);
 	Weapon(const Weapon& other);
+
+	size_t getDistanceType() const;
 
 	size_t useItem(int effect) override;
 

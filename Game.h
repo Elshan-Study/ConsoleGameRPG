@@ -41,9 +41,9 @@ public:
 
 	void reset();
 
-	void initLevel1();
+	void initLevel10();
 
-	void initLevel2();
+	void initLevel11();
 
 	void initLevels();
 

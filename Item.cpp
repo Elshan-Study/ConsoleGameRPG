@@ -139,10 +139,11 @@ std::unique_ptr<Item> Armor::DeserializeArmor(std::istream& in) {
 }
 
 
-Weapon::Weapon() : damage(0), critic(4) {};
-Weapon::Weapon(std::string name, size_t damage, size_t critic) : Item(name, 0), damage(damage), critic(critic) {};
-Weapon::Weapon(const Weapon& other) : Item(other), damage(other.damage), critic(other.critic) {};
+Weapon::Weapon() : distanceType(WeaponType::Melee), damage(0), critic(4) {};
+Weapon::Weapon(std::string name, size_t distanceType, size_t damage, size_t critic) : Item(name, 0), distanceType(distanceType), damage(damage), critic(critic) {};
+Weapon::Weapon(const Weapon& other) : Item(other), distanceType(other.distanceType), damage(other.damage), critic(other.critic) {};
 
+size_t Weapon::getDistanceType() const { return distanceType; }
 size_t Weapon::useItem(int effect)
 {
 	if (isExist == 0) { return 0; }
@@ -169,6 +170,7 @@ void Weapon::Serialize(std::ostream& out) const {
 
 	out.write(reinterpret_cast<const char*>(&isConsumable), sizeof(isConsumable));
 	out.write(reinterpret_cast<const char*>(&isExist), sizeof(isExist));
+	out.write(reinterpret_cast<const char*>(&distanceType), sizeof(distanceType));
 	out.write(reinterpret_cast<const char*>(&damage), sizeof(damage));
 	out.write(reinterpret_cast<const char*>(&critic), sizeof(critic));
 }
@@ -181,15 +183,17 @@ std::unique_ptr<Item> Weapon::DeserializeWeapon(std::istream& in) {
 
 	bool isConsumable;
 	bool isExist;
+	size_t distanceType;
 	size_t damage;
 	size_t critic;
 
 	in.read(reinterpret_cast<char*>(&isConsumable), sizeof(isConsumable));
 	in.read(reinterpret_cast<char*>(&isExist), sizeof(isExist));
+	in.read(reinterpret_cast<char*>(&distanceType), sizeof(distanceType));
 	in.read(reinterpret_cast<char*>(&damage), sizeof(damage));
 	in.read(reinterpret_cast<char*>(&critic), sizeof(critic));
 
-	auto weapon = std::make_unique<Weapon>(name, damage, critic);
+	auto weapon = std::make_unique<Weapon>(name, distanceType, damage, critic);
 	weapon->isExist = isExist;
 	return weapon;
 }
