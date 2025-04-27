@@ -51,13 +51,15 @@ class Armor final : public Item
 {
 private:
 	size_t armor_hp;
-	size_t current_armor_hp;
 	size_t soak;
 public:
-	
+	size_t current_armor_hp;
+
 	Armor();
 	explicit Armor(std::string name, size_t armor_hp, size_t soak);
 	Armor(const Armor& other);
+
+	size_t getArmorHP() const;
 
 	size_t useItem(int effect = 1) override;
 

@@ -77,6 +77,8 @@ Armor::Armor() : armor_hp(0), soak(0), current_armor_hp(0) {};
 Armor::Armor(std::string name, size_t armor_hp, size_t soak) : Item(name, 0), armor_hp(armor_hp), soak(soak), current_armor_hp(armor_hp) {};
 Armor::Armor(const Armor& other) : Item(other), armor_hp(other.armor_hp), soak(other.soak), current_armor_hp(other.current_armor_hp) {};
 
+size_t Armor::getArmorHP() const { return armor_hp; }
+
 size_t Armor::useItem(int effect) 
 {
 	if (isExist == 0) { return 0; }

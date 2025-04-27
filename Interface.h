@@ -107,10 +107,11 @@ public:
 		{
 			std::cout << "1. Restore AP\n";
 			std::cout << "2. Restore HP\n";
-			std::cout << "3. Visit Capital City\n";
-			std::cout << "4. Visit Evil Swamp\n";
-			std::cout << "5. Visit Black Mountain\n";
-			std::cout << "6. Return to main menu\n";
+			std::cout << "3. Restore Armor\n";
+			std::cout << "4. Visit Capital City\n";
+			std::cout << "5. Visit Evil Swamp\n";
+			std::cout << "6. Visit Black Mountain\n";
+			std::cout << "7. Return to main menu\n";
 			std::string input;
 			std::cout << "Your choice: ";
 			std::getline(std::cin, input);
@@ -120,7 +121,7 @@ public:
 			}
 
 			choice = std::stoi(input);
-			if (choice < 1 || choice > 6) {
+			if (choice < 1 || choice > 7) {
 				std::cout << "Wrong choice!\n"; continue;
 			}
 

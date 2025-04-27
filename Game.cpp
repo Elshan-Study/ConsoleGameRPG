@@ -338,49 +338,77 @@ void Game::loadLocation(size_t index, Map& map, FightingScene& fight)
 
 void Game::gamePlay(size_t choice)
 {
-	if (choice == 1)
+	MapMenu newMenu;
+	bool isArmor = false;
+	FightingScene sewerFight(&enemies[0], PC, 10, 10, FightingScene::Cool, FightingScene::MeleeMod);
+	size_t maxAP = PC.archetype->getAP() - (5 - PC.Discipline());
+	size_t maxHP = PC.archetype->getHP() - (5 - PC.Resilience());
+	size_t maxArmorHP;
+
+	switch (choice)
 	{
-		if (PC.currentAP == PC.archetype->getAP())
+	case 1:
+		if (PC.currentAP == PC.archetype->getAP() || PC.currentAP >= maxAP)
 		{
-			std::cout << "AP is full!\n";
-			return;
+			std::cout << "AP have reached its maximum possible!\n";
+			std::cin.get();
 		}
-		if (PC.skillCheck(PC.discipline(), 2))
+		else if (PC.skillCheck(PC.discipline(), 2))
 		{
-			PC.recoverAP();
 			size_t mod = 5 - PC.Discipline();
-			PC.currentAP -= mod;
+			PC.currentAP = (PC.currentAP + mod < maxAP) ? PC.currentAP + mod : maxAP;
 			std::cout << "Some AP recovered\n";
+			std::cin.get();
 		}
-	}
-	else if (choice == 2)
-	{
-		if (PC.currentHP == PC.archetype->getHP())
+		else { std::cout << "Unsuccess\n"; std::cin.get();}
+		break;
+	case 2:
+		if (PC.currentHP == PC.archetype->getHP() || PC.currentHP >= maxHP)
 		{
-			std::cout << "HP is full!\n";
-			return;
+			std::cout << "HP have reached its maximum possible!\n";
+			std::cin.get();
 		}
-		if (PC.skillCheck(PC.resilience(), 2))
+		else if (PC.skillCheck(PC.resilience(), 2))
 		{
-			PC.recoverHP();
 			size_t mod = 5 - PC.Resilience();
-			PC.currentHP -= mod;
+			PC.currentHP = (PC.currentHP + mod < maxHP) ? PC.currentHP + mod : maxHP;
 			std::cout << "Some HP recovered\n";
+			std::cin.get();
 		}
-	}
-	else if (choice == 3)
-	{
+		else { std::cout << "Unsuccess\n"; std::cin.get();}
+		break;
+	case 3:
+		for (size_t i = 0; i < PC.inventory.getSize(); ++i)
+		{
+			Item* item = PC.inventory[i].get();
+			if (Armor* armor = dynamic_cast<Armor*>(item))
+			{
+				isArmor = true;
+				maxArmorHP = armor->getArmorHP() / 2 + 1;
+				int mod = 5 - PC.Mechanics();
+
+				if(armor->current_armor_hp == armor->getArmorHP() || armor->current_armor_hp >= maxArmorHP) 
+				{std::cout << armor->Name() << " HP have reached its maximum possible!\n"; std::cin.get();}
+				else if (PC.skillCheck(PC.mechanics(), 2))
+				{
+					armor->current_armor_hp = (armor->current_armor_hp + mod < maxArmorHP) ? armor->current_armor_hp + mod : maxArmorHP;
+					std::cout << "Armor " << armor->Name() << " HP is recovered\n";
+					std::cin.get();
+				}
+				else { std::cout << "Unsuccess\n"; std::cin.get(); }
+			}
+		}
+		if (!isArmor) { std::cout << "You don't have any armor\n"; std::cin.get();}
+		break;
+	case 4:
 		CapitalCity.readDescription();
 		std::cout << std::endl;
-		MapMenu newMenu;
 		choice = newMenu.show(CapitalCity);
 		clearScreen();
-
-		FightingScene sewerFight(&enemies[0], PC, 10, 10, FightingScene::Vigilance, FightingScene::MeleeMod);
-
 		loadLocation(choice - 1, CapitalCity, sewerFight);
-
-		return;
+		break;
+	default:
+		break;
 	}
 }
 
@@ -391,7 +419,7 @@ int Game::MenuControl()
 		PC.printInfo();
 		int choice = InsideGameMenu::show();
 		clearScreen();
-		if (choice != 6)
+		if (choice != 7)
 		{
 			gamePlay(choice);
 			clearScreen();
@@ -498,7 +526,7 @@ void Game::start()
 			while (true)
 			{
 				int switchControl = MenuControl();
-				if (switchControl == 6) { break; }
+				if (switchControl == 7) { break; }
 			}
 			break;
 		case 2:
