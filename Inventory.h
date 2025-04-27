@@ -5,7 +5,7 @@
 class Inventory final
 {
 private:
-	static const size_t MAX_ITEMS = 20;
+	static const size_t MAX_ITEMS = 30;
 	size_t size;
 public:
 	std::unique_ptr<Item> items[MAX_ITEMS];

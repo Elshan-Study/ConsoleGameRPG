@@ -93,3 +93,20 @@ public:
 
     bool on() override;
 };
+
+class RestStage : public QuestStage {
+private:
+    Character& Main;
+    size_t serviceChoice;
+
+public:
+    enum class RestoreChoice
+    {
+        HPRestore,
+        APRestore,
+        ArmorHP,
+    };
+    RestStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost, size_t serviceChoice, Character& Main);
+
+    bool on() override;
+};

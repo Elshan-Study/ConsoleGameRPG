@@ -841,6 +841,32 @@ bool SceneControl::loadNPCScene(QuestGetPointer*& location, size_t questStatus)
 
 	while (true)
 	{
+
+		if (auto buyStage = dynamic_cast<buyItemStage*>(location->quest.findStage(nextStage)))
+		{
+			int choice;
+			std::string input;
+			std::cout << "Do you want buy this item?\n 1. Yes\n 2. No\n";
+			std::cout << "Your choice: ";
+			std::getline(std::cin, input);
+
+			if (!isNumber(input)) {
+				std::cout << "Wrong input!\n"; continue;
+			}
+
+			choice = std::stoi(input);
+			if (choice < 1 || choice > 2) {
+				std::cout << "Wrong choice!\n"; continue;
+			}
+			
+			if (choice != 1)
+			{
+				std::cout << "You have left the location" << "\n\n";
+				std::cin.get();
+				return false;
+			}
+		}
+
 		if (nextStage == currentStage) {
 			std::cout << "You have left the location" << "\n\n";
 			std::cin.get();
@@ -884,7 +910,7 @@ bool SceneControl::loadNPCScene(QuestGetPointer*& location, size_t questStatus)
 				}
 				else if (auto buyStage = dynamic_cast<buyItemStage*>(stage))
 				{
-					nextStage = !successStatus ? skillStage->badIndex : skillStage->nextIndex;
+					nextStage = !successStatus ? currentStage : skillStage->nextIndex;
 					badOutput = "You don't have enough money\n";
 				}
 				else { nextStage = stage->nextIndex; }

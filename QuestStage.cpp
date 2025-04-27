@@ -78,3 +78,32 @@ bool buyItemStage::on() {
     }
     return false;
 }
+
+RestStage::RestStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost, size_t serviceChoice, Character& Main)
+    : QuestStage(name, mainIndex, nextIndex, cost), serviceChoice(serviceChoice), Main(Main) {
+}
+
+bool RestStage::on()
+{
+    if (serviceChoice == static_cast<size_t>(RestoreChoice::HPRestore))
+    {
+        Main.recoverHP();
+    }
+    else if (serviceChoice == static_cast<size_t>(RestoreChoice::APRestore))
+    {
+        Main.recoverAP();
+    }
+    else if (serviceChoice == static_cast<size_t>(RestoreChoice::ArmorHP))
+    {
+        for (size_t i = 0; i < Main.inventory.getSize(); ++i)
+        {
+            Item* item = Main.inventory[i].get();
+            if (Armor* armor = dynamic_cast<Armor*>(item))
+            {
+                armor->recoverArmorHP();
+            }
+        }
+    }
+
+    return true;
+}

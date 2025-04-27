@@ -73,23 +73,25 @@ std::unique_ptr<Item> Potion::DeserializePotion(std::istream& in) {
 	return potion;
 }
 
-Armor::Armor() : armor_hp(0), soak(0) {};
-Armor::Armor(std::string name, size_t armor_hp, size_t soak) : Item(name, 0), armor_hp(armor_hp), soak(soak) {};
-Armor::Armor(const Armor& other) : Item(other), armor_hp(other.armor_hp), soak(other.soak) {};
+Armor::Armor() : armor_hp(0), soak(0), current_armor_hp(0) {};
+Armor::Armor(std::string name, size_t armor_hp, size_t soak) : Item(name, 0), armor_hp(armor_hp), soak(soak), current_armor_hp(armor_hp) {};
+Armor::Armor(const Armor& other) : Item(other), armor_hp(other.armor_hp), soak(other.soak), current_armor_hp(other.current_armor_hp) {};
 
 size_t Armor::useItem(int effect) 
 {
 	if (isExist == 0) { return 0; }
-	armor_hp -= effect;
-	if (armor_hp == 0) { isExist = 0; }
+	current_armor_hp -= effect;
+	if (current_armor_hp == 0) { isExist = 0; }
 	return soak;
 }
 
 void Armor::addCopy(size_t value) {}
 
+void Armor::recoverArmorHP() { current_armor_hp = armor_hp; }
+
 void Armor::print(std::ostream& os) const 
 {
-	os << name << "(Soak: " << soak << "; Armor HP: " << armor_hp << ")" << "\n";
+	os << name << "(Soak: " << soak << "; Armor HP: " << current_armor_hp << "/" << armor_hp << ")" << "\n";
 }
 
 void Armor::Serialize(std::ostream& out) const  {
@@ -105,6 +107,7 @@ void Armor::Serialize(std::ostream& out) const  {
 	out.write(reinterpret_cast<const char*>(&isConsumable), sizeof(isConsumable));
 	out.write(reinterpret_cast<const char*>(&isExist), sizeof(isExist));
 	out.write(reinterpret_cast<const char*>(&armor_hp), sizeof(armor_hp));
+	out.write(reinterpret_cast<const char*>(&current_armor_hp), sizeof(current_armor_hp));
 	out.write(reinterpret_cast<const char*>(&soak), sizeof(soak));
 }
 
@@ -117,15 +120,19 @@ std::unique_ptr<Item> Armor::DeserializeArmor(std::istream& in) {
 	bool isConsumable;
 	bool isExist;
 	size_t armor_hp;
+	size_t current_armor_hp;
 	size_t soak;
 
 	in.read(reinterpret_cast<char*>(&isConsumable), sizeof(isConsumable));
 	in.read(reinterpret_cast<char*>(&isExist), sizeof(isExist));
 	in.read(reinterpret_cast<char*>(&armor_hp), sizeof(armor_hp));
+	in.read(reinterpret_cast<char*>(&current_armor_hp), sizeof(current_armor_hp));
 	in.read(reinterpret_cast<char*>(&soak), sizeof(soak));
 
 	auto armor = std::make_unique<Armor>(name, armor_hp, soak);
 	armor->isExist = isExist;
+	armor->current_armor_hp = current_armor_hp;
+
 	return armor;
 }
 

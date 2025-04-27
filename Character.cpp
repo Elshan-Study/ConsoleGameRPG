@@ -128,14 +128,26 @@ void Character::attack(Character& target, bool trueWeapon, size_t itemIndex, siz
 
 	if (roll >= successDiff)
 	{
+		int bestSoak = 0;
+		Armor* bestArmor = nullptr;
+
 		for (size_t i = 0; i < target.inventory.getSize(); ++i)
 		{
 			Item* item = target.inventory[i].get();
-			if (dynamic_cast<Armor*>(item) != nullptr)
+			if (Armor* armor = dynamic_cast<Armor*>(item))
 			{
-				soak = item->useItem(1);
-				break;
+				int currentSoak = armor->useItem(1);
+				if (currentSoak > bestSoak)
+				{
+					bestSoak = currentSoak;
+					bestArmor = armor;
+				}
 			}
+		}
+
+		if (bestArmor != nullptr)
+		{
+			soak = bestSoak;
 		}
 
 		size_t itemEffect = 0;
