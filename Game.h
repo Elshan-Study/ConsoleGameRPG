@@ -13,7 +13,7 @@ private:
 	PCCharacterCreate createPC;
 	SceneControl sceneControl;
 	Map CapitalCity;
-	Map EvilSwamp;
+	Map Outskirts;
 	Map BlackMountain;
 	size_t keySize = 0;
 	size_t enemySize = 0;
@@ -41,9 +41,15 @@ public:
 
 	void reset();
 
+	void initMaps();
+
 	void initLevel10();
 
 	void initLevel11();
+
+	void initLevel20();
+
+	void initLevel21();
 
 	void initLevels();
 

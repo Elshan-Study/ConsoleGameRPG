@@ -668,6 +668,7 @@ bool FightingScene::start()
 		std::cout << "Distance between " << PC.name << " and " << Enemy->name << ": " << distanceBetween << " steps\n";
 		std::cout << "Your current HP: " << PC.currentHP << "\n";
 		std::cout << "Your current AP: " << PC.currentAP << "\n";
+		std::cout << "Your inventory: \n";
 		std::cout << PC.inventory;
 		std::cin.get();
 
@@ -740,24 +741,6 @@ bool FightingScene::start()
 					break;
 				case 3:
 				{
-					/*size_t dice = isClose() ? PC.melee() : PC.ranged();
-					weapon1 = isClose() ? "Sword" : "Bow";
-					weapon2 = isClose() ? "Knife" : "Crossbow";
-
-					bool hasWeapon = false;
-					for (size_t i = 0; i < PC.inventory.getSize(); i++) {
-						if (PC.inventory[i]->Name() == weapon1 || PC.inventory[i]->Name() == weapon2) {
-							hasWeapon = true; itemIndex = i; break;
-						}
-					}
-
-					PC.attack(*Enemy, hasWeapon, itemIndex, dice, 2);
-					std::cout << "Enemy HP now : " << Enemy->currentHP << "\n";
-					std::cin.get();
-					Enemy->inventory.CheckInventory();
-					turnInProgress = false;
-					break;*/
-
 					size_t dice = isClose() ? PC.melee() : PC.ranged();
 					size_t desiredType = isClose() ? Weapon::WeaponType::Melee : Weapon::WeaponType::Range;
 
@@ -896,9 +879,6 @@ bool SceneControl::loadNPCScene(QuestGetPointer*& location, size_t questStatus)
 
 	else { std::cerr << "Error of Scene Control" << std::flush; return isKeyAdded; }
 
-	bool successStatus = true;
-	std::string badOutput;
-
 	QuestStage* stage = location->quest.findStage(currentStage);
 	std::cout << stage->showName() << "\n";
 	std::cin.get();
@@ -906,32 +886,6 @@ bool SceneControl::loadNPCScene(QuestGetPointer*& location, size_t questStatus)
 
 	while (true)
 	{
-
-		if (auto buyStage = dynamic_cast<buyItemStage*>(location->quest.findStage(nextStage)))
-		{
-			int choice;
-			std::string input;
-			std::cout << "Do you want buy this item?\n 1. Yes\n 2. No\n";
-			std::cout << "Your choice: ";
-			std::getline(std::cin, input);
-
-			if (!isNumber(input)) {
-				std::cout << "Wrong input!\n"; continue;
-			}
-
-			choice = std::stoi(input);
-			if (choice < 1 || choice > 2) {
-				std::cout << "Wrong choice!\n"; continue;
-			}
-			
-			if (choice != 1)
-			{
-				std::cout << "You have left the location" << "\n\n";
-				std::cin.get();
-				return false;
-			}
-		}
-
 		if (nextStage == currentStage) {
 			std::cout << "You have left the location" << "\n\n";
 			std::cin.get();
@@ -971,25 +925,62 @@ bool SceneControl::loadNPCScene(QuestGetPointer*& location, size_t questStatus)
 				if (auto skillStage = dynamic_cast<skillCheckStage*>(stage))
 				{
 					nextStage = !successStatus ? skillStage->badIndex : skillStage->nextIndex;
-					badOutput = "Unsuccess\n";
-				}
-				else if (auto buyStage = dynamic_cast<buyItemStage*>(stage))
-				{
-					nextStage = !successStatus ? currentStage : skillStage->nextIndex;
-					badOutput = "You don't have enough money\n";
+					if (!successStatus) { std::cout << "Unsuccess\n"; }
 				}
 				else { nextStage = stage->nextIndex; }
 
 				break;
 			}
 		}
+		else if (auto buyStage = dynamic_cast<buyItemStage*>(location->quest.findStage(nextStage)))
+		{
+			int choice;
+			std::string input;
+
+			currentStage = nextStage;
+			stage = location->quest.findStage(currentStage);
+			std::cout << stage->showName() << "\n";
+			std::cin.get();
+
+			while (true)
+			{
+				std::cout << "Do you want buy this item?\n 1. Yes\n 2. No\n";
+				std::cout << "Your choice: ";
+				std::getline(std::cin, input);
+
+				if (!isNumber(input)) {
+					std::cout << "Wrong input!\n"; continue;
+				}
+
+				choice = std::stoi(input);
+				if (choice < 1 || choice > 2) {
+					std::cout << "Wrong choice!\n"; continue;
+				}
+
+				if (choice != 1)
+				{
+					std::cout << "You have left the location" << "\n\n";
+					std::cin.get();
+					return false;
+				}
+
+				else {
+					bool successStatus = stage->on();
+					if (successStatus) { nextStage = stage->nextIndex; break; }
+					else{
+						std::cout << "You don't have enough money! You have left the location" << "\n\n";
+						std::cin.get();
+						return false;
+					}
+				}
+			}
+		}
 		else
 		{
 			currentStage = nextStage;
 			stage = location->quest.findStage(currentStage);
-			successStatus = stage->on();
-			if(successStatus) { std::cout << stage->showName() << "\n"; }
-			else { std::cout << badOutput; }
+			stage->on();
+			std::cout << stage->showName() << "\n"; 
 			std::cin.get();
 			nextStage = stage->nextIndex;
 		}

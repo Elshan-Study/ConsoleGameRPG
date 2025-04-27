@@ -109,7 +109,7 @@ public:
 			std::cout << "2. Restore HP\n";
 			std::cout << "3. Restore Armor\n";
 			std::cout << "4. Visit Capital City\n";
-			std::cout << "5. Visit Evil Swamp\n";
+			std::cout << "5. Visit Outskirts\n";
 			std::cout << "6. Visit Black Mountain\n";
 			std::cout << "7. Return to main menu\n";
 			std::string input;
@@ -143,21 +143,25 @@ public:
 
 		while (true)
 		{
-			std::cout << "1. " << map[0]->getName() << "\n";
-			std::cout << "2. " << map[1]->getName() << "\n";
-			std::cout << "3. Return to menu\n";
+			for (size_t i = 0; i < map.getSize(); ++i)
+			{
+				std::cout << (i + 1) << ". " << map[i]->getName() << "\n";
+			}
+			std::cout << (map.getSize() + 1) << ". Return to menu\n";
 
 			std::string input;
 			std::cout << "Your choice: ";
 			std::getline(std::cin, input);
 
 			if (!isNumber(input)) {
-				std::cout << "Wrong input!\n"; continue;
+				std::cout << "Wrong input!\n";
+				continue;
 			}
 
 			choice = std::stoi(input);
-			if (choice < 1 || choice > 3) {
-				std::cout << "Wrong choice!\n"; continue;
+			if (choice < 1 || choice > static_cast<int>(map.getSize() + 1)) {
+				std::cout << "Wrong choice!\n";
+				continue;
 			}
 
 			break;

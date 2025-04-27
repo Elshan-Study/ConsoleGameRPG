@@ -10,8 +10,7 @@ void Game::addEnemy(Character&& enemy)
 	enemies[enemySize++] = std::move(enemy);
 }
 
-/*QuestPointer EvilSwamp("Evil Swamp", "evilSwamp.txt", key2);
-	QuestPointer DragonCaves("Dragon Caves", "dragonCaves.txt", key3);*/
+//QuestPointer DragonCaves("Dragon Caves", "dragonCaves.txt", key3);
 
 void Game::reset()
 {
@@ -38,9 +37,15 @@ void Game::reset()
 	BlackMountain.reset(); */
 }
 
+void Game::initMaps()
+{
+	CapitalCity.setMain("Capital City", "capitalCity.txt");
+	Outskirts.setMain("Outskirts", "outskirts.txt");
+}
+
 void Game::initLevel10()
 {
-	std::unique_ptr<Location> GuardBarracks = std::make_unique<QuestGetPointer>("GuardBarracks", "quardBarracks.txt", key1);
+	std::unique_ptr<Location> GuardBarracks = std::make_unique<QuestGetPointer>("Guard Barracks", "quardBarracks.txt", key1);
 	QuestGetPointer* rawPtr = dynamic_cast<QuestGetPointer*>(GuardBarracks.get());
 
 	/*Base*/
@@ -259,10 +264,169 @@ void Game::initLevel11()
 	CapitalCity.addLocation(std::move(Sewerage));
 }
 
+void Game::initLevel20() 
+{
+	std::unique_ptr<Location> AlchemistHut = std::make_unique<QuestGetPointer>("Alchemist Hut", "alchemistHut.txt", key2);
+	QuestGetPointer* rawPtr = dynamic_cast<QuestGetPointer*>(AlchemistHut.get());
+
+	/*Base*/
+	std::unique_ptr<QuestStage> stage10 = std::make_unique<TextStage>(
+		"Alchemist: When you enter, he doesn't even raise his head:\ndid you come here, traveler? The swamps don't like extra eyes.",
+		10, 0, 0, PC);
+	std::unique_ptr<QuestStage> stage30 = std::make_unique<TextStage>(
+		"Alchemist: Oh, you're back already? What? You haven't completed the task yet? When you do, then we'll talk.",
+		30, 2, 0, PC);
+	std::unique_ptr<QuestStage> stage40 = std::make_unique<TextStage>(
+		"Alchemist: You have no business here!!",
+		40, 40, 0, PC);
+	std::unique_ptr<QuestStage> stage50 = std::make_unique<TextStage>(
+		"Alchemist: Come in, come in, there are new products for you!",
+		50, 2, 0, PC);
+	rawPtr->quest.addStage(std::move(stage10)); /*0*/
+	rawPtr->quest.addStage(std::move(stage30)); /*1*/
+	rawPtr->quest.addStage(std::move(stage40)); /*2*/
+	rawPtr->quest.addStage(std::move(stage50)); /*3*/
+
+	/*Main Option*/
+	std::unique_ptr<QuestStage> stage11 = std::make_unique<TextStage>(
+		"Looking for adventure.I heard there are dangerous places here.",
+		11, 111, 0, PC);
+	std::unique_ptr<QuestStage> stage12 = std::make_unique<TextStage>(
+		"I'm lost. Can you tell me the way?",
+		12, 121, 0, PC);
+	std::unique_ptr<QuestStage> stage13 = std::make_unique<TextStage>(
+		"Do you know who kidnaps people in these parts?",
+		13, 131, 0, PC);
+	std::unique_ptr<QuestStage> stage14 = std::make_unique<TextStage>(
+		"I heard you have some useful stuff to buy...",
+		14, 141, 0, PC);
+	std::unique_ptr<QuestStage> stage15 = std::make_unique<skillCheckStage>(
+		"Treat me please! (2 AP)",
+		15, 151, 152, 2, 2, PC, PC.charm());
+	std::unique_ptr<OptionChoice> option0 = std::make_unique<OptionChoice>(5);
+	rawPtr->quest.addStage(std::move(stage11)); /*4*/
+	rawPtr->quest.addStage(std::move(stage12)); /*5*/
+	rawPtr->quest.addStage(std::move(stage13)); /*6*/
+	rawPtr->quest.addStage(std::move(stage14)); /*7*/
+	rawPtr->quest.addStage(std::move(stage15)); /*8*/
+	rawPtr->quest.addOption(std::move(option0));
+	rawPtr->quest.linkStageToOption(4, 0);
+	rawPtr->quest.linkStageToOption(5, 0);
+	rawPtr->quest.linkStageToOption(6, 0);
+	rawPtr->quest.linkStageToOption(7, 0);
+	rawPtr->quest.linkStageToOption(8, 0);
+
+	/*Quest Stage*/
+	std::unique_ptr<QuestStage> stage111 = std::make_unique<TextStage>(
+		"The alchemist grins with one edge of his dry lips:\n"
+		"Adventures, you say? Ha! There's enough of them here until your bones become softer than swamp mud."
+		"I have a deal.If you want to risk your skin, listen carefully.",
+		111, 20, 0, PC);
+	std::unique_ptr<QuestStage> stage121 = std::make_unique<TextStage>(
+		"The alchemist shakes his head:\n"
+		"In these parts there is only one road - to the quagmire and the unmarked grave."
+		"But if you still want to live - I can show you the way. But there will be a price for you: risk and stench.",
+		121, 20, 0, PC);
+	std::unique_ptr<QuestStage> stage131 = std::make_unique<TextStage>(
+		"The alchemist becomes serious for a moment:\n"
+		"What lurks in the fog does not call by name. The swamp itself takes its own."
+		"But there is a place there... the rotting heart of this land. If you want to know more, go there.",
+		131, 20, 0, PC);
+	std::unique_ptr<QuestStage> stage20 = std::make_unique<TextStage>(
+		"Alchemist: There is a place in the swamps where even rottenness does not willingly go. Ancient muck has awakened there...\n"
+		"If you remove the artifact \"Heart of the Swamps\", it will cease to live.\n"
+		"If you really want to test yourself - go there. But keep in mind: not everyone returns.",
+		20, 21, 0, PC);
+	std::unique_ptr<QuestStage> stage21 = std::make_unique<TextStage>(
+		"[New Quest : Evil Swamp Quest]",
+		21, 21, 0, PC);
+	rawPtr->quest.addStage(std::move(stage111)); /*9*/
+	rawPtr->quest.addStage(std::move(stage121)); /*10*/
+	rawPtr->quest.addStage(std::move(stage131)); /*11*/
+	rawPtr->quest.addStage(std::move(stage20)); /*12*/
+	rawPtr->quest.addStage(std::move(stage21)); /*13*/
+
+	/*Merchant line*/
+	std::unique_ptr<QuestStage> stage141 = std::make_unique<TextStage>(
+		"The alchemist grins: Yeah, you can... But everything has its price.",
+		141, 1, 0, PC);
+	rawPtr->quest.addStage(std::move(stage141)); /*14*/
+
+	std::unique_ptr<QuestStage> stage1411 = std::make_unique<skillCheckStage>(
+		"Bargain for a Healing Potion (2 AP)",
+		1411, 14111, 14112, 2, 2, PC, PC.negotiation());
+	std::unique_ptr<QuestStage> stage1412 = std::make_unique<skillCheckStage>(
+		"Bargain for a Poison (2 AP)",
+		1412, 14121, 14122, 2, 2, PC, PC.negotiation()); 
+	std::unique_ptr<OptionChoice> option1 = std::make_unique<OptionChoice>(2);
+	rawPtr->quest.addStage(std::move(stage1411)); /*15*/
+	rawPtr->quest.addStage(std::move(stage1412)); /*16*/
+	rawPtr->quest.addOption(std::move(option1));
+	rawPtr->quest.linkStageToOption(15, 1);
+	rawPtr->quest.linkStageToOption(16, 1);
+
+	std::unique_ptr<Item> healPotion = std::make_unique<Potion>("Heal potion", 5);
+	std::unique_ptr<Item> healPotion2 = std::make_unique<Potion>("Heal potion", 5);
+	std::unique_ptr<Item> poison = std::make_unique<Potion>("Poison", 5);
+	std::unique_ptr<Item> poison2 = std::make_unique<Potion>("Poison", 5);
+
+	std::unique_ptr<QuestStage> stage14111 = std::make_unique<buyItemStage>(
+		"Good trade. Price: 25.",
+		14111, 141111, 0, 25, PC, std::move(healPotion)); 
+	std::unique_ptr<QuestStage> stage14112 = std::make_unique<buyItemStage>(
+		"Bad trade. Price: 50.",
+		14112, 141111, 0, 50, PC, std::move(healPotion2)); 
+	std::unique_ptr<QuestStage> stage14121 = std::make_unique<buyItemStage>(
+		"Good trade. Price: 50.",
+		14121, 141211, 0, 50, PC, std::move(poison));
+	std::unique_ptr<QuestStage> stage14122 = std::make_unique<buyItemStage>(
+		"Bad trade. Price: 75.",
+		14122, 141211, 0, 75, PC, std::move(poison2));
+	rawPtr->quest.addStage(std::move(stage14111)); /*17*/
+	rawPtr->quest.addStage(std::move(stage14112)); /*18*/
+	rawPtr->quest.addStage(std::move(stage14121)); /*19*/
+	rawPtr->quest.addStage(std::move(stage14122)); /*20*/
+
+	std::unique_ptr<QuestStage> stage141111 = std::make_unique<TextStage>(
+		"[You receive: Heal Point]",
+		141111, 141111, 0, PC);
+	std::unique_ptr<QuestStage> stage141211 = std::make_unique<TextStage>(
+		"[You receive: Poison]",
+		141211, 141211, 0, PC);
+	rawPtr->quest.addStage(std::move(stage141111)); /*21*/
+	rawPtr->quest.addStage(std::move(stage141211)); /*22*/
+
+	/*Heal line*/
+	std::unique_ptr<QuestStage> stage151 = std::make_unique<RestStage>(
+		"Alchemist: Yes, of course!", 151, 151, 0, static_cast<size_t>(RestStage::RestoreChoice::HPRestore), PC);
+	std::unique_ptr<QuestStage> stage152 = std::make_unique<TextStage>(
+		"Alchemist: I'm busy now. Come later.",
+		152, 152, 0, PC);
+	rawPtr->quest.addStage(std::move(stage151)); /*23*/
+	rawPtr->quest.addStage(std::move(stage152)); /*24*/
+
+	/*Option 2*/
+	std::unique_ptr<QuestStage> stage51 = std::make_unique<TextStage>(
+		"Goodbye!", 51, 51, 0, PC);
+	std::unique_ptr<OptionChoice> option2 = std::make_unique<OptionChoice>(2);
+	rawPtr->quest.addStage(std::move(stage51)); /*25*/
+	rawPtr->quest.addOption(std::move(option2));
+	rawPtr->quest.linkStageToOption(25, 2);
+	rawPtr->quest.linkStageToOption(7, 2);
+	rawPtr->quest.linkStageToOption(8, 2);
+
+	Outskirts.addLocation(std::move(AlchemistHut));
+
+};
+
+void Game::initLevel21() {};
+
 void Game::initLevels()
 {
 	initLevel10();
 	initLevel11();
+	initLevel20();
+	initLevel21();
 }
 
 void Game::initEnemies()
@@ -341,6 +505,7 @@ void Game::gamePlay(size_t choice)
 	MapMenu newMenu;
 	bool isArmor = false;
 	FightingScene sewerFight(&enemies[0], PC, 10, 10, FightingScene::Cool, FightingScene::MeleeMod);
+	FightingScene swampFight(&enemies[0], PC, 5, 15, FightingScene::Vigilance, FightingScene::RangeMod);
 	size_t maxAP = PC.archetype->getAP() - (5 - PC.Discipline());
 	size_t maxHP = PC.archetype->getHP() - (5 - PC.Resilience());
 	size_t maxArmorHP;
@@ -405,7 +570,16 @@ void Game::gamePlay(size_t choice)
 		std::cout << std::endl;
 		choice = newMenu.show(CapitalCity);
 		clearScreen();
+		if (choice > CapitalCity.getSize()) { return; }
 		loadLocation(choice - 1, CapitalCity, sewerFight);
+		break;
+	case 5:
+		Outskirts.readDescription();
+		std::cout << std::endl;
+		choice = newMenu.show(Outskirts);
+		clearScreen();
+		if (choice > Outskirts.getSize()) { return; }
+		loadLocation(choice - 1, Outskirts, swampFight);
 		break;
 	default:
 		break;
@@ -489,7 +663,7 @@ void Game::LoadControl(bool& gameActive)
 	{
 		reset();
 		GameDataManager::LoadGame(*this, saveFile);
-		CapitalCity.setMain("Capital City", "capitalCity.txt");
+		initMaps();
 		initLevels();
 		GameDataManager::LoadLocationsStatus(*this, locStatusFile);
 		gameActive = true;
@@ -517,7 +691,7 @@ void Game::start()
 			createPC.TestPC(PC);
 			std::cout << "Character Create Successfully" << std::endl;
 			initEnemies();
-			CapitalCity.setMain("Capital City", "capitalCity.txt");
+			initMaps();
 			initLevels();
 			std::cin.get();
 			clearScreen();
@@ -536,7 +710,7 @@ void Game::start()
 			{
 
 				int switchControl = MenuControl();
-				if (switchControl == 6) { break; }
+				if (switchControl == 7) { break; }
 			}
 
 			std::cin.get();

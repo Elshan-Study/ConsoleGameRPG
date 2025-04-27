@@ -2,7 +2,7 @@
 
 Character::Character() : name("name"), archetype(nullptr), specialization(nullptr), currentHP(0), currentAP(0), money(0) {};
 Character::Character(const std::string& name, std::unique_ptr<Archetype> archetype,
-	std::unique_ptr<Specialization> specialization) : name(name), archetype(std::move(archetype)), specialization(std::move(specialization))
+	std::unique_ptr<Specialization> specialization) : name(name), money(0), archetype(std::move(archetype)), specialization(std::move(specialization))
 {
 	currentHP = this->archetype->getHP();
 	currentAP = this->archetype->getAP();
