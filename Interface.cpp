@@ -211,14 +211,14 @@ void PCCharacterCreate::SkillEdit(Character& PC, size_t& experience)
 		switch (choice)
 		{
 		case 1:
-			if (PC.Alchemy() != 5 && experience >= (PC.Alchemy() + 1) * 5)
+			if (PC.Alchemy() != 3 && experience >= (PC.Alchemy() + 1) * 5)
 			{
 				experience -= (PC.Alchemy() + 1) * 5;
 				PC.specialization->Alchemy += 1;
 			}
 			break;
 		case 2:
-			if (PC.Mechanics() != 5 && experience >= (PC.Mechanics() + 1) * 5)
+			if (PC.Mechanics() != 3 && experience >= (PC.Mechanics() + 1) * 5)
 			{
 				experience -= (PC.Mechanics() + 1) * 5;
 				PC.specialization->Mechanics += 1;
@@ -226,7 +226,7 @@ void PCCharacterCreate::SkillEdit(Character& PC, size_t& experience)
 			}
 			break;
 		case 3:
-			if (PC.Magic() != 5 && experience >= (PC.Magic() + 1) * 5)
+			if (PC.Magic() != 3 && experience >= (PC.Magic() + 1) * 5)
 			{
 				experience -= (PC.Magic() + 1) * 5;
 				PC.specialization->Magic += 1;
@@ -234,7 +234,7 @@ void PCCharacterCreate::SkillEdit(Character& PC, size_t& experience)
 			}
 			break;
 		case 4:
-			if (PC.Athletics() != 5 && experience >= (PC.Athletics() + 1) * 5)
+			if (PC.Athletics() != 3 && experience >= (PC.Athletics() + 1) * 5)
 			{
 				experience -= (PC.Athletics() + 1) * 5;
 				PC.specialization->Athletics += 1;
@@ -242,7 +242,7 @@ void PCCharacterCreate::SkillEdit(Character& PC, size_t& experience)
 			}
 			break;
 		case 5:
-			if (PC.Resilience() != 5 && experience >= (PC.Resilience() + 1) * 5)
+			if (PC.Resilience() != 3 && experience >= (PC.Resilience() + 1) * 5)
 			{
 				experience -= (PC.Resilience() + 1) * 5;
 				PC.specialization->Resilience += 1;
@@ -250,7 +250,7 @@ void PCCharacterCreate::SkillEdit(Character& PC, size_t& experience)
 			}
 			break;
 		case 6:
-			if (PC.Melee() != 5 && experience >= (PC.Melee() + 1) * 5)
+			if (PC.Melee() != 3 && experience >= (PC.Melee() + 1) * 5)
 			{
 				experience -= (PC.Melee() + 1) * 5;
 				PC.specialization->Melee += 1;
@@ -258,7 +258,7 @@ void PCCharacterCreate::SkillEdit(Character& PC, size_t& experience)
 			}
 			break;
 		case 7:
-			if (PC.Coordination() != 5 && experience >= (PC.Coordination() + 1) * 5)
+			if (PC.Coordination() != 3 && experience >= (PC.Coordination() + 1) * 5)
 			{
 				experience -= (PC.Coordination() + 1) * 5;
 				PC.specialization->Coordination += 1;
@@ -266,7 +266,7 @@ void PCCharacterCreate::SkillEdit(Character& PC, size_t& experience)
 			}
 			break;
 		case 8:
-			if (PC.Stealth() != 5 && experience >= (PC.Stealth() + 1) * 5)
+			if (PC.Stealth() != 3 && experience >= (PC.Stealth() + 1) * 5)
 			{
 				experience -= (PC.Stealth() + 1) * 5;
 				PC.specialization->Stealth += 1;
@@ -274,7 +274,7 @@ void PCCharacterCreate::SkillEdit(Character& PC, size_t& experience)
 			}
 			break;
 		case 9:
-			if (PC.Ranged() != 5 && experience >= (PC.Ranged() + 1) * 5)
+			if (PC.Ranged() != 3 && experience >= (PC.Ranged() + 1) * 5)
 			{
 				experience -= (PC.Ranged() + 1) * 5;
 				PC.specialization->Ranged += 1;
@@ -282,7 +282,7 @@ void PCCharacterCreate::SkillEdit(Character& PC, size_t& experience)
 			}
 			break;
 		case 10:
-			if (PC.Discipline() != 5 && experience >= (PC.Discipline() + 1) * 5)
+			if (PC.Discipline() != 3 && experience >= (PC.Discipline() + 1) * 5)
 			{
 				experience -= (PC.Discipline() + 1) * 5;
 				PC.specialization->Discipline += 1;
@@ -290,7 +290,7 @@ void PCCharacterCreate::SkillEdit(Character& PC, size_t& experience)
 			}
 			break;
 		case 11:
-			if (PC.Vigilance() != 5 && experience >= (PC.Vigilance() + 1) * 5)
+			if (PC.Vigilance() != 3 && experience >= (PC.Vigilance() + 1) * 5)
 			{
 				experience -= (PC.Vigilance() + 1) * 5;
 				PC.specialization->Vigilance += 1;
@@ -298,7 +298,7 @@ void PCCharacterCreate::SkillEdit(Character& PC, size_t& experience)
 			}
 			break;
 		case 12:
-			if (PC.Coercion() != 5 && experience >= (PC.Coercion() + 1) * 5)
+			if (PC.Coercion() != 3 && experience >= (PC.Coercion() + 1) * 5)
 			{
 				experience -= (PC.Coercion() + 1) * 5;
 				PC.specialization->Coercion += 1;
@@ -306,14 +306,14 @@ void PCCharacterCreate::SkillEdit(Character& PC, size_t& experience)
 			}
 			break;
 		case 13:
-			if (PC.Perception() != 5 && experience >= (PC.Perception() + 1) * 5)
+			if (PC.Perception() != 3 && experience >= (PC.Perception() + 1) * 5)
 			{
 				experience -= (PC.Perception() + 1) * 5;
 				PC.specialization->Perception += 1;
 			}
 			break;
 		case 14:
-			if (PC.Skullduggery() != 5 && experience >= (PC.Skullduggery() + 1) * 5)
+			if (PC.Skullduggery() != 3 && experience >= (PC.Skullduggery() + 1) * 5)
 			{
 				experience -= (PC.Skullduggery() + 1) * 5;
 				PC.specialization->Skullduggery += 1;
@@ -321,7 +321,7 @@ void PCCharacterCreate::SkillEdit(Character& PC, size_t& experience)
 			}
 			break;
 		case 15:
-			if (PC.Survival() != 5 && experience >= (PC.Survival() + 1) * 5)
+			if (PC.Survival() != 3 && experience >= (PC.Survival() + 1) * 5)
 			{
 				experience -= (PC.Survival() + 1) * 5;
 				PC.specialization->Survival += 1;
@@ -329,7 +329,7 @@ void PCCharacterCreate::SkillEdit(Character& PC, size_t& experience)
 			}
 			break;
 		case 16:
-			if (PC.Cool() != 5 && experience >= (PC.Cool() + 1) * 5)
+			if (PC.Cool() != 3 && experience >= (PC.Cool() + 1) * 5)
 			{
 				experience -= (PC.Cool() + 1) * 5;
 				PC.specialization->Cool += 1;
@@ -337,7 +337,7 @@ void PCCharacterCreate::SkillEdit(Character& PC, size_t& experience)
 			}
 			break;
 		case 17:
-			if (PC.Charm() != 5 && experience >= (PC.Charm() + 1) * 5)
+			if (PC.Charm() != 3 && experience >= (PC.Charm() + 1) * 5)
 			{
 				experience -= (PC.Charm() + 1) * 5;
 				PC.specialization->Charm += 1;
@@ -345,7 +345,7 @@ void PCCharacterCreate::SkillEdit(Character& PC, size_t& experience)
 			}
 			break;
 		case 18:
-			if (PC.Negotiation() != 5 && experience >= (PC.Negotiation() + 1) * 5)
+			if (PC.Negotiation() != 3 && experience >= (PC.Negotiation() + 1) * 5)
 			{
 				experience -= (PC.Negotiation() + 1) * 5;
 				PC.specialization->Negotiation += 1;
@@ -454,7 +454,7 @@ void PCCharacterCreate::CharacterEdit(Character& PC)
 
 		std::cout << "You have " << experience << "exp\n";
 		std::cout << "Cost of Characteristics = New Level * 10 (Max level 3)\n";
-		std::cout << "Cost of Skills = New Level * 5 (Max level 5)\n";
+		std::cout << "Cost of Skills = New Level * 5 (Max level 3)\n";
 		std::cout << "1.Increase Characteristics\n";
 		std::cout << "2.Increase Skill\n";
 		std::cout << "3.Reset\n";

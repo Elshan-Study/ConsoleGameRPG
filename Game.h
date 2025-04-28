@@ -51,6 +51,10 @@ public:
 
 	void initLevel21();
 
+	void initLevel30();
+
+	void initLevel31();
+
 	void initLevels();
 
 	void initEnemies();

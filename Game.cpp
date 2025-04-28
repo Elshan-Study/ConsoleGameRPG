@@ -533,12 +533,18 @@ void Game::initLevel21()
 	Outskirts.addLocation(std::move(EvilSwamp));
 }
 
+void initLevel30() {};
+
+void initLevel31() {};
+
 void Game::initLevels()
 {
 	initLevel10();
 	initLevel11();
 	initLevel20();
 	initLevel21();
+	initLevel30();
+	initLevel31();
 }
 
 void Game::initEnemies()
