@@ -591,7 +591,8 @@ void PCCharacterCreate::TestPC(Character& PC)
 	PC.specialization->Ranged += 2;
 	PC.SetAll();
 	std::unique_ptr<Item> item = std::make_unique<Potion>("Heal potion", 5);
-	item->addCopy(2);
+	item->addCopy(12);
+	PC.addItem(std::move(item));
 	std::unique_ptr<Item> item2 = std::make_unique<Weapon>("Sword", Weapon::Melee, 5, 3);
 	PC.addItem(std::move(item2));
 	std::unique_ptr<Item> item3 = std::make_unique<Weapon>("Knife", Weapon::Melee, 3, 2);
@@ -604,10 +605,13 @@ void PCCharacterCreate::TestPC(Character& PC)
 	PC.addItem(std::move(steelArmor));
 	std::unique_ptr<Item> mantle = std::make_unique<Armor>("Mantle", 5, 1);
 	PC.addItem(std::move(mantle));
+	std::unique_ptr<Item> protectiveTalisman = std::make_unique<QuestItem>("Protective Talisman");
+	PC.addItem(std::move(protectiveTalisman));
+	PC.money += 1000;
 }
 
-FightingScene::FightingScene(Character* enemy, Character& pc, size_t distanceBetween, size_t distanceMax, size_t initSkill, size_t behavior)
-	: Enemy(enemy), PC(pc), distanceBetween(distanceBetween), distanceMax(distanceMax),
+FightingScene::FightingScene(Character* enemy, Character& pc, size_t distanceBetween, size_t distanceMax, size_t coercionDiff, size_t initSkill, size_t behavior)
+	: Enemy(enemy), PC(pc), distanceBetween(distanceBetween), distanceMax(distanceMax), coercionDiff(coercionDiff),
 	initiativeSkill(initSkill), enemyBehavior(behavior) {
 }
 
@@ -663,6 +667,7 @@ bool FightingScene::start()
 	std::cout << "Fight scene with " << Enemy->name << " start!\n";
 	bool coercionStatus = false;
 	CharacterQueue queue = initiativeCheck();
+	int enemyChoice = -1;
 
 	while (true)
 	{
@@ -683,9 +688,15 @@ bool FightingScene::start()
 				else if (enemyBehavior == RangeMod) enemyRanged(0);
 				else if (enemyBehavior == BalanceMod)
 				{
-					int roll = rand() % 2;
-					if (roll == 0) enemyMelee(0);
-					else enemyRanged(1);
+					if (enemyChoice == MeleeMod) { enemyMelee(0); enemyChoice = -1; }
+					else if(enemyChoice == RangeMod) { enemyRanged(1); enemyChoice = -1;
+					}
+					else {
+						int roll = rand() % 2;
+						if (roll == 0) {enemyMelee(0); enemyChoice = MeleeMod;}
+						else { enemyRanged(1); enemyChoice = RangeMod;}
+					}
+					
 				}
 			}
 			else coercionStatus = false;
@@ -826,7 +837,7 @@ bool FightingScene::start()
 					if (PC.currentAP == 0) {
 						std::cout << "You don't have any AP\n"; std::cin.get(); break;
 					}
-					skillCheck = PC.skillCheck(PC.coercion(), 2);
+					skillCheck = PC.skillCheck(PC.coercion(), coercionDiff);
 					PC.currentAP = PC.currentAP > 0 ? PC.currentAP - 1 : 0;
 					std::cout << (skillCheck ? "Enemy is scared\n" : "Your attempts made the enemy laugh\n");
 					coercionStatus = skillCheck;

@@ -110,3 +110,20 @@ public:
 
     bool on() override;
 };
+
+class DamageStage : public QuestStage {
+private:
+    Character& Main;
+    size_t damageChoice;
+    int damageValue;
+
+public:
+    enum class DamageChoice
+    {
+        HPDamage,
+        APDamage,
+    };
+    DamageStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost, size_t damageChoice, int damageValue, Character& Main);
+
+    bool on() override;
+};

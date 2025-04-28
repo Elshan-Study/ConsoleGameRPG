@@ -528,7 +528,7 @@ void Game::initLevel21()
 	rawPtr->quest.addStage(std::move(stage40)); /*21*/
 	rawPtr->quest.addStage(std::move(stage50)); /*22*/
 
-	rawPtr->quest.setReward(100);
+	rawPtr->quest.setReward(150);
 	Outskirts.addLocation(std::move(EvilSwamp));
 }
 
@@ -573,7 +573,7 @@ void Game::initLevel30()
 		15, 151, 152, 2, 4, PC, PC.charm());
 	std::unique_ptr<QuestStage> stage16 = std::make_unique<skillCheckStage>(
 		"Can you fix my armor? (2 AP)",
-		16, 161, 162, 2, 4, PC, PC.charm());
+		16, 161, 162, 2, 2, PC, PC.charm());
 	std::unique_ptr<QuestStage> stage17 = std::make_unique<TextStage>(
 		"Bye!",
 		17, 17, 0, PC);
@@ -616,34 +616,49 @@ void Game::initLevel30()
 	std::unique_ptr<QuestStage> stage1412 = std::make_unique<skillCheckStage>(
 		"Bargain for the Crossbow (2 AP)",
 		1412, 14121, 14122, 2, 3, PC, PC.negotiation());
-	std::unique_ptr<OptionChoice> option1 = std::make_unique<OptionChoice>(2);
+	std::unique_ptr<QuestStage> stage1413 = std::make_unique<skillCheckStage>(
+		"Bargain for the Great Armor (2 AP)",
+		1413, 14131, 14132, 2, 3, PC, PC.negotiation());
+	std::unique_ptr<OptionChoice> option1 = std::make_unique<OptionChoice>(3);
 	rawPtr->quest.addStage(std::move(stage1411)); /*14*/
 	rawPtr->quest.addStage(std::move(stage1412)); /*15*/
+	rawPtr->quest.addStage(std::move(stage1413)); /*16*/
 	rawPtr->quest.addOption(std::move(option1));
 	rawPtr->quest.linkStageToOption(14, 1);
 	rawPtr->quest.linkStageToOption(15, 1);
+	rawPtr->quest.linkStageToOption(16, 1);
 
 	std::unique_ptr<Item> item1 = std::make_unique<Weapon>("Great Sword", Weapon::Melee, 7, 3);
 	std::unique_ptr<Item> item2 = std::make_unique<Weapon>("Great Sword", Weapon::Melee, 7, 3);
 	std::unique_ptr<Item> item3 = std::make_unique<Weapon>("Crossbow", Weapon::Range, 7, 3);
 	std::unique_ptr<Item> item4 = std::make_unique<Weapon>("Crossbow", Weapon::Range, 7, 3);
+	std::unique_ptr<Item> item5 = std::make_unique<Armor>("Great Armor", 20, 3);
+	std::unique_ptr<Item> item6 = std::make_unique<Armor>("Great Armor", 20, 3);
 
 	std::unique_ptr<QuestStage> stage14111 = std::make_unique<buyItemStage>(
-		"Good trade. Price: 150.",
-		14111, 141111, 0, 150, PC, std::move(item1));
+		"Good trade. Price: 100.",
+		14111, 141111, 0, 100, PC, std::move(item1));
 	std::unique_ptr<QuestStage> stage14112 = std::make_unique<buyItemStage>(
-		"Bad trade. Price: 200.",
-		14112, 141111, 0, 200, PC, std::move(item2));
+		"Bad trade. Price: 150.",
+		14112, 141111, 0, 150, PC, std::move(item2));
 	std::unique_ptr<QuestStage> stage14121 = std::make_unique<buyItemStage>(
-		"Good trade. Price: 150.",
-		14121, 141211, 0, 150, PC, std::move(item3));
+		"Good trade. Price: 100.",
+		14121, 141211, 0, 100, PC, std::move(item3));
 	std::unique_ptr<QuestStage> stage14122 = std::make_unique<buyItemStage>(
+		"Bad trade. Price: 150.",
+		14122, 141211, 0, 150, PC, std::move(item4));
+	std::unique_ptr<QuestStage> stage14131 = std::make_unique<buyItemStage>(
+		"Good trade. Price: 150.",
+		14131, 141311, 0, 150, PC, std::move(item5));
+	std::unique_ptr<QuestStage> stage14132 = std::make_unique<buyItemStage>(
 		"Bad trade. Price: 200.",
-		14122, 141211, 0, 200, PC, std::move(item4));
+		14132, 141311, 0, 200, PC, std::move(item6));
 	rawPtr->quest.addStage(std::move(stage14111)); /*16*/
 	rawPtr->quest.addStage(std::move(stage14112)); /*17*/
 	rawPtr->quest.addStage(std::move(stage14121)); /*18*/
 	rawPtr->quest.addStage(std::move(stage14122)); /*19*/
+	rawPtr->quest.addStage(std::move(stage14131)); /*20*/
+	rawPtr->quest.addStage(std::move(stage14132)); /*21*/
 
 	std::unique_ptr<QuestStage> stage141111 = std::make_unique<TextStage>(
 		"[You receive: Great Sword]",
@@ -651,8 +666,12 @@ void Game::initLevel30()
 	std::unique_ptr<QuestStage> stage141211 = std::make_unique<TextStage>(
 		"[You receive: Crossbow]",
 		141211, 141211, 0, PC);
-	rawPtr->quest.addStage(std::move(stage141111)); /*20*/
-	rawPtr->quest.addStage(std::move(stage141211)); /*21*/
+	std::unique_ptr<QuestStage> stage141311 = std::make_unique<TextStage>(
+		"[You receive: Great Armor]",
+		141311, 141311, 0, PC);
+	rawPtr->quest.addStage(std::move(stage141111)); /*22*/
+	rawPtr->quest.addStage(std::move(stage141211)); /*23*/
+	rawPtr->quest.addStage(std::move(stage141311)); /*24*/
 
 	/*Service line 1*/
 	std::unique_ptr<QuestStage> stage151 = std::make_unique<RestStage>(
@@ -661,8 +680,8 @@ void Game::initLevel30()
 	std::unique_ptr<QuestStage> stage152 = std::make_unique<TextStage>(
 		"Blacksmith: Sorry. I'm expecting guests today.",
 		152, 152, 0, PC);
-	rawPtr->quest.addStage(std::move(stage151)); /*22*/
-	rawPtr->quest.addStage(std::move(stage152)); /*23*/
+	rawPtr->quest.addStage(std::move(stage151)); /*25*/
+	rawPtr->quest.addStage(std::move(stage152)); /*26*/
 
 	/*Service line 2*/
 	std::unique_ptr<QuestStage> stage161 = std::make_unique<RestStage>(
@@ -671,8 +690,8 @@ void Game::initLevel30()
 	std::unique_ptr<QuestStage> stage162 = std::make_unique<TextStage>(
 		"Blacksmith: Sorry, I have a lot of work!",
 		162, 162, 0, PC);
-	rawPtr->quest.addStage(std::move(stage161)); /*24*/
-	rawPtr->quest.addStage(std::move(stage162)); /*25*/
+	rawPtr->quest.addStage(std::move(stage161)); /*27*/
+	rawPtr->quest.addStage(std::move(stage162)); /*28*/
 
 	/*Option 2*/
 	std::unique_ptr<OptionChoice> option2 = std::make_unique<OptionChoice>(2);
@@ -685,7 +704,144 @@ void Game::initLevel30()
 	BlackMountain.addLocation(std::move(MountainPeak));
 };
 
-void Game::initLevel31() {};
+void Game::initLevel31()
+{
+	std::unique_ptr<Location> DragonCaves = std::make_unique<QuestPointer>("Dragon Caves", "dragonCaves.txt", key3);
+	QuestPointer* rawPtr = dynamic_cast<QuestPointer*>(DragonCaves.get());
+
+	/*Base:*/
+	std::unique_ptr<QuestStage> stage0 = std::make_unique<TextStage>(
+		"Where are you going?", 999, 0, 0, PC);
+	std::unique_ptr<QuestStage> stage1 = std::make_unique<TextStage>(
+		"Inspect the entrance to the caves (1 AP)", 10, 11, 1, PC);
+	std::unique_ptr<QuestStage> stage2 = std::make_unique<TextStage>(
+		"Go deeper along the main path (2 AP)", 20, 21, 2, PC);
+	std::unique_ptr<QuestStage> stage3 = std::make_unique<useQuestItemStage>(
+		"Look for a hidden passage (if you have a Protective Talisman)", 30, 31, PC, "Protective Talisman");
+	std::unique_ptr<QuestStage> stage4 = std::make_unique<skillCheckStage>(
+		"Try to pass without a talisman (4 AP)", 40, 41, 42, 4, 3, PC, PC.alchemy());
+	std::unique_ptr<OptionChoice> option0 = std::make_unique<OptionChoice>(4);
+	rawPtr->quest.addStage(std::move(stage0)); /*0*/
+	rawPtr->quest.addStage(std::move(stage1)); /*1*/
+	rawPtr->quest.addStage(std::move(stage2)); /*2*/
+	rawPtr->quest.addStage(std::move(stage3)); /*3*/
+	rawPtr->quest.addStage(std::move(stage4)); /*4*/
+	rawPtr->quest.addOption(std::move(option0));
+	rawPtr->quest.linkStageToOption(1, 0);
+	rawPtr->quest.linkStageToOption(2, 0);
+	rawPtr->quest.linkStageToOption(3, 0);
+	rawPtr->quest.linkStageToOption(4, 0);
+
+	std::unique_ptr<QuestStage> stage11 = std::make_unique<TextStage>(
+		"You carefully examine the rocks, trying to figure out if the path can be made safe. The stones crumble under your feet.", 11, 1, 0, PC);
+	std::unique_ptr<QuestStage> stage21 = std::make_unique<TextStage>(
+		"The path leads into a huge stone gut. The deeper you go, the more you feel the heaviness in your chest. It becomes difficult to breathe.", 21, 2, 0, PC);
+	std::unique_ptr<QuestStage> stage31 = std::make_unique<TextStage>(
+		"The talisman begins to vibrate slightly on your chest, pointing to a thin crack in the rock.", 31, 32, 0, PC);
+	std::unique_ptr<QuestStage> stage32 = std::make_unique<TextStage>(
+		"You enter a huge hall. In the center, a dragon sleeps, its scales gleaming in the dim light of the magma.", 32, 3, 0, PC);
+	std::unique_ptr<QuestStage> stage41 = std::make_unique<TextStage>(
+		"Clearing the way safely.", 41, 32, 0, PC);
+	std::unique_ptr<QuestStage> stage42 = std::make_unique<TextStage>(
+		"Absorbed by toxic fumes.", 42, 60, 0, PC);
+	rawPtr->quest.addStage(std::move(stage11)); /*5*/
+	rawPtr->quest.addStage(std::move(stage21)); /*6*/
+	rawPtr->quest.addStage(std::move(stage31)); /*7*/
+	rawPtr->quest.addStage(std::move(stage32)); /*8*/
+	rawPtr->quest.addStage(std::move(stage41)); /*9*/
+	rawPtr->quest.addStage(std::move(stage42)); /*10*/
+
+	/*Option 1:*/
+	std::unique_ptr<QuestStage> stage111 = std::make_unique<skillCheckStage>(
+		"Try to secure the trail with improvised means (2 AP)", 111, 1111, 1112, 2, 3, PC, PC.mechanics());
+	std::unique_ptr<QuestStage> stage112 = std::make_unique<skillCheckStage>(
+		"Pass without delay (2 AP)", 112, 1121, 1122, 2, 3, PC, PC.coordination());
+	std::unique_ptr<OptionChoice> option1 = std::make_unique<OptionChoice>(2);
+	rawPtr->quest.addStage(std::move(stage111)); /*11*/
+	rawPtr->quest.addStage(std::move(stage112)); /*12*/
+	rawPtr->quest.addOption(std::move(option1));
+	rawPtr->quest.linkStageToOption(11, 1);
+	rawPtr->quest.linkStageToOption(12, 1);
+
+	std::unique_ptr<QuestStage> stage1111 = std::make_unique<TextStage>(
+		"Safe descent, passage becomes stable.", 1111, 32, 0, PC);
+	std::unique_ptr<QuestStage> stage1121 = std::make_unique<TextStage>(
+		"You deftly jump over dangerous areas.", 1121, 32, 0, PC);
+	std::unique_ptr<QuestStage> stage1112 = std::make_unique<DamageStage>(
+		"Rockfall, you take damage, but you can continue.", 1112, 32, 0, static_cast<size_t>(DamageStage::DamageChoice::HPDamage), 5, PC);
+	std::unique_ptr<QuestStage> stage1122 = std::make_unique<DamageStage>(
+		"You slip and lose some health.", 1122, 32, 0, static_cast<size_t>(DamageStage::DamageChoice::HPDamage), 3, PC);
+	rawPtr->quest.addStage(std::move(stage1111)); /*13*/
+	rawPtr->quest.addStage(std::move(stage1121)); /*14*/
+	rawPtr->quest.addStage(std::move(stage1112)); /*15*/
+	rawPtr->quest.addStage(std::move(stage1122)); /*16*/
+
+	/*Option 2:*/
+	std::unique_ptr<QuestStage> stage211 = std::make_unique<skillCheckStage>(
+		"Focus and overcome fear (3 AP)", 211, 2111, 2112, 3, 3, PC, PC.discipline());
+	std::unique_ptr<QuestStage> stage212 = std::make_unique<skillCheckStage>(
+		"Slow down your breathing and walk carefully (2 AP)", 212, 2121, 2122, 2, 3, PC, PC.skullduggery());
+	std::unique_ptr<OptionChoice> option2 = std::make_unique<OptionChoice>(2);
+	rawPtr->quest.addStage(std::move(stage211)); /*17*/
+	rawPtr->quest.addStage(std::move(stage212)); /*18*/
+	rawPtr->quest.addOption(std::move(option2));
+	rawPtr->quest.linkStageToOption(17, 2);
+	rawPtr->quest.linkStageToOption(18, 2);
+
+	std::unique_ptr<QuestStage> stage2111 = std::make_unique<TextStage>(
+		"Safe descent, passage becomes stable.", 2111, 32, 0, PC);
+	std::unique_ptr<QuestStage> stage2121 = std::make_unique<TextStage>(
+		"You deftly jump over dangerous areas.", 2121, 32, 0, PC);
+	std::unique_ptr<QuestStage> stage2112 = std::make_unique<DamageStage>(
+		"Rockfall, you take damage, but you can continue.", 2112, 32, 0, static_cast<size_t>(DamageStage::DamageChoice::APDamage), 3, PC);
+	std::unique_ptr<QuestStage> stage2122 = std::make_unique<DamageStage>(
+		"You slip and lose some health.", 2122, 32, 0, static_cast<size_t>(DamageStage::DamageChoice::HPDamage), 3, PC);
+	rawPtr->quest.addStage(std::move(stage2111)); /*19*/
+	rawPtr->quest.addStage(std::move(stage2121)); /*20*/
+	rawPtr->quest.addStage(std::move(stage2112)); /*21*/
+	rawPtr->quest.addStage(std::move(stage2122)); /*22*/
+
+	/*Option 3:*/
+	std::unique_ptr<QuestStage> stage321 = std::make_unique<skillCheckStage>(
+		"Sneak up and steal some of the treasure (4 AP)", 321, 3211, 3212, 4, 4, PC, PC.stealth());
+	std::unique_ptr<QuestStage> stage322 = std::make_unique<TextStage>(
+		"Rely on your own strength and attack the dragon.", 322, 3212, 0, PC);
+	std::unique_ptr<QuestStage> stage323 = std::make_unique<skillCheckStage>(
+		"Conduct a chemical reaction to distract (5 AP)", 323, 3231, 3212, 5, 4, PC, PC.alchemy());
+	std::unique_ptr<OptionChoice> option3 = std::make_unique<OptionChoice>(3);
+	rawPtr->quest.addStage(std::move(stage321)); /*23*/
+	rawPtr->quest.addStage(std::move(stage322)); /*24*/
+	rawPtr->quest.addStage(std::move(stage323)); /*25*/
+	rawPtr->quest.addOption(std::move(option3));
+	rawPtr->quest.linkStageToOption(23, 3);
+	rawPtr->quest.linkStageToOption(24, 3);
+	rawPtr->quest.linkStageToOption(25, 3);
+
+	std::unique_ptr<QuestStage> stage3211 = std::make_unique<TextStage>(
+		"You steal the treasure and leave without a fight.", 3211, 50, 0, PC);
+	std::unique_ptr<QuestStage> stage3231 = std::make_unique<TextStage>(
+		"The dragon is temporarily blinded, you can quickly steal the treasure.", 3231, 50, 0, PC);
+	std::unique_ptr<QuestStage> stage3212 = std::make_unique<AttackStage>(
+		"The Ancient Dragon Awakens.", 3212, 50, 0, 0, PC);
+	rawPtr->quest.addStage(std::move(stage3211)); /*26*/
+	rawPtr->quest.addStage(std::move(stage3231)); /*27*/
+	rawPtr->quest.addStage(std::move(stage3212)); /*28*/
+
+	/*Endings:*/
+	std::unique_ptr<QuestStage> stage50 = std::make_unique<TextStage>(
+		"Having skillfully avoided or defeated the dragon, you return from the depths with the stolen treasure.\n"
+		"The fame of your feat quickly spreads, opening up new opportunities and respect in the eyes of nobles and commoners.",
+		50, 50, 0, PC);
+	std::unique_ptr<QuestStage> stage60 = std::make_unique<TextStage>(
+		"Miscalculating or losing in battle, you are forced to retreat from the Caves in panic, leaving behind only traces of shame\n"
+		"The road to the dragon is forever closed to you, and the memory of the missed opportunity will be a heavy burden on your path.",
+		60, 60, 0, PC);
+	rawPtr->quest.addStage(std::move(stage50)); /*29*/
+	rawPtr->quest.addStage(std::move(stage60)); /*30*/
+
+	rawPtr->quest.setReward(200);
+	BlackMountain.addLocation(std::move(DragonCaves));
+}
 
 void Game::initLevels()
 {
@@ -810,9 +966,9 @@ void Game::gamePlay(size_t choice)
 {
 	MapMenu newMenu;
 	bool isArmor = false;
-	FightingScene sewerFight(&enemies[0], PC, 10, 10, FightingScene::Cool, FightingScene::MeleeMod);
-	FightingScene swampFight(&enemies[1], PC, 3, 15, FightingScene::Vigilance, FightingScene::RangeMod);
-	FightingScene caveFight(&enemies[2], PC, 3, 20, FightingScene::Cool, FightingScene::BalanceMod);
+	FightingScene sewerFight(&enemies[0], PC, 10, 10, 2, FightingScene::Cool, FightingScene::MeleeMod);
+	FightingScene swampFight(&enemies[1], PC, 3, 15, 3, FightingScene::Vigilance, FightingScene::RangeMod);
+	FightingScene caveFight(&enemies[2], PC, 3, 20, 4, FightingScene::Cool, FightingScene::BalanceMod);
 	size_t maxAP = PC.archetype->getAP() - (5 - PC.Discipline());
 	size_t maxHP = PC.archetype->getHP() - (5 - PC.Resilience());
 	size_t maxArmorHP;
@@ -894,7 +1050,7 @@ void Game::gamePlay(size_t choice)
 		choice = newMenu.show(BlackMountain);
 		clearScreen();
 		if (choice > BlackMountain.getSize()) { return; }
-		loadLocation(choice - 1, BlackMountain, caveFight, 40, 50, 21);
+		loadLocation(choice - 1, BlackMountain, caveFight, 50, 60, 21);
 		break;
 	default:
 		break;

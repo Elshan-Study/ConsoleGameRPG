@@ -107,3 +107,21 @@ bool RestStage::on()
 
     return true;
 }
+
+DamageStage::DamageStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost, size_t damageChoice, int damageValue, Character& Main)
+    : QuestStage(name, mainIndex, nextIndex, cost), damageChoice(damageChoice), damageValue(damageValue), Main(Main) {
+}
+
+bool DamageStage::on()
+{
+    if (damageChoice == static_cast<size_t>(DamageChoice::HPDamage))
+    {
+        Main.currentHP -= damageValue;
+    }
+    else if (damageChoice == static_cast<size_t>(DamageChoice::APDamage))
+    {
+        Main.currentAP -= damageValue;
+    }
+
+    return true;
+}

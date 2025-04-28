@@ -185,11 +185,12 @@ private:
 	size_t distanceMax;
 	size_t initiativeSkill;
 	size_t enemyBehavior;
+	size_t coercionDiff;
 
 	enum class CharacterQueue { PC, Enemy };
 
 public:
-	FightingScene(Character* enemy, Character& pc, size_t distanceBetween, size_t distanceMax, size_t initSkill, size_t behavior);
+	FightingScene(Character* enemy, Character& pc, size_t distanceBetween, size_t distanceMax, size_t coercionDiff, size_t initSkill, size_t behavior);
 
 
 	bool isClose() const;
