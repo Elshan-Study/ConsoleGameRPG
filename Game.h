@@ -59,7 +59,7 @@ public:
 
 	void initEnemies();
 
-	void loadLocation(size_t index, Map& map, FightingScene& fight, size_t winStage, size_t defeatStage);
+	void loadLocation(size_t index, Map& map, FightingScene& fight, size_t winStage, size_t defeatStage, size_t questQetStag);
 
 	void gamePlay(size_t choice);
 

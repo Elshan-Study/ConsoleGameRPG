@@ -867,7 +867,7 @@ bool FightingScene::start()
 	}
 }
 
-bool SceneControl::loadNPCScene(QuestGetPointer*& location, size_t questStatus)
+bool SceneControl::loadNPCScene(QuestGetPointer*& location, size_t questStatus, size_t questQetStage)
 {
 	size_t currentStage{};
 	size_t nextStage;
@@ -890,6 +890,7 @@ bool SceneControl::loadNPCScene(QuestGetPointer*& location, size_t questStatus)
 		if (nextStage == currentStage) {
 			std::cout << "You have left the location" << "\n\n";
 			std::cin.get();
+			if (nextStage != questQetStage) { return false; }
 			return isKeyAdded;
 		}
 		else if (nextStage < 10)

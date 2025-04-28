@@ -215,7 +215,7 @@ public:
 		WinReaction = 50
 	};
 
-	bool loadNPCScene(QuestGetPointer*& location, size_t questStatus);
+	bool loadNPCScene(QuestGetPointer*& location, size_t questStatus, size_t questQetStage);
 
 	bool loadQuest(Character& PC, QuestPointer*& location, FightingScene& fighting, size_t startStage, size_t winStage, size_t defeatStage);
 

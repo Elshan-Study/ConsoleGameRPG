@@ -41,7 +41,7 @@ void GameDataManager::SaveLocationsStatus(const Game& game, const std::string& f
 
     game.CapitalCity.serialize(outFile);
     game.Outskirts.serialize(outFile);
-    //game.BlackMountain.serialize(outFile); 
+    game.BlackMountain.serialize(outFile); 
 
     outFile.close();
 }
@@ -88,7 +88,7 @@ void GameDataManager::LoadLocationsStatus(Game& game, const std::string& filenam
 
     game.CapitalCity.deserialize(inFile);
     game.Outskirts.deserialize(inFile);
-    /* game.BlackMountain.deserialize(inFile, game.PC);*/
+    game.BlackMountain.deserialize(inFile);
 
     inFile.close();
 

@@ -10,8 +10,6 @@ void Game::addEnemy(Character&& enemy)
 	enemies[enemySize++] = std::move(enemy);
 }
 
-//QuestPointer DragonCaves("Dragon Caves", "dragonCaves.txt", key3);
-
 void Game::reset()
 {
 	keySize = 0;
@@ -34,13 +32,14 @@ void Game::reset()
 
 	CapitalCity = Map();
 	Outskirts = Map();
-	/*BlackMountain = Map();*/
+	BlackMountain = Map();
 }
 
 void Game::initMaps()
 {
 	CapitalCity.setMain("Capital City", "capitalCity.txt");
 	Outskirts.setMain("Outskirts", "outskirts.txt");
+	BlackMountain.setMain("BlackMountain", "blackMountain.txt");
 }
 
 void Game::initLevel10()
@@ -533,9 +532,160 @@ void Game::initLevel21()
 	Outskirts.addLocation(std::move(EvilSwamp));
 }
 
-void initLevel30() {};
+void Game::initLevel30() 
+{
+	std::unique_ptr<Location> MountainPeak = std::make_unique<QuestGetPointer>("Mountain Peak", "mountainPeak.txt", key3);
+	QuestGetPointer* rawPtr = dynamic_cast<QuestGetPointer*>(MountainPeak.get());
 
-void initLevel31() {};
+	/*Base*/
+	std::unique_ptr<QuestStage> stage10 = std::make_unique<TextStage>(
+		"Blacksmith: Guests don't often wander here. What are you looking for - steel, rest, or a challenge?",
+		10, 0, 0, PC);
+	std::unique_ptr<QuestStage> stage30 = std::make_unique<TextStage>(
+		"Blacksmith: How's life?",
+		30, 2, 0, PC);
+	std::unique_ptr<QuestStage> stage40 = std::make_unique<TextStage>(
+		"Blacksmith: I spit in the face of people like you!",
+		40, 40, 0, PC);
+	std::unique_ptr<QuestStage> stage50 = std::make_unique<TextStage>(
+		"Blacksmith: Legends will be written about you!",
+		50, 2, 0, PC);
+	rawPtr->quest.addStage(std::move(stage10)); /*0*/
+	rawPtr->quest.addStage(std::move(stage30)); /*1*/
+	rawPtr->quest.addStage(std::move(stage40)); /*2*/
+	rawPtr->quest.addStage(std::move(stage50)); /*3*/
+
+	/*Main Option*/
+	std::unique_ptr<QuestStage> stage11 = std::make_unique<TextStage>(
+		"I'm looking for something important.",
+		11, 20, 0, PC);
+	std::unique_ptr<QuestStage> stage12 = std::make_unique<TextStage>(
+		"I was told you knew about the Dragon Caves.",
+		12, 20, 0, PC);
+	std::unique_ptr<QuestStage> stage13 = std::make_unique<TextStage>(
+		"I just want to talk.",
+		13, 20, 0, PC);
+	std::unique_ptr<QuestStage> stage14 = std::make_unique<TextStage>(
+		"Let's haggle.",
+		14, 141, 0, PC);
+	std::unique_ptr<QuestStage> stage15 = std::make_unique<skillCheckStage>(
+		"Can I take a break with you? (2 AP)",
+		15, 151, 152, 2, 4, PC, PC.charm());
+	std::unique_ptr<QuestStage> stage16 = std::make_unique<skillCheckStage>(
+		"Can you fix my armor? (2 AP)",
+		16, 161, 162, 2, 4, PC, PC.charm());
+	std::unique_ptr<QuestStage> stage17 = std::make_unique<TextStage>(
+		"Bye!",
+		17, 17, 0, PC);
+	std::unique_ptr<OptionChoice> option0 = std::make_unique<OptionChoice>(5);
+	rawPtr->quest.addStage(std::move(stage11)); /*4*/
+	rawPtr->quest.addStage(std::move(stage12)); /*5*/
+	rawPtr->quest.addStage(std::move(stage13)); /*6*/
+	rawPtr->quest.addStage(std::move(stage14)); /*7*/
+	rawPtr->quest.addStage(std::move(stage15)); /*8*/
+	rawPtr->quest.addStage(std::move(stage16)); /*9*/
+	rawPtr->quest.addStage(std::move(stage17)); /*10*/
+	rawPtr->quest.addOption(std::move(option0));
+	rawPtr->quest.linkStageToOption(4, 0);
+	rawPtr->quest.linkStageToOption(5, 0);
+	rawPtr->quest.linkStageToOption(6, 0);
+	rawPtr->quest.linkStageToOption(7, 0);
+	rawPtr->quest.linkStageToOption(8, 0);
+
+	/*Quest Stage*/
+	std::unique_ptr<QuestStage> stage20 = std::make_unique<TextStage>(
+		"Blacksmith: Ha! So fate has brought you to me. Below, in the depths of the mountain, the Ancient One sleeps.\n"
+		"The treasures he guards may help the city. But wake him carefully.\n"
+		"I can tell you the way... if you are willing to risk it.",
+		20, 21, 0, PC);
+	std::unique_ptr<QuestStage> stage21 = std::make_unique<TextStage>(
+		"[New Quest : DragonCaves]",
+		21, 21, 0, PC);
+	rawPtr->quest.addStage(std::move(stage20)); /*11*/
+	rawPtr->quest.addStage(std::move(stage21)); /*12*/
+
+	/*Merchant line*/
+	std::unique_ptr<QuestStage> stage141 = std::make_unique<TextStage>(
+		"Blacksmith: If you need a better blade or a more powerful crossbow, we can negotiate.\n But know this: my craft is not for the poor.",
+		141, 1, 0, PC);
+	rawPtr->quest.addStage(std::move(stage141)); /*13*/
+
+	std::unique_ptr<QuestStage> stage1411 = std::make_unique<skillCheckStage>(
+		"Bargain for the Great Sword (2 AP)",
+		1411, 14111, 14112, 2, 3, PC, PC.negotiation());
+	std::unique_ptr<QuestStage> stage1412 = std::make_unique<skillCheckStage>(
+		"Bargain for the Crossbow (2 AP)",
+		1412, 14121, 14122, 2, 3, PC, PC.negotiation());
+	std::unique_ptr<OptionChoice> option1 = std::make_unique<OptionChoice>(2);
+	rawPtr->quest.addStage(std::move(stage1411)); /*14*/
+	rawPtr->quest.addStage(std::move(stage1412)); /*15*/
+	rawPtr->quest.addOption(std::move(option1));
+	rawPtr->quest.linkStageToOption(14, 1);
+	rawPtr->quest.linkStageToOption(15, 1);
+
+	std::unique_ptr<Item> item1 = std::make_unique<Weapon>("Great Sword", Weapon::Melee, 7, 3);
+	std::unique_ptr<Item> item2 = std::make_unique<Weapon>("Great Sword", Weapon::Melee, 7, 3);
+	std::unique_ptr<Item> item3 = std::make_unique<Weapon>("Crossbow", Weapon::Range, 7, 3);
+	std::unique_ptr<Item> item4 = std::make_unique<Weapon>("Crossbow", Weapon::Range, 7, 3);
+
+	std::unique_ptr<QuestStage> stage14111 = std::make_unique<buyItemStage>(
+		"Good trade. Price: 150.",
+		14111, 141111, 0, 150, PC, std::move(item1));
+	std::unique_ptr<QuestStage> stage14112 = std::make_unique<buyItemStage>(
+		"Bad trade. Price: 200.",
+		14112, 141111, 0, 200, PC, std::move(item2));
+	std::unique_ptr<QuestStage> stage14121 = std::make_unique<buyItemStage>(
+		"Good trade. Price: 150.",
+		14121, 141211, 0, 150, PC, std::move(item3));
+	std::unique_ptr<QuestStage> stage14122 = std::make_unique<buyItemStage>(
+		"Bad trade. Price: 200.",
+		14122, 141211, 0, 200, PC, std::move(item4));
+	rawPtr->quest.addStage(std::move(stage14111)); /*16*/
+	rawPtr->quest.addStage(std::move(stage14112)); /*17*/
+	rawPtr->quest.addStage(std::move(stage14121)); /*18*/
+	rawPtr->quest.addStage(std::move(stage14122)); /*19*/
+
+	std::unique_ptr<QuestStage> stage141111 = std::make_unique<TextStage>(
+		"[You receive: Great Sword]",
+		141111, 141111, 0, PC);
+	std::unique_ptr<QuestStage> stage141211 = std::make_unique<TextStage>(
+		"[You receive: Crossbow]",
+		141211, 141211, 0, PC);
+	rawPtr->quest.addStage(std::move(stage141111)); /*20*/
+	rawPtr->quest.addStage(std::move(stage141211)); /*21*/
+
+	/*Service line 1*/
+	std::unique_ptr<QuestStage> stage151 = std::make_unique<RestStage>(
+		"Blacksmith: I see fatigue on your face. If you want, spend the night by my hearth. But the morning will be cold.", 
+		151, 151, 0, static_cast<size_t>(RestStage::RestoreChoice::APRestore), PC);
+	std::unique_ptr<QuestStage> stage152 = std::make_unique<TextStage>(
+		"Blacksmith: Sorry. I'm expecting guests today.",
+		152, 152, 0, PC);
+	rawPtr->quest.addStage(std::move(stage151)); /*22*/
+	rawPtr->quest.addStage(std::move(stage152)); /*23*/
+
+	/*Service line 2*/
+	std::unique_ptr<QuestStage> stage161 = std::make_unique<RestStage>(
+		"Blacksmith: Sure, come here.",
+		161, 161, 0, static_cast<size_t>(RestStage::RestoreChoice::ArmorHP), PC);
+	std::unique_ptr<QuestStage> stage162 = std::make_unique<TextStage>(
+		"Blacksmith: Sorry, I have a lot of work!",
+		162, 162, 0, PC);
+	rawPtr->quest.addStage(std::move(stage161)); /*24*/
+	rawPtr->quest.addStage(std::move(stage162)); /*25*/
+
+	/*Option 2*/
+	std::unique_ptr<OptionChoice> option2 = std::make_unique<OptionChoice>(2);
+	rawPtr->quest.addOption(std::move(option2));
+	rawPtr->quest.linkStageToOption(7, 2);
+	rawPtr->quest.linkStageToOption(8, 2);
+	rawPtr->quest.linkStageToOption(9, 2);
+	rawPtr->quest.linkStageToOption(10, 2);
+
+	BlackMountain.addLocation(std::move(MountainPeak));
+};
+
+void Game::initLevel31() {};
 
 void Game::initLevels()
 {
@@ -581,9 +731,29 @@ void Game::initEnemies()
 	spawn.addItem(std::move(armor));
 
 	addEnemy(std::move(spawn));
+
+	/*Dragon*/
+	std::unique_ptr<Archetype> arch3 = std::make_unique<Sturdy>();
+	std::unique_ptr<Specialization> spec3 = std::make_unique<Knight>();
+	Character dragon("Dragon", std::move(arch3), std::move(spec3));
+	dragon.specialization->Vigilance += 2;
+	dragon.specialization->Ranged += 2;
+
+	dragon.SetAll();
+	dragon.archetype->changeHP(8);
+	dragon.currentHP = dragon.archetype->getHP();
+
+	std::unique_ptr<Item> weapon3 = std::make_unique<Weapon>("Claws", Weapon::Melee, 5, 2);
+	dragon.addItem(std::move(weapon3));
+	std::unique_ptr<Item> weapon4 = std::make_unique<Weapon>("Fire", Weapon::Range, 6, 4);
+	dragon.addItem(std::move(weapon4));
+	std::unique_ptr<Item> armor1 = std::make_unique<Armor>("Dragon scales", 40, 3);
+	dragon.addItem(std::move(armor1));
+
+	addEnemy(std::move(dragon));
 }
 
-void Game::loadLocation(size_t index, Map& map, FightingScene& fight, size_t winStage, size_t defeatStage)
+void Game::loadLocation(size_t index, Map& map, FightingScene& fight, size_t winStage, size_t defeatStage, size_t questQetStage)
 {
 	if (auto rawPtr = dynamic_cast<QuestPointer*>(map[index].get()))
 	{
@@ -623,7 +793,7 @@ void Game::loadLocation(size_t index, Map& map, FightingScene& fight, size_t win
 		rawPtr->readDescription();
 		std::cout << "\n";
 		std::cin.get();
-		bool isKeyAdded = sceneControl.loadNPCScene(rawPtr, map.getFinishStatus());
+		bool isKeyAdded = sceneControl.loadNPCScene(rawPtr, map.getFinishStatus(), questQetStage);
 		if (isKeyAdded)
 		{
 			rawPtr->activate("OK");
@@ -642,6 +812,7 @@ void Game::gamePlay(size_t choice)
 	bool isArmor = false;
 	FightingScene sewerFight(&enemies[0], PC, 10, 10, FightingScene::Cool, FightingScene::MeleeMod);
 	FightingScene swampFight(&enemies[1], PC, 3, 15, FightingScene::Vigilance, FightingScene::RangeMod);
+	FightingScene caveFight(&enemies[2], PC, 3, 20, FightingScene::Cool, FightingScene::BalanceMod);
 	size_t maxAP = PC.archetype->getAP() - (5 - PC.Discipline());
 	size_t maxHP = PC.archetype->getHP() - (5 - PC.Resilience());
 	size_t maxArmorHP;
@@ -707,7 +878,7 @@ void Game::gamePlay(size_t choice)
 		choice = newMenu.show(CapitalCity);
 		clearScreen();
 		if (choice > CapitalCity.getSize()) { return; }
-		loadLocation(choice - 1, CapitalCity, sewerFight, 50, 60);
+		loadLocation(choice - 1, CapitalCity, sewerFight, 50, 60, 22);
 		break;
 	case 5:
 		Outskirts.readDescription();
@@ -715,7 +886,15 @@ void Game::gamePlay(size_t choice)
 		choice = newMenu.show(Outskirts);
 		clearScreen();
 		if (choice > Outskirts.getSize()) { return; }
-		loadLocation(choice - 1, Outskirts, swampFight, 40, 50);
+		loadLocation(choice - 1, Outskirts, swampFight, 40, 50, 21);
+		break;
+	case 6:
+		BlackMountain.readDescription();
+		std::cout << std::endl;
+		choice = newMenu.show(BlackMountain);
+		clearScreen();
+		if (choice > BlackMountain.getSize()) { return; }
+		loadLocation(choice - 1, BlackMountain, caveFight, 40, 50, 21);
 		break;
 	default:
 		break;
