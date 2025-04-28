@@ -1,0 +1,18 @@
+
+The kingdom is in turmoil. Defeats have weakened its walls and broken the faith of the common people.
+The king looks at you with bitterness:
+
+       ___/^^^\___
+      |   ( T T )  |
+      |     -      |
+      |    /___\   |
+     /|____________|\
+    /  ||        ||  \
+   /   ||        ||   \
+  /____||________||____\
+ /                       \
+|         THRONE          |
+
+You are released with gratitude, but without celebration. Your path ends in the shadow of defeat.
+
+==============BAD ENDING=====================

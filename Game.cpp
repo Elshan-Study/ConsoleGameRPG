@@ -35,6 +35,52 @@ void Game::reset()
 	BlackMountain = Map();
 }
 
+void Game::printGameStart()
+{
+	std::ifstream file("gameStart.txt");
+	if (!file.is_open()) {
+		std::cerr << "Can't open the file if Final!" << std::endl;
+		return;
+	}
+
+	std::string line;
+	while (std::getline(file, line)) {
+		std::cout << line << std::endl;
+	}
+
+	file.close();
+}
+
+bool Game::checkGameFinal()
+{
+	std::string finalTextFile;
+
+	if (winCount + defeatCount == QUESTCOUNT)
+	{
+		if (winCount > defeatCount) { finalTextFile = "winFinal.txt"; }
+		else { finalTextFile = "defeatFinal.txt"; }
+
+		std::ifstream file(finalTextFile);
+		if (!file.is_open()) {
+			std::cerr << "Can't open the file if Final!" << std::endl;
+			return 0;
+		}
+
+		std::string line;
+		while (std::getline(file, line)) {
+			std::cout << line << std::endl;
+		}
+
+		file.close();
+		
+		reset();
+
+		return 1;
+	}
+
+	return 0;
+}
+
 void Game::initMaps()
 {
 	CapitalCity.setMain("Capital City", "capitalCity.txt");
@@ -1062,6 +1108,8 @@ int Game::MenuControl()
 	while (true)
 	{
 		PC.printInfo();
+		std::cout << "Win count: " << winCount << "/" << QUESTCOUNT << "\n";
+		std::cout << "Defeat count: " << defeatCount << "/" << QUESTCOUNT << "\n";
 		int choice = InsideGameMenu::show();
 		clearScreen();
 		if (choice != 7)
@@ -1123,8 +1171,8 @@ void Game::LoadControl(bool& gameActive)
 		locStatusFile = "saveSlot3LocStatus.bin";
 		break;
 	case 4:
-		saveFile = "autosave1.bin";
-		locStatusFile = "autosaveLocStatus1.bin";
+		saveFile = "autosave.bin";
+		locStatusFile = "autosaveLocStatus.bin";
 		break;
 	default:
 		return;
@@ -1158,8 +1206,7 @@ void Game::start()
 		{
 		case 1:
 			reset();
-			/*createPC.initialize(PC);*/
-			createPC.TestPC(PC);
+			createPC.initialize(PC);
 			std::cout << "Character Create Successfully" << std::endl;
 			initEnemies();
 			initMaps();
@@ -1168,8 +1215,13 @@ void Game::start()
 			clearScreen();
 			gameActive = true;
 
+			printGameStart();
+			std::cin.get();
+			clearScreen();
+
 			while (true)
 			{
+				if (checkGameFinal()) { gameActive = false; std::cin.get(); clearScreen(); break; }
 				int switchControl = MenuControl();
 				if (switchControl == 7) { break; }
 			}
@@ -1179,7 +1231,7 @@ void Game::start()
 
 			while (true)
 			{
-
+				if (checkGameFinal()) { gameActive = false; std::cin.get(); clearScreen(); break; }
 				int switchControl = MenuControl();
 				if (switchControl == 7) { break; }
 			}
@@ -1198,8 +1250,9 @@ void Game::start()
 			clearScreen();
 			break;
 		case 5:
-			GameDataManager::SaveGame(*this, "autosave1.bin");
-			GameDataManager::SaveLocationsStatus(*this, "autosaveLocStatus1.bin");
+			GameDataManager::SaveGame(*this, "autosave.bin");
+			GameDataManager::SaveLocationsStatus(*this, "autosaveLocStatus.bin");
+			checkGameFinal();
 			return;
 		default:
 			break;

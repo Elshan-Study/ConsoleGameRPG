@@ -554,6 +554,7 @@ void PCCharacterCreate::StartItemSet(Character& PC)
 		std::unique_ptr<Item> item = std::make_unique<Weapon>("Knife", Weapon::Melee, 3, 2);
 		PC.addItem(std::move(item));
 		item = std::make_unique<Potion>("Poison", 5);
+		item->addCopy(1);
 		PC.addItem(std::move(item));
 	}
 
@@ -593,13 +594,13 @@ void PCCharacterCreate::TestPC(Character& PC)
 	std::unique_ptr<Item> item = std::make_unique<Potion>("Heal potion", 5);
 	item->addCopy(12);
 	PC.addItem(std::move(item));
-	std::unique_ptr<Item> item2 = std::make_unique<Weapon>("Sword", Weapon::Melee, 5, 3);
+	std::unique_ptr<Item> item2 = std::make_unique<Weapon>("Cheater Sword", Weapon::Melee, 20, 1);
 	PC.addItem(std::move(item2));
 	std::unique_ptr<Item> item3 = std::make_unique<Weapon>("Knife", Weapon::Melee, 3, 2);
 	PC.addItem(std::move(item3));
 	std::unique_ptr<Item> item4 = std::make_unique<Potion>("Poison", 5);
 	PC.addItem(std::move(item4));
-	std::unique_ptr<Item> item5 = std::make_unique<Weapon>("Bow", Weapon::Range, 3, 3);
+	std::unique_ptr<Item> item5 = std::make_unique<Weapon>("Cheater Bow", Weapon::Range, 20, 1);
 	PC.addItem(std::move(item5));
 	std::unique_ptr<Item> steelArmor = std::make_unique<Armor>("Steel Armor", 10, 2);
 	PC.addItem(std::move(steelArmor));

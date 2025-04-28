@@ -41,6 +41,10 @@ public:
 
 	void reset();
 
+	void printGameStart();
+
+	bool checkGameFinal();
+
 	void initMaps();
 
 	void initLevel10();
