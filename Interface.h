@@ -199,6 +199,8 @@ public:
 
 	void enemyRanged(size_t itemIndex);
 
+	void recoverEnemy() { Enemy->recoverHP(); }
+
 	CharacterQueue initiativeCheck();
 
 	bool start();

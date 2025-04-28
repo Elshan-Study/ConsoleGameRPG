@@ -410,23 +410,23 @@ void Game::initLevel20()
 	rawPtr->quest.linkStageToOption(15, 1);
 	rawPtr->quest.linkStageToOption(16, 1);
 
-	std::unique_ptr<Item> healPotion = std::make_unique<Potion>("Heal potion", 5);
-	std::unique_ptr<Item> healPotion2 = std::make_unique<Potion>("Heal potion", 5);
-	std::unique_ptr<Item> poison = std::make_unique<Potion>("Poison", 5);
-	std::unique_ptr<Item> poison2 = std::make_unique<Potion>("Poison", 5);
+	std::shared_ptr<Item> healPotion = std::make_shared<Potion>("Heal potion", 5);
+	std::shared_ptr<Item> healPotion2 = std::make_shared<Potion>("Heal potion", 5);
+	std::shared_ptr<Item> poison = std::make_shared<Potion>("Poison", 5);
+	std::shared_ptr<Item> poison2 = std::make_shared<Potion>("Poison", 5);
 
 	std::unique_ptr<QuestStage> stage14111 = std::make_unique<buyItemStage>(
 		"Good trade. Price: 25.",
-		14111, 141111, 0, 25, PC, std::move(healPotion)); 
+		14111, 141111, 0, 25, PC, healPotion); 
 	std::unique_ptr<QuestStage> stage14112 = std::make_unique<buyItemStage>(
 		"Bad trade. Price: 50.",
-		14112, 141111, 0, 50, PC, std::move(healPotion2)); 
+		14112, 141111, 0, 50, PC, healPotion2); 
 	std::unique_ptr<QuestStage> stage14121 = std::make_unique<buyItemStage>(
 		"Good trade. Price: 50.",
-		14121, 141211, 0, 50, PC, std::move(poison));
+		14121, 141211, 0, 50, PC, poison);
 	std::unique_ptr<QuestStage> stage14122 = std::make_unique<buyItemStage>(
 		"Bad trade. Price: 75.",
-		14122, 141211, 0, 75, PC, std::move(poison2));
+		14122, 141211, 0, 75, PC, poison2);
 	rawPtr->quest.addStage(std::move(stage14111)); /*17*/
 	rawPtr->quest.addStage(std::move(stage14112)); /*18*/
 	rawPtr->quest.addStage(std::move(stage14121)); /*19*/
@@ -674,12 +674,12 @@ void Game::initLevel30()
 	rawPtr->quest.linkStageToOption(15, 1);
 	rawPtr->quest.linkStageToOption(16, 1);
 
-	std::unique_ptr<Item> item1 = std::make_unique<Weapon>("Great Sword", Weapon::Melee, 7, 3);
-	std::unique_ptr<Item> item2 = std::make_unique<Weapon>("Great Sword", Weapon::Melee, 7, 3);
-	std::unique_ptr<Item> item3 = std::make_unique<Weapon>("Crossbow", Weapon::Range, 7, 3);
-	std::unique_ptr<Item> item4 = std::make_unique<Weapon>("Crossbow", Weapon::Range, 7, 3);
-	std::unique_ptr<Item> item5 = std::make_unique<Armor>("Great Armor", 20, 3);
-	std::unique_ptr<Item> item6 = std::make_unique<Armor>("Great Armor", 20, 3);
+	std::shared_ptr<Item> item1 = std::make_shared<Weapon>("Great Sword", Weapon::Melee, 7, 3);
+	std::shared_ptr<Item> item2 = std::make_shared<Weapon>("Great Sword", Weapon::Melee, 7, 3);
+	std::shared_ptr<Item> item3 = std::make_shared<Weapon>("Crossbow", Weapon::Range, 7, 3);
+	std::shared_ptr<Item> item4 = std::make_shared<Weapon>("Crossbow", Weapon::Range, 7, 3);
+	std::shared_ptr<Item> item5 = std::make_shared<Armor>("Great Armor", 20, 3);
+	std::shared_ptr<Item> item6 = std::make_shared<Armor>("Great Armor", 20, 3);
 
 	std::unique_ptr<QuestStage> stage14111 = std::make_unique<buyItemStage>(
 		"Good trade. Price: 100.",
@@ -1125,23 +1125,64 @@ void Game::SaveControl()
 {
 	int choice = SaveLoadMenu::showSaves();
 
+	if (!PC.archetype || !PC.specialization)
+	{
+		std::cout << "You can't save the empty Game!\n";
+		return;
+	}
+	std::string saveFile;
+	std::string locStatusFile;
+
 	switch (choice)
 	{
 	case 1:
-		GameDataManager::SaveGame(*this, "saveSlot1.bin");
-		GameDataManager::SaveLocationsStatus(*this, "saveSlot1LocStatus.bin");
+		saveFile = "saveSlot1.bin";
+		locStatusFile = "saveSlot1LocStatus.bin";
 		break;
 	case 2:
-		GameDataManager::SaveGame(*this, "saveSlot2.bin");
-		GameDataManager::SaveLocationsStatus(*this, "saveSlot2LocStatus.bin");
+		saveFile = "saveSlot2.bin";
+		locStatusFile = "saveSlot2LocStatus.bin";
 		break;
 	case 3:
-		GameDataManager::SaveGame(*this, "saveSlot3.bin");
-		GameDataManager::SaveLocationsStatus(*this, "saveSlot3LocStatus.bin");
+		saveFile = "saveSlot3.bin";
+		locStatusFile = "saveSlot3LocStatus.bin";
 		break;
 	default:
-		break;
+		return; 
 	}
+
+	if (fileExists(saveFile) && fileExists(locStatusFile))
+	{
+		while (true)
+		{
+			std::cout << "Save file already exists. Do you want to overwrite it? (1 - Yes, 0 - No): ";
+			std::string response;
+			std::cout << "Your choice: ";
+			std::getline(std::cin, response);
+
+			if (!isNumber(response)) {
+				std::cout << "Wrong input!\n"; continue;
+			}
+
+			choice = std::stoi(response);
+			if (choice < 0 || choice > 1) {
+				std::cout << "Wrong choice!\n"; continue;
+			}
+
+			if (choice != 1)
+			{
+				std::cout << "Save cancelled.\n";
+				return;
+			}
+			
+			break;
+		}
+	}
+
+	GameDataManager::SaveGame(*this, saveFile);
+	GameDataManager::SaveLocationsStatus(*this, locStatusFile);
+
+	std::cout << "Game successfully saved!\n";
 }
 
 bool Game::fileExists(const std::string& filename)
@@ -1186,6 +1227,7 @@ void Game::LoadControl(bool& gameActive)
 		initLevels();
 		GameDataManager::LoadLocationsStatus(*this, locStatusFile);
 		gameActive = true;
+		std::cout << "Game successfully loaded!\n";
 	}
 	else
 	{
@@ -1207,6 +1249,7 @@ void Game::start()
 		case 1:
 			reset();
 			createPC.initialize(PC);
+			/*createPC.TestPC(PC);*/
 			std::cout << "Character Create Successfully" << std::endl;
 			initEnemies();
 			initMaps();
@@ -1250,8 +1293,11 @@ void Game::start()
 			clearScreen();
 			break;
 		case 5:
-			GameDataManager::SaveGame(*this, "autosave.bin");
-			GameDataManager::SaveLocationsStatus(*this, "autosaveLocStatus.bin");
+			if (PC.archetype && PC.specialization)
+			{
+				GameDataManager::SaveGame(*this, "autosave.bin");
+				GameDataManager::SaveLocationsStatus(*this, "autosaveLocStatus.bin");
+			}
 			checkGameFinal();
 			return;
 		default:

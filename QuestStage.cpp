@@ -66,14 +66,18 @@ bool giveItemStage::on() {
         return true;
     }
 
-buyItemStage::buyItemStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost, size_t itemCost, Character& Main, std::unique_ptr<Item> item) 
-    : QuestStage(name, mainIndex, nextIndex, cost), itemCost(itemCost), Main(Main), item(std::move(item)) {
+buyItemStage::buyItemStage(const std::string& name, size_t mainIndex, size_t nextIndex, size_t cost, size_t itemCost, Character& Main, std::shared_ptr<Item> item) 
+    : QuestStage(name, mainIndex, nextIndex, cost), itemCost(itemCost), Main(Main), item(item) {
 }
 
 bool buyItemStage::on() {
     if (Main.money >= itemCost) {
         Main.money -= itemCost;
-        Main.inventory.addItem(std::move(item));
+
+        if (item) {
+            Main.inventory.addItem(item->clone());
+        }
+
         return true;
     }
     return false;

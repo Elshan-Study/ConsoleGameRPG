@@ -22,6 +22,7 @@ public:
 	virtual void addCopy(size_t value) = 0;
 
 	std::string Name() const;
+	virtual std::unique_ptr<Item> clone() const = 0;
 
 	virtual void Serialize(std::ostream& out) const = 0;
 	static std::unique_ptr<Item> Deserialize(std::istream& in);
@@ -39,6 +40,9 @@ public:
 	Potion(const Potion& other);
 	size_t useItem(int effect = 0) override;
 
+	std::unique_ptr<Item> clone() const override {
+		return std::make_unique<Potion>(*this);
+	}
 	void addCopy(size_t value) override;
 	void print(std::ostream& os) const override;
 	void Serialize(std::ostream& out) const override;
@@ -63,6 +67,9 @@ public:
 
 	size_t useItem(int effect = 1) override;
 
+	std::unique_ptr<Item> clone() const override {
+		return std::make_unique<Armor>(*this);
+	}
 	void addCopy(size_t value) override;
 	
 	void recoverArmorHP();
@@ -92,6 +99,9 @@ public:
 
 	size_t useItem(int effect) override;
 
+	std::unique_ptr<Item> clone() const override {
+		return std::make_unique<Weapon>(*this);
+	}
 	void print(std::ostream& os) const override;
 
 	void addCopy(size_t value) override;
@@ -111,6 +121,9 @@ public:
 
 	size_t useItem(int effect = 0) override;
 
+	std::unique_ptr<Item> clone() const override {
+		return std::make_unique<QuestItem>(*this);
+	}
 	void print(std::ostream& os) const override;
 
 	void addCopy(size_t value) override;

@@ -1109,6 +1109,8 @@ bool SceneControl::loadQuest(Character& PC, QuestPointer*& location, FightingSce
 					{
 						nextStage = stage->nextIndex;
 					}
+
+					fighting.recoverEnemy();
 				}
 				else if (successStatus)
 				{
@@ -1137,6 +1139,8 @@ bool SceneControl::loadQuest(Character& PC, QuestPointer*& location, FightingSce
 				{
 					nextStage = stage->nextIndex;
 				}
+
+				fighting.recoverEnemy();
 			}
 			else
 			{
